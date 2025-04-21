@@ -1,0 +1,20 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #111;
+  padding: 10px 20px;
+}
+
+nav a {
+  color: white;
+  margin-right: 15px;
+  text-decoration: none;
+}
+
+main {
+  padding: 40px 20px;
+} 
