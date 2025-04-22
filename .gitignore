@@ -1,20 +1,28 @@
-# Jekyll build output
+# Arquivos de build do Jekyll
 _site/
-
-# Cache files
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
 
-# Arquivos do sistema
+# Arquivos do Replit
+.replit
+.replit.nix
+
+# Ruby e Bundler
+*.gem
+.bundle/
+vendor/
+Gemfile.lock
+
+# Arquivos temporários e de sistema
+*.log
+*.swp
+*.tmp
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# Arquivos de ambiente local
-.bundle/
-vendor/ 
+# VS Code ou Cursor (ambientes baseados em VS Code)
+.vscode/
+
+# Backup de editores
+*~
