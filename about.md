@@ -9,8 +9,8 @@ title: About
     
     <div class="about-images">
       <img src="/assets/images/O74BfQpphpcFp5fXq58ZUI0xI.jpg" alt="Wagner Rosa" class="profile-image">
-      <img src="/assets/images/ZCPO7WWJlqtNBN0LoVqyYGb3T5s.jpg" alt="Wagner Rosa" class="profile-image">
       <img src="/assets/images/wMidRpLqDBPXxDi5TVCZqTKK8.gif" alt="Wagner Rosa" class="profile-image">
+      <img src="/assets/images/ZCPO7WWJlqtNBN0LoVqyYGb3T5s.jpg" alt="Wagner Rosa" class="profile-image">
     </div>
     
     <div class="about-section bio-section">

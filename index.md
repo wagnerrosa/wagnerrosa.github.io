@@ -23,7 +23,9 @@ title: Home
           </text>
         </svg>
       </div>
-      <p>I'm Wagner Rosa, multidisciplinary designer with 10+ years of experience, who believes in the power of storytelling and simplicity so I try to apply them to communicating and delivering solution.</p>
+      <p>I'm Wagner Rosa, multidisciplinary designer with 10+ years of experience,<br>
+      who believes in the power of storytelling and simplicity so I try to apply them<br>
+      to communicating and delivering solution.</p>
     </div>
   </div>
 </div>
