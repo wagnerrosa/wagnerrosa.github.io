@@ -1,15 +1,84 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ page.title }} - {{ site.title }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/dark-mode.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   {% include header.html %}
+
   <main>
     {{ content }}
   </main>
+
+  <footer>
+    <div class="container">
+      <p>Wagner Rosa © 2024</p>
+      <div class="social-links">
+        <a href="https://linkedin.com/in/wagnerrosa" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://instagram.com/wagnerrosa" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://github.com/wagnerrosa" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://behance.net/wagnerrosa" target="_blank"><i class="fab fa-behance"></i></a>
+      </div>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const darkModeSwitch = document.getElementById('darkModeSwitch');
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+      
+      function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        const expires = "expires=" + date.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+      }
+      
+      function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+      
+      function applyTheme(isDark) {
+        if (isDark) {
+          document.body.classList.add('dark-mode');
+        } else {
+          document.body.classList.remove('dark-mode');
+        }
+        darkModeSwitch.checked = isDark;
+        setCookie('darkMode', isDark, 365); // Salva por 1 ano
+      }
+      
+      const savedTheme = getCookie('darkMode');
+      if (savedTheme !== null) {
+        applyTheme(savedTheme === 'true');
+      } else {
+        applyTheme(prefersDarkScheme.matches);
+      }
+      
+      darkModeSwitch.addEventListener('change', (e) => {
+        applyTheme(e.target.checked);
+      });
+      
+      prefersDarkScheme.addEventListener('change', (e) => {
+        if (getCookie('darkMode') === null) {
+          applyTheme(e.matches);
+        }
+      });
+    });
+  </script>
+  <script src="/assets/js/parallax.js"></script>
 </body>
 </html> 

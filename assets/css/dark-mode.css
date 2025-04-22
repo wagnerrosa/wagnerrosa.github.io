@@ -1,0 +1,87 @@
+body {
+  background-color: #ffffff;
+  color: #000000;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark-mode header {
+  background: rgba(18, 18, 18, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode nav a {
+  color: #ffffff;
+}
+
+body.dark-mode nav a:hover {
+  color: #cccccc;
+}
+
+body.dark-mode .hero {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark-mode .about {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark-mode .work {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+body.dark-mode .about-section {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark-mode .timeline-item {
+  border-left-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .skills-list li {
+  background: #1e1e1e;
+  color: #ffffff;
+}
+
+body.dark-mode .contact-info a {
+  color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
+body.dark-mode .contact-info a:hover {
+  color: #cccccc;
+  border-bottom-color: #cccccc;
+}
+
+body.dark-mode footer {
+  background-color: #1e1e1e;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .social-links a {
+  color: #ffffff;
+}
+
+body.dark-mode .social-links a:hover {
+  color: #cccccc;
+}
+
+body.dark-mode .form-check-input {
+  background-color: #1e1e1e;
+  border-color: #ffffff;
+}
+
+body.dark-mode .form-check-input:checked {
+  background-color: #ffffff;
+  border-color: #ffffff;
+}
+
+/*# sourceMappingURL=dark-mode.css.map */
