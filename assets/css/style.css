@@ -256,8 +256,8 @@ html body.dark-mode .work {
 
 .video-background {
   position: relative;
-  max-width: 1000px;
-  max-height: 1000px;
+  max-width: none !important;
+  width: 100% !important;
   margin: 0 auto;
   border-radius: 20px;
   overflow: hidden;
@@ -276,6 +276,15 @@ html body.dark-mode .work {
 }
 
 .video-background .video-mobile {
+  display: none !important;
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.video-background .video-desktop {
   display: block;
   width: 100%;
   height: auto;
@@ -1038,27 +1047,41 @@ body.dark-mode .specialties-content.active {
 
 @media (max-width: 768px) {
   .video-background .video-desktop {
-    display: none;
+    display: none !important;
   }
   .video-background .video-mobile {
-    display: block;
+    display: block !important;
     width: 100%;
     height: auto;
     max-height: 80vh;
     object-fit: cover;
+    object-position: top center;
   }
 }
 
 @media (max-width: 768px) {
-  /* Menu hamburger: itens verticalizados quando aberto */
-  .navbar-collapse .nav-right {
-    flex-direction: column !important;
+  /* Header mobile: logo, toggle e hambúrguer em linha única */
+  header .navbar {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
     align-items: center !important;
-    gap: 1.5rem;
-    padding: 1rem 0;
   }
-  .navbar-collapse .nav-right a {
-    font-size: 1.5rem;
-    margin: 0;
+  header .navbar .logo,
+  header .navbar .form-check,
+  header .navbar .navbar-toggler {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
   }
+}
+
+/* Remover borda circular em volta do botão hamburger */
+.navbar-toggler {
+  border: none !important;
+  background-color: transparent;
+  border-radius: 0 !important;
+}
+.navbar-toggler:focus {
+  outline: none !important;
+  box-shadow: none !important;
 } 

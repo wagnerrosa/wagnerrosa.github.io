@@ -44,17 +44,19 @@ title: Home
 </div>
 
 <div id="work" class="work">
-  <div class="video-background">
-    <video class="video-desktop" autoplay loop muted playsinline>
-      <source src="/assets/images/BTN.mp4" type="video/mp4">
-    </video>
-    <video class="video-mobile" autoplay loop muted playsinline>
-      <source src="https://wagnerrosa.s3.us-east-2.amazonaws.com/BTN+2.mp4" type="video/mp4">
-    </video>
-    <div class="video-overlay">
-      <div class="work-content">
-        <h2>What I've Done?</h2>
-        <a href="https://www.behance.net/wagnerrosa" target="_blank" class="btn">View all projects ↗</a>
+  <div class="container">
+    <div class="video-background">
+      <video class="video-desktop" autoplay loop muted playsinline>
+        <source src="/assets/images/BTN.mp4" type="video/mp4">
+      </video>
+      <video class="video-mobile" autoplay loop muted playsinline>
+        <source src="https://wagnerrosa.s3.us-east-2.amazonaws.com/BTN+2.mp4" type="video/mp4">
+      </video>
+      <div class="video-overlay">
+        <div class="work-content">
+          <h2>What I've Done?</h2>
+          <a href="https://www.behance.net/wagnerrosa" target="_blank" class="btn">View all projects ↗</a>
+        </div>
       </div>
     </div>
   </div>
