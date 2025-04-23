@@ -1,15 +1,23 @@
 <header class="container-fluid">
-  <nav class="container d-flex justify-content-between align-items-center py-3">
-    <div class="nav-left">
-      <a href="/" class="logo text-decoration-none">Wagner Rosa</a>
+  <nav class="navbar navbar-light navbar-expand-md container py-3">
+    <a href="/" class="logo navbar-brand text-decoration-none">Wagner Rosa</a>
+    <!-- Dark mode toggle para mobile (à esquerda do hamburger) -->
+    <div class="form-check form-switch d-flex align-items-center me-2 d-md-none">
+      <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+      <label class="form-check-label mb-0" for="darkModeSwitch">Dark Mode</label>
     </div>
-    <div class="nav-right d-flex gap-4 align-items-center">
-      <a href="/#work" class="text-decoration-none">Work</a>
-      <a href="/about.html" class="text-decoration-none">About</a>
-      <a href="https://drive.google.com/SEU_CURRICULO.pdf" target="_blank" class="text-decoration-none">CV</a>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="darkModeSwitch">
-        <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mobileMenu">
+      <div class="nav-right d-flex gap-4 align-items-center ms-auto">
+        <a href="/#work" class="text-decoration-none">Work</a>
+        <a href="/about.html" class="text-decoration-none">About</a>
+        <a href="https://drive.google.com/SEU_CURRICULO.pdf" target="_blank" class="text-decoration-none">CV</a>
+        <div class="form-check form-switch d-none d-md-flex align-items-center mb-0">
+          <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+          <label class="form-check-label" for="darkModeSwitch">Dark Mode</label>
+        </div>
       </div>
     </div>
   </nav>

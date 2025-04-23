@@ -45,8 +45,11 @@ title: Home
 
 <div id="work" class="work">
   <div class="video-background">
-    <video autoplay loop muted playsinline>
+    <video class="video-desktop" autoplay loop muted playsinline>
       <source src="/assets/images/BTN.mp4" type="video/mp4">
+    </video>
+    <video class="video-mobile" autoplay loop muted playsinline>
+      <source src="https://wagnerrosa.s3.us-east-2.amazonaws.com/BTN+2.mp4" type="video/mp4">
     </video>
     <div class="video-overlay">
       <div class="work-content">
