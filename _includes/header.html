@@ -1,22 +1,34 @@
 <header class="container-fluid">
-  <nav class="navbar navbar-expand-md navbar-light">
-    <div class="container py-3">
+  <nav class="navbar navbar-light">
+    <div class="container py-3 d-flex align-items-center justify-content-between">
       <a class="navbar-brand" href="/">Wagner Rosa</a>
-      <!-- Dark Mode toggle sempre visível (fora do collapse) -->
-      <div class="form-check form-switch d-flex align-items-center ms-auto me-2">
-        <input class="form-check-input" type="checkbox" id="darkModeSwitch">
-        <label class="form-check-label mb-0 ms-2" for="darkModeSwitch">Dark Mode</label>
-      </div>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="mobileMenu">
-        <ul class="navbar-nav w-100 d-flex flex-column align-items-center gap-3 py-3">
+      
+      <div class="nav-right d-flex align-items-center gap-3">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+          <label class="form-check-label mb-0 ms-2" for="darkModeSwitch">Dark Mode</label>
+        </div>
+        
+        <ul class="navbar-nav flex-row d-none d-md-flex gap-3">
           <li class="nav-item"><a class="nav-link" href="/#work">Work</a></li>
           <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="https://drive.google.com/file/d/1C39CyjZ3hV4WOe0ztUv6dcxRFfxo_6h8/view?usp=sharing" target="_blank">CV</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://drive.google.com/file/d/1jdIPW995czoPVqnsgdOKhOV-fYODj_Iu/view?usp=share_link" target="_blank">CV</a></li>
         </ul>
+        
+        <button class="navbar-toggler d-md-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
       </div>
     </div>
   </nav>
+  
+  <div class="collapse navbar-collapse d-md-none" id="mobileMenu">
+    <div class="mobile-menu-content">
+      <ul class="navbar-nav flex-column pb-3 w-100 text-center">
+        <li class="nav-item w-100"><a class="nav-link" href="/#work">Work</a></li>
+        <li class="nav-item w-100"><a class="nav-link" href="/about.html">About</a></li>
+        <li class="nav-item w-100"><a class="nav-link" href="https://drive.google.com/file/d/1jdIPW995czoPVqnsgdOKhOV-fYODj_Iu/view?usp=share_link" target="_blank">CV</a></li>
+      </ul>
+    </div>
+  </div>
 </header> 

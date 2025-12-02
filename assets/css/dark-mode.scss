@@ -67,6 +67,14 @@ body.dark-mode .contact-info a:hover {
   border-bottom-color: rgb(255, 255, 255);
 }
 
+body.dark-mode .about-page h1 {
+  color: rgb(244, 231, 212) !important;
+  
+  @media (max-width: 768px) {
+    color: rgb(244, 231, 212) !important;
+  }
+}
+
 body.dark-mode footer {
   background-color: rgb(12, 12, 12);
   border-top: 1px solid rgba(244, 231, 212, 0.1);
