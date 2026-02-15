@@ -63,6 +63,7 @@ No runtime hydration.
 
 # 3. Project Structure
 
+```text
 /
 ├── index.html
 ├── about.html
@@ -86,6 +87,7 @@ No runtime hydration.
     ├── the-invisible-frontier.html
     ├── building-a-sub-500ms-site-2026.html
     └── iel-rs-ux-redesign.html
+```
 
 ### Responsibilities
 
@@ -484,16 +486,14 @@ Never rely on media strategy.
   </button>
   
   <!-- Navigation (required) -->
-  <div>
-    <a 
-      href="/" 
-      class="text-blue-600 dark:text-blue-400 text-base"
-      data-track="internal_home_from_article" 
-      data-category="navigation" 
-      data-location="article">
-      ← Back to homepage
-    </a>
-  </div>
+      <div class="flex justify-between pt-8">
+        <a href="/insights/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_insights_from_article" data-category="navigation" data-location="article">
+          ← Back to insights
+        </a>
+        <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_article" data-category="navigation" data-location="article">
+          Go to homepage →
+        </a>
+      </div>
 </footer>
 ```
 
@@ -501,8 +501,7 @@ Never rely on media strategy.
 1. **Border top** separates from main content
 2. **Disclosure section** (optional) - for research notes, case study context
 3. **Back to top button** (required) - fixed position, appears after scroll
-4. **Navigation link** (required) - returns to homepage
-5. **No "Back to Insights"** link - keep navigation simple
+4. **Navigation links** (required) - Back to insights or Go to homepage
 
 ---
 
