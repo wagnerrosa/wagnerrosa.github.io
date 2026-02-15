@@ -15,6 +15,17 @@
         if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
       })();
     </script>
+    <script>
+    // To disable analytics locally:
+    // localStorage.setItem('dev_mode', 'true');
+    // To re-enable:
+    // localStorage.removeItem('dev_mode');
+    (function(){
+      if (localStorage.getItem('dev_mode') === 'true') {
+        window['ga-disable-G-VTCEP9QKNC'] = true;
+      }
+    })();
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
     <script>
@@ -45,12 +56,16 @@
     <meta property="og:image" content="https://wagnerrosa.com/assets/wagnerrosa-picture.jpg">
     <meta property="og:type" content="website">
     <!-- Clarity -->
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "vhbu1gthme");
+    <script>
+        (function(){
+            if (localStorage.getItem('dev_mode') === 'true') return;
+
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "vhbu1gthme");
+        })();
     </script>
 </head>
 <body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">

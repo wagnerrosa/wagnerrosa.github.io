@@ -15,6 +15,17 @@
   </script>
   <link href="./output.css" rel="stylesheet">
     <!-- Google tag (gtag.js) -->
+    <script>
+    // To disable analytics locally:
+    // localStorage.setItem('dev_mode', 'true');
+    // To re-enable:
+    // localStorage.removeItem('dev_mode');
+    (function(){
+      if (localStorage.getItem('dev_mode') === 'true') {
+        window['ga-disable-G-VTCEP9QKNC'] = true;
+      }
+    })();
+    </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
@@ -24,12 +35,16 @@
     gtag('config', 'G-VTCEP9QKNC');
     </script>
     <!-- Clarity -->
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "vhbu1gthme");
+    <script>
+        (function(){
+            if (localStorage.getItem('dev_mode') === 'true') return;
+
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "vhbu1gthme");
+        })();
     </script>
 </head>
 <body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">

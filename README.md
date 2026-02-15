@@ -127,7 +127,7 @@ The same single-column structure must scale naturally across:
 No alternative layouts per breakpoint.
 No additional grid structures for larger screens.
 
-#5. Header Pattern (Must Be Reused)
+# 5. Header Pattern (Must Be Reused)
 
 Every page must include:
 	•	Profile image (rounded)
@@ -139,7 +139,7 @@ Header markup should mirror index.html.
 
 ⸻
 
-#6. Typography Rules
+# 6. Typography Rules
 
 Main content area:
 
@@ -158,7 +158,7 @@ Use hierarchy sparingly.
 
 ⸻
 
-#7. Dark Mode Strategy
+# 7. Dark Mode Strategy
 
 Dark mode is:
 	•	Class-based (darkMode: 'class')
@@ -175,7 +175,7 @@ Never rely on media strategy.
 
 ⸻
 
-#8. 404 Page Pattern
+# 8. 404 Page Pattern
 
 404 is:
 	•	Same layout
@@ -189,7 +189,7 @@ Never rely on media strategy.
 
 ⸻
 
-#9. Creating New Article Pages (insights/)
+# 9. Creating New Article Pages (insights/)
 
 All articles must:
 	1.	Be placed inside:
@@ -248,7 +248,7 @@ Authority through clarity.
 
 ⸻
 
-#11. Performance Rules
+# 11. Performance Rules
 
 Never add:
 	•	Frontend frameworks
@@ -266,7 +266,7 @@ Keep:
 
 ⸻
 
-#12. When Generating Pages with AI
+# 12. When Generating Pages with AI
 
 If generating new pages, the AI must:
 	•	Follow this README strictly
@@ -279,7 +279,7 @@ No deviation from layout system.
 
 ⸻
 
-#13. Evolution Strategy
+# 13. Evolution Strategy
 
 Possible future additions:
 	•	Sitemap.xml
