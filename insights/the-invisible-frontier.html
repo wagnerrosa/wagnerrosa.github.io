@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Invisible Frontier | Wagner Rosa</title>
+  <meta name="description" content="Microinteractions, Predictive Design, and the Rise of Adaptive Systems (2025–2026). Interfaces are becoming fluid, context-aware environments—and microinteractions are the infrastructure of digital trust.">
+  <meta property="og:title" content="The Invisible Frontier | Wagner Rosa">
+  <meta property="og:description" content="Microinteractions, Predictive Design, and the Rise of Adaptive Systems (2025–2026).">
+  <meta property="og:image" content="https://wagnerrosa.com/assets/wagnerrosa-picture.jpg">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://wagnerrosa.com/insights/the-invisible-frontier.html">
+  <link rel="icon" href="../assets/wagnerrosa.ico" type="image/x-icon">
+  <script>
+    (function(){
+      var d=document.documentElement;
+      var t=localStorage.getItem('theme');
+      if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
+    })();
+  </script>
+  <link href="../output.css" rel="stylesheet">
+  <!-- Micro-interactions (animations only) -->
+  <link href="../assets/micro-interactions.css" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script>
+    // ===== DEVELOPER TRACKING CONTROL =====
+    // 
+    // THREE WAYS TO DISABLE TRACKING:
+    //
+    // 1. PERMANENT (until you clear cache):
+    //    Open browser console and run:
+    //    localStorage.setItem('dev_mode', 'true')
+    //    To re-enable: localStorage.removeItem('dev_mode')
+    //
+    // 2. SESSION-BASED (until you close browser):
+    //    Visit any page with: ?preview=dev
+    //    Example: https://wagnerrosa.com/?preview=dev
+    //
+    // 3. AUTOMATIC (always works):
+    //    Localhost and 127.0.0.1 are ALWAYS excluded
+    //
+    // =======================================
+    
+    (function(){
+      // Check 1: Localhost detection
+      var isLocal = 
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+      
+      // Check 2: Permanent dev mode (localStorage)
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      
+      // Check 3: Query parameter detection
+      var urlParams = new URLSearchParams(window.location.search);
+      var hasPreviewParam = urlParams.get('preview') === 'dev';
+      
+      // If preview param detected, save to sessionStorage
+      if (hasPreviewParam && !sessionStorage.getItem('dev_preview')) {
+        sessionStorage.setItem('dev_preview', 'true');
+      }
+      
+      // Check 4: Session-based dev mode
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+      
+      // Disable if ANY condition is true
+      if (isLocal || isDevMode || hasPreviewParam || hasDevSession) {
+        window['ga-disable-G-VTCEP9QKNC'] = true;
+        console.log('🚫 Analytics disabled (dev mode active)');
+      }
+    })();
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VTCEP9QKNC');
+  </script>
+  <!-- Clarity -->
+  <script>
+    (function(){
+      // Same checks as Google Analytics
+      var isLocal = 
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+      
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+      
+      // Disable if ANY condition is true
+      if (isLocal || isDevMode || hasDevSession) {
+        console.log('🚫 Clarity disabled (dev mode active)');
+        return;
+      }
+
+      // Load Clarity only if NOT in dev mode
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "vhbu1gthme");
+    })();
+  </script>
+</head>
+<body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
+  <!-- Scroll progress (Tailwind classes!) -->
+  <div 
+    class="scroll-progress fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-700 to-blue-500 dark:from-blue-300 dark:to-blue-200 z-[9999]" 
+    role="progressbar" 
+    aria-label="Reading progress">
+  </div>
+  
+  <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+    <header class="flex items-center mb-8">
+      <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
+      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300"><a href="/">Wagner Rösa</a></h2>
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+    </header>
+    <main class="space-y-8">
+      <h1 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+        The Invisible Frontier
+      </h1>
+
+      <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">Microinteractions, Predictive Design, and the Rise of Adaptive Systems (2025–2026)</strong>
+      </p>
+
+      <p class="text-base leading-relaxed">
+        User experience design is undergoing a structural transformation in the mid-2020s. Interfaces are no longer rigid, click-based systems—they are fluid, context-aware environments that behave more like living organisms than mechanical tools.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Microinteractions, once dismissed as aesthetic embellishments, have become the foundational infrastructure of digital trust.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        By 2026, a high-performing website is no longer merely a navigation tool. It is a responsive ecosystem that interprets intent, anticipates needs, and delivers continuous feedback. Human–computer interaction increasingly resembles dialogue rather than command execution.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        The Evolutionary Anatomy of Microinteractions
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Microinteractions are small, contained functional moments designed to accomplish a single task—providing feedback, guiding behavior, or signaling a system state change.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        An effective microinteraction follows four structural components:
+      </p>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr>
+              <th class="text-left py-2 pr-4 border-b border-neutral-300 dark:border-neutral-700">Element</th>
+              <th class="text-left py-2 pr-4 border-b border-neutral-300 dark:border-neutral-700">Purpose</th>
+              <th class="text-left py-2 pr-4 border-b border-neutral-300 dark:border-neutral-700">2025–2026 Implementation</th>
+            </tr>
+          </thead>
+          <tbody class="align-top">
+            <tr>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Trigger</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Initiates the interaction</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Eye gestures, voice commands, scroll depth detection</td>
+            </tr>
+            <tr>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Rules</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Governs logic and constraints</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Real-time validation, predictive autofill</td>
+            </tr>
+            <tr>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Feedback</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Communicates system response</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Haptic pulses, animated confirmations, microcopy</td>
+            </tr>
+            <tr>
+              <td class="py-2 pr-4">Loops &amp; Modes</td>
+              <td class="py-2 pr-4">Determines behavior over time</td>
+              <td class="py-2 pr-4">Progress bars, typing states, adaptive UI states</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-base leading-relaxed">
+        Microinteractions in 2026 are atomic and intent-sensitive. A pulsing button no longer exists to attract attention—it signals that the system predicts an imminent decision point.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">The difference is subtle but profound: feedback becomes foresight.</strong>
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Predictive Design and Intent-Driven Interfaces
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        The defining shift from 2025 to 2026 is the move from reactive to predictive systems.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Traditional UX relied on predefined user journeys mapped through conversion funnels. Modern adaptive systems construct journeys dynamically, using behavioral and contextual signals to shape interface structure in real time.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Menus reorganize based on usage patterns. Dashboards highlight overdue actions automatically. Notifications are suppressed or surfaced depending on inferred urgency.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The interface does not wait for users to choose a path—it assembles one around them.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        This evolution reduces cognitive load and shifts attention from navigation to meaningful action.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Emotionally Aware Interfaces
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Microinteractions now incorporate emotional inference.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Scrolling hesitation, cursor movement patterns, voice tone, and (when permitted) facial expression data allow systems to estimate user sentiment.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        When friction is detected:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Forms may simplify.</li>
+        <li>Tooltips may activate proactively.</li>
+        <li>Visual density may reduce.</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        When achievement is detected:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Celebratory animations reinforce progress.</li>
+        <li>Sound design or haptics amplify reward signals.</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        A widely recognized example is the animated unicorn in Asana, which appears upon task completion. In 2026, such moments are no longer decorative—they are retention architecture.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Emotionally intelligent microinteractions increase memory encoding, trust formation, and long-term engagement.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        The Sensory Web: Multimodality in Practice
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Digital experience is no longer confined to sight and touch.
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Haptics and Physical Feedback
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The Web Vibration API has matured into a strategic UX tool:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li><strong class="font-medium text-neutral-900 dark:text-neutral-100">Action confirmation:</strong> Subtle pulses reinforce form submission.</li>
+        <li><strong class="font-medium text-neutral-900 dark:text-neutral-100">Accessibility:</strong> Distinct vibration patterns assist visually impaired users.</li>
+        <li><strong class="font-medium text-neutral-900 dark:text-neutral-100">Immersive commerce:</strong> Emerging ultrasonic surface technologies simulate material textures in virtual storefronts.</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        Touch becomes a memory anchor.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Voice and Vision Interfaces
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Voice user interfaces (VUI) and vision-based interaction (VBI) are mainstream in 2026.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Devices such as Meta Neural Band enable micro-gesture control through neural and muscular signals.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Users can:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Pinch the air to zoom.</li>
+        <li>Speak naturally to complete forms.</li>
+        <li>Navigate interfaces hands-free.</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        Navigation shifts from button selection to conversational collaboration.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        The Aesthetics of Depth: Liquid Glass and Spatial UI
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">Minimalism is evolving toward dimensional clarity.</strong>
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Liquid Glass Design
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        Liquid Glass emphasizes:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Translucent layers</li>
+        <li>Micro-refraction effects</li>
+        <li>Dynamic depth adaptation</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        Instead of flat hierarchy, visual layering creates intuitive structure without heavy borders or excessive color contrast.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Emerging Visual Patterns (2026)
+      </h2>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr>
+              <th class="text-left py-2 pr-4 border-b border-neutral-300 dark:border-neutral-700">Trend</th>
+              <th class="text-left py-2 pr-4 border-b border-neutral-300 dark:border-neutral-700">Technical Characteristic</th>
+              <th class="text-left py-2 pr-4 border-b border-neutral-300 dark:border-neutral-700">UX Impact</th>
+            </tr>
+          </thead>
+          <tbody class="align-top">
+            <tr>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Bento Box Grids</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Modular, compartmentalized layouts</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Improved scannability</td>
+            </tr>
+            <tr>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Z-Axis Scrolling</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Scroll-linked 3D depth movement</td>
+              <td class="py-2 pr-4 border-b border-neutral-200 dark:border-neutral-800">Narrative immersion</td>
+            </tr>
+            <tr>
+              <td class="py-2 pr-4">Neubrutalism</td>
+              <td class="py-2 pr-4">High-contrast typography, bold shadows</td>
+              <td class="py-2 pr-4">Strong brand memorability</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">The interface becomes spatial rather than flat.</strong>
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Business Impact: Measurable Performance Gains
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Microinteractions are not decorative—they are conversion infrastructure.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Recent A/B tests (2025) indicate:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Microanimations can increase conversion rates by up to 70%.</li>
+        <li>Optimized progress indicators reduced cart abandonment by 16% at Amazon.</li>
+        <li>Celebratory completion states increased booking completion rates by over 30% on travel platforms.</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        These are not cosmetic metrics. They represent reductions in hesitation, friction, and uncertainty.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Trust compounds.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Ethics, Sustainability, and Inclusive Design
+      </h2>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Green UX
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        Lightweight animation frameworks such as Rive and Lottie reduce bandwidth consumption compared to heavy video backgrounds.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Fast experiences signal quality. Slow ones signal neglect.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Performance is now part of brand identity.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Neurodiversity and Cognitive Safety
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Adaptive systems must support:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Reduced-motion preferences</li>
+        <li>Built-in animation pauses</li>
+        <li>Clear, empathetic microcopy</li>
+        <li>Predictable state transitions</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        In 2026, accessibility is not compliance—it is competitive advantage.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Beyond 2026: Neural Interfaces and Thought-Speed Interaction
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Emerging brain–computer interface technologies suggest that microinteractions may soon occur without physical gesture.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The design challenge shifts from layout to cognition:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>How do we maintain consent?</li>
+        <li>How do we preserve autonomy?</li>
+        <li>How do we ensure transparency in AI-driven adaptation?</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        Designers become ethical architects of invisible systems.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Conclusion: The Power of Invisible Precision
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Technology reaches its highest form when it becomes imperceptible.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Microinteractions represent the smallest unit of interface design—but they generate the largest impact on perceived quality, trust, and emotional resonance.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The brands that master adaptive intelligence, multimodality, and ethical restraint will define the digital standard of 2026.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Because in an attention-scarce world, clarity is luxury.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">And invisible excellence is power.</strong>
+      </p>
+
+      <div class="mt-12 pt-8 border-t border-neutral-300 dark:border-neutral-700">
+        <div class="mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+          <p class="text-sm text-neutral-500 dark:text-neutral-500">
+            <strong class="font-medium text-neutral-700 dark:text-neutral-300">
+              Research methodology:
+            </strong>
+            This article synthesizes findings from AI-assisted research.
+            Sources were audited, patterns cross-referenced, and insights organized by
+            <a href="/about.html" class="text-blue-600 dark:text-blue-400">
+              Wagner Rosa
+            </a>.
+          </p>
+        </div>
+
+        <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mb-4">
+          References
+        </h2>
+
+        <ol class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+          <li>Industry analyses on UX trends (2025–2026) and adaptive interface systems.</li>
+          <li>Research on microinteractions as structured feedback loops (e.g., <a href="https://www.nngroup.com/articles/microinteractions/" class="text-blue-600 dark:text-blue-400">Nielsen Norman Group</a>).</li>
+          <li>Studies on predictive design and AI-driven personalization in product UX.</li>
+          <li>Technical documentation on multimodal and haptic interaction systems (e.g., <a href="https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API" class="text-blue-600 dark:text-blue-400">MDN: Vibration API</a>).</li>
+          <li>Accessibility guidance on motion sensitivity and interaction comfort (e.g., <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion" class="text-blue-600 dark:text-blue-400">MDN: prefers-reduced-motion</a>).</li>
+          <li>Case studies from leading platforms such as Amazon, Shopify, and Asana on progress feedback and completion states.</li>
+          <li>Reports on ethical AI, user autonomy, and sustainable UX design.</li>
+        </ol>
+      </div>
+    </main>
+    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <!-- Back to top button (Tailwind classes!) -->
+      <button 
+        id="back-to-top" 
+        aria-label="Back to top"
+        class="fixed bottom-8 right-8 w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-xl font-medium rounded-full shadow-lg z-[9998]">
+        ↑
+      </button>
+      
+      <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_article" data-category="navigation" data-location="article">
+        ← Back to homepage
+      </a>
+    </footer>
+  </div>
+  <script>
+    (function(){
+      var r=document.documentElement;
+      var b=document.getElementById('theme-toggle');
+      if(b){b.addEventListener('click',function(){
+        var d=r.classList.toggle('dark');
+        localStorage.setItem('theme', d?'dark':'light');
+      });}
+    })();
+  </script>
+  <script>
+    document.querySelectorAll('[data-track]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (typeof gtag === 'function') {
+          gtag('event', 'site_interaction', {
+            event_category: el.dataset.category,
+            event_label: el.dataset.track,
+            event_location: el.dataset.location
+          });
+        }
+      });
+    });
+  </script>
+
+  <!-- Micro-interactions scripts -->
+  <script>
+    // Scroll progress bar
+    (function(){
+      const progress = document.querySelector('.scroll-progress');
+      if (!progress) return;
+      
+      function update() {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = winScroll / height;
+        progress.style.transform = 'scaleX(' + scrolled + ')';
+      }
+      
+      let ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            update();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+      
+      update();
+    })();
+  </script>
+
+  <script>
+    // Back to top button
+    (function(){
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      
+      function checkScroll() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      }
+      
+      window.addEventListener('scroll', checkScroll);
+      checkScroll();
+      
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+</body>
+</html>

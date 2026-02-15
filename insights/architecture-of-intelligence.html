@@ -19,6 +19,8 @@
     })();
   </script>
   <link href="../output.css" rel="stylesheet">
+  <!-- Micro-interactions (animations only) -->
+  <link href="../assets/micro-interactions.css" rel="stylesheet">
   <!-- Google tag (gtag.js) -->
   <script>
     // ===== DEVELOPER TRACKING CONTROL =====
@@ -103,11 +105,18 @@
   </script>
 </head>
 <body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
+  <!-- Scroll progress (Tailwind classes!) -->
+  <div 
+    class="scroll-progress fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-700 to-blue-500 dark:from-blue-300 dark:to-blue-200 z-[9999]" 
+    role="progressbar" 
+    aria-label="Reading progress">
+  </div>
+  
   <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
     <header class="flex items-center mb-8">
       <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
-      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300">Wagner Rösa</h2>
-      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 hover:underline px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300"><a href="/">Wagner Rösa</a></h2>
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
     </header>
     <main class="space-y-8">
       <h1 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
@@ -287,6 +296,15 @@
       </p>
 
       <div class="mt-12 pt-8 border-t border-neutral-300 dark:border-neutral-700">
+          <!-- Disclosure -->
+  <div class="mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+    <p class="text-sm text-neutral-500 dark:text-neutral-500">
+      <strong class="font-medium text-neutral-700 dark:text-neutral-300">Research methodology:</strong> 
+      This article synthesizes findings from AI-assisted research. 
+      Sources were verified, content curated, and insights organized by 
+      <a href="/about.html" class="text-blue-600 dark:text-blue-400">Wagner Rosa</a>.
+    </p>
+  </div>
         <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mb-4">References</h2>
         <ol class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
           <li>Industry reports on agentic AI, GenUI, and design system scalability.</li>
@@ -294,8 +312,18 @@
         </ol>
       </div>
     </main>
-    <footer class="mt-8">
-      <a href="../index.html" class="text-base text-blue-600 dark:text-blue-400 hover:underline" data-track="internal_home_from_article" data-category="navigation" data-location="insight">Back to homepage</a>
+    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <!-- Back to top button (Tailwind classes!) -->
+      <button 
+        id="back-to-top" 
+        aria-label="Back to top"
+        class="fixed bottom-8 right-8 w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-xl font-medium rounded-full shadow-lg z-[9998]">
+        ↑
+      </button>
+      
+      <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_article" data-category="navigation" data-location="article">
+        ← Back to homepage
+      </a>
     </footer>
   </div>
   <script>
@@ -320,6 +348,58 @@
         }
       });
     });
+  </script>
+
+  <!-- Micro-interactions scripts -->
+  <script>
+    // Scroll progress bar
+    (function(){
+      const progress = document.querySelector('.scroll-progress');
+      if (!progress) return;
+      
+      function update() {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = winScroll / height;
+        progress.style.transform = 'scaleX(' + scrolled + ')';
+      }
+      
+      let ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            update();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+      
+      update();
+    })();
+  </script>
+
+  <script>
+    // Back to top button
+    (function(){
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      
+      function checkScroll() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      }
+      
+      window.addEventListener('scroll', checkScroll);
+      checkScroll();
+      
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
   </script>
 </body>
 </html>

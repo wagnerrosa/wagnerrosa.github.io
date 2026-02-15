@@ -1,0 +1,105 @@
+/* ===== MICRO-INTERACTIONS: ANIMATIONS ONLY ===== */
+/* Version: 2.0 | Tailwind-first approach */
+
+/* ========================================
+   1. HOVER & FOCUS TRANSITIONS
+   ======================================== */
+
+a, button {
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+              background-size 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  text-decoration: none;
+}
+
+a:hover {
+  background-size: 100% 2px;
+}
+
+/* Enhanced focus (not well supported by Tailwind) */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid rgb(59 130 246);
+  outline-offset: 4px;
+  border-radius: 2px;
+  opacity: 1;
+}
+
+.dark a:focus-visible,
+.dark button:focus-visible {
+  outline-color: rgb(96 165 250);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Theme toggle rotation */
+#theme-toggle {
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+#theme-toggle:hover {
+  transform: rotate(180deg);
+}
+
+/* ========================================
+   2. LINK UNDERLINE ANIMATION
+   ======================================== */
+
+/* ========================================
+   3. SCROLL PROGRESS (transform only)
+   ======================================== */
+
+.scroll-progress {
+  transform: scaleX(0);
+  transform-origin: 0%;
+  will-change: transform;
+}
+
+/* ========================================
+   4. BACK TO TOP (visibility only)
+   ======================================== */
+
+#back-to-top {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .scroll-progress {
+    display: none;
+  }
+}

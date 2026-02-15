@@ -19,6 +19,8 @@
     })();
   </script>
   <link href="./output.css" rel="stylesheet">
+  <!-- Micro-interactions (animations only) -->
+  <link href="./assets/micro-interactions.css" rel="stylesheet">
   <!-- Google tag (gtag.js) -->
   <script>
     // ===== DEVELOPER TRACKING CONTROL =====
@@ -106,8 +108,8 @@
   <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
     <header class="flex items-center mb-8">
       <img class="w-10 h-10 rounded-full mr-4" src="./assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
-      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300 hover:underline"><a href="/" data-track="internal_home_from_header" data-category="navigation" data-location="about">Wagner Rosa</a></h2>
-      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 hover:underline px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300"><a href="/" data-track="internal_home_from_header" data-category="navigation" data-location="about">Wagner Rösa</a></h2>
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
     </header>
     <main class="space-y-8">
       <h1 class="text-base leading-relaxed text-neutral-900 dark:text-neutral-100">About</h1>
@@ -144,10 +146,72 @@
                class="w-full rounded-md"
                loading="lazy">
         </div>
+        <!-- Colophon: Como o site foi construído -->
+        <section class="mt-20 pt-12 border-t border-neutral-200 dark:border-neutral-800 space-y-8">
+
+          <h2 class="text-sm tracking-wide text-neutral-500 dark:text-neutral-400 uppercase">
+            Colophon
+          </h2>
+
+          <div class="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+            <div class="text-neutral-900 dark:text-neutral-100">Static HTML</div>
+            <div class="text-neutral-500">Zero runtime</div>
+
+            <div class="text-neutral-900 dark:text-neutral-100">Tailwind CSS</div>
+            <div class="text-neutral-500">Utility-first</div>
+
+            <div class="text-neutral-900 dark:text-neutral-100">Vanilla JavaScript</div>
+            <div class="text-neutral-500">Theme toggle only</div>
+
+            <div class="text-neutral-900 dark:text-neutral-100">No frameworks</div>
+            <div class="text-neutral-500">No build complexity</div>
+          </div>
+
+          <div class="flex gap-10 text-sm">
+
+            <div>
+              <div class="text-neutral-500 dark:text-neutral-100 font-medium">
+                100 / 100
+              </div>
+              <div class="text-neutral-500 text-xs uppercase tracking-wide">
+                Lighthouse
+              </div>
+            </div>
+
+            <div>
+              <div class="text-neutral-500 dark:text-neutral-200 font-medium">
+                &lt; 500ms
+              </div>
+              <div class="text-neutral-500 text-xs uppercase tracking-wide">
+                Load time
+              </div>
+            </div>
+
+            <div>
+              <div class="text-neutral-500 dark:text-neutral-100 font-medium">
+                0
+              </div>
+              <div class="text-neutral-500 text-xs uppercase tracking-wide">
+                Layout shifts
+              </div>
+            </div>
+
+          </div>
+
+          <div>
+            <a href="https://github.com/wagnerrosa/wagnerrosa.github.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm text-blue-600 dark:text-blue-400">
+              View source on GitHub
+            </a>
+          </div>
+
+        </section>
       </div>
     </main>
     <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
-      <a href="/" class="text-blue-600 dark:text-blue-400 hover:underline text-base" data-track="internal_home_from_about" data-category="navigation" data-location="about">
+      <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_about" data-category="navigation" data-location="about">
         ← Back to homepage
       </a>
     </footer>
