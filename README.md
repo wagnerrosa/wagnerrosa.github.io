@@ -81,19 +81,24 @@ No runtime hydration.
 │   ├── wagnerrosa.ico
 │   └── micro-interactions.css
 └── insights/
-    └── architecture-of-intelligence.html
+    ├── index.html
+    ├── architecture-of-intelligence.html
+    ├── the-invisible-frontier.html
+    ├── building-a-sub-500ms-site-2026.html
+    └── iel-rs-ux-redesign.html
 
 ### Responsibilities
 
 - `index.html` → Homepage (primary reference layout)
-- `about.html` → Personal background and site colophon
+- `about.html` → Personal background and colophon
 - `404.html` → Custom error page (same layout system)
-- `insights/` → All article / SEO pages
+- `insights/` → Article hub and all long-form content
+- `insights/index.html` → **Article listing page** (centralized navigation)
 - `input.css` → Tailwind entry
 - `output.css` → Compiled CSS (committed)
 - `tailwind.config.js` → Dark mode + content scan
 - `assets/` → Static optimized assets
-- `assets/micro-interactions.css` → Minimal animations and transitions
+- `assets/micro-interactions.css` → Minimal animations and transitions (1.2KB)
 
 ---
 
@@ -154,7 +159,7 @@ No additional grid structures for larger screens.
 Every page must include:
 
 - Profile image (rounded)
-- Name (linked to appropriate page)
+- Name (linked to home or about)
 - Theme toggle button (◐)
 - Same spacing and alignment
 
@@ -164,11 +169,11 @@ Header markup should mirror index.html.
 
 ```html
 <header class="flex items-center mb-8">
-  <img class="w-10 h-10 rounded-full mr-4" src="./assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
+  <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
   <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300">
-    <a href="about.html">Wagner Rösa</a>
+    <a href="/">Wagner Rösa</a>
   </h2>
-  <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 hover:underline px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+  <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
 </header>
 ```
 
@@ -184,8 +189,9 @@ Main content area:
 
 ### Guidelines:
 
-- Body scale ≈ 22px
-- Line height ≈ 32px
+- Body scale ≈ 22px (homepage and about)
+- Body scale = 16px (insights listing and articles)
+- Line height ≈ 32px (homepage/about), relaxed (insights)
 - Neutral palette
 - No bold-heavy paragraphs
 - Headings restrained (no oversized hero typography)
@@ -194,7 +200,67 @@ Use hierarchy sparingly.
 
 ---
 
-# 7. Micro-Interactions System
+# 7. Insights System
+
+## The Insights Hub (`/insights/index.html`)
+
+Central listing page for all articles and case studies.
+
+### Purpose:
+- Single source of truth for all published content
+- Chronological or curated order
+- Clear categorization (Essay, Case Study, Technical)
+
+### Structure:
+
+```html
+<main class="space-y-8">
+  <h1 class="text-base leading-relaxed text-neutral-900 dark:text-neutral-100">
+    Insights
+  </h1>
+
+  <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
+    This collection gathers insights on scalable UX systems, intelligent 
+    interfaces, and product architecture. Each piece combines AI-assisted 
+    research with human curation and structured editorial review.
+  </p>
+
+  <section class="space-y-10 mt-10">
+    <!-- Article entries -->
+    <article class="space-y-2">
+      <h2 class="text-base font-medium text-neutral-900 dark:text-neutral-100">
+        <a href="/insights/article-slug.html">Article Title</a>
+      </h2>
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+        Brief description of the article content.
+      </p>
+      <div class="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
+        <span>2026 · Category</span>
+        <a href="/insights/article-slug.html" class="text-blue-600 dark:text-blue-400">
+          Read →
+        </a>
+      </div>
+    </article>
+  </section>
+</main>
+```
+
+### Article Categories:
+- **Technical Essay** - Code, architecture, performance
+- **UX Strategy Essay** - Systems thinking, design philosophy
+- **Systems Essay** - Scalability, product architecture
+- **Case Study** - Real projects with context and outcomes
+
+### When Adding New Articles:
+
+1. Create article file in `/insights/`
+2. **Update `/insights/index.html`** with new entry
+3. Follow the article template pattern
+4. Maintain chronological order (newest first)
+
+---
+
+# 8. Micro-Interactions System
 
 The site includes **minimal, performant micro-interactions** via `/assets/micro-interactions.css`.
 
@@ -208,25 +274,18 @@ The site includes **minimal, performant micro-interactions** via `/assets/micro-
 ## What's Included
 
 ### 1. Hover & Focus States
-- Links: subtle opacity fade (0.7) on hover
+- Links: underline animation on hover
 - Focus: custom blue outline (accessibility + aesthetics)
 - Buttons: slight translateY on click (tactile feedback)
 - Theme toggle: 180° rotation on hover
 
-### 2. Link Underline Animation
-- Underline transitions from transparent → visible on hover
-- Smooth 0.3s cubic-bezier easing
-- **Important:** Do NOT use Tailwind's `hover:underline` class
-  - CSS handles underlines automatically
-  - Remove `hover:underline` from all `<a>` tags
-
-### 3. Scroll Progress Bar (Articles only)
+### 2. Scroll Progress Bar (Articles only)
 - Thin blue bar at top of page
 - Scales from 0% → 100% as user reads
 - Uses `requestAnimationFrame` (60fps smooth)
 - Requires additional HTML + JS (see Article Pattern)
 
-### 4. Back to Top Button (Articles only)
+### 3. Back to Top Button (Articles only)
 - Circular blue button (bottom-right)
 - Appears after 300px scroll
 - Smooth scroll to top on click
@@ -240,7 +299,7 @@ Add in `<head>` after `output.css`:
 
 ```html
 <link href="./output.css" rel="stylesheet">
-<!-- Micro-interactions -->
+<!-- Micro-interactions (animations only) -->
 <link href="./assets/micro-interactions.css" rel="stylesheet">
 ```
 
@@ -268,7 +327,7 @@ For long-form content in `/insights/`, add:
   <div class="max-w-xl mx-auto...">
 ```
 
-**2. Back to Top Button (inside `<footer>`):**
+**2. Back to Top Button (inside `<footer>` BEFORE navigation link):**
 
 ```html
 <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
@@ -280,7 +339,10 @@ For long-form content in `/insights/`, add:
     ↑
   </button>
   
-  <a href="/">← Back to homepage</a>
+  <!-- Navigation -->
+  <div>
+    <a href="/">← Back to homepage</a>
+  </div>
 </footer>
 ```
 
@@ -349,7 +411,7 @@ All micro-interactions respect `prefers-reduced-motion`:
 
 ---
 
-# 8. Dark Mode Strategy
+# 9. Dark Mode Strategy
 
 Dark mode is:
 
@@ -399,7 +461,52 @@ Never rely on media strategy.
 
 ---
 
-# 9. 404 Page Pattern
+# 10. Article Footer Pattern
+
+**All articles must follow this exact footer structure:**
+
+```html
+<footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+  <!-- Optional: Research/Case Study Disclosure (if applicable) -->
+  <div class="mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+    <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+      <span class="font-medium text-neutral-700 dark:text-neutral-300">Note:</span> 
+      Context about the article (methodology, case study details, etc.)
+    </p>
+  </div>
+  
+  <!-- Back to top button (required for articles) -->
+  <button 
+    id="back-to-top" 
+    aria-label="Back to top"
+    class="fixed bottom-8 right-8 w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-xl font-medium rounded-full shadow-lg z-[9998]">
+    ↑
+  </button>
+  
+  <!-- Navigation (required) -->
+  <div>
+    <a 
+      href="/" 
+      class="text-blue-600 dark:text-blue-400 text-base"
+      data-track="internal_home_from_article" 
+      data-category="navigation" 
+      data-location="article">
+      ← Back to homepage
+    </a>
+  </div>
+</footer>
+```
+
+### Footer Rules:
+1. **Border top** separates from main content
+2. **Disclosure section** (optional) - for research notes, case study context
+3. **Back to top button** (required) - fixed position, appears after scroll
+4. **Navigation link** (required) - returns to homepage
+5. **No "Back to Insights"** link - keep navigation simple
+
+---
+
+# 11. 404 Page Pattern
 
 404 is:
 
@@ -414,13 +521,13 @@ Never rely on media strategy.
 
 ---
 
-# 10. Creating New Article Pages (insights/)
+# 12. Creating New Article Pages (insights/)
 
 All articles must:
 
 1. Be placed inside `/insights/`
 
-Example: `/insights/ai-in-frontend.html`
+Example: `/insights/new-article.html`
 
 2. Reuse:
 
@@ -433,11 +540,22 @@ Example: `/insights/ai-in-frontend.html`
 3. Follow this content pattern:
 
 ```html
-<main class="space-y-8 text-[22px] leading-8">
-  <h1>Article Title</h1>
-  <p>Intro paragraph.</p>
-  <h2>Section</h2>
-  <p>Content.</p>
+<main class="space-y-8">
+  <h1 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+    Article Title
+  </h1>
+
+  <p class="text-base leading-relaxed">
+    Intro paragraph.
+  </p>
+
+  <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+    Section
+  </h2>
+
+  <p class="text-base leading-relaxed">
+    Content.
+  </p>
 </main>
 ```
 
@@ -445,6 +563,8 @@ Example: `/insights/ai-in-frontend.html`
 - Scroll progress bar
 - Back to top button
 - Required scripts
+
+5. **Update `/insights/index.html`** with new entry
 
 ### Article Guidelines
 
@@ -456,76 +576,6 @@ Example: `/insights/ai-in-frontend.html`
 - No unrelated visual elements
 - Use text as primary medium
 
-### Research & References (Mandatory for Insights)
-
-All long-form articles inside /insights/ must include a final section containing:
-
-1. Research Methodology
-
-A short paragraph clarifying:
-	•	The article is synthesized from AI-assisted research
-	•	Sources were reviewed and curated
-	•	Insights were organized by Wagner Rösa
-	•	The text reflects structured interpretation, not automated output
-
-Standard Pattern:
-```html
-<hr class="border-neutral-200 dark:border-neutral-800">
-
-<p class="text-base text-neutral-600 dark:text-neutral-400">
-<strong class="font-medium text-neutral-700 dark:text-neutral-300">Research methodology:</strong> This article synthesizes findings from AI-assisted research. Sources were reviewed, curated, and interpreted by <a href="/about.html" class="text-blue-600 dark:text-blue-400">Wagner Rosa</a>.
-</p>
-```
-
-⸻
-
-2. References Section
-
-All insights articles must end with a references section.
-
-Rules:
-	•	Include only primary or authoritative sources
-	•	Avoid listing every consulted link
-	•	Prefer:
-	•	Industry reports
-	•	Institutional publications
-	•	Research-backed analysis
-	•	Reputable platforms
-	•	Group similar sources instead of listing dozens
-
-Standard Structure:
-```html
-<h2 class="text-xl font-medium mt-12">References</h2>
-
-<ul class="space-y-3 text-base text-neutral-700 dark:text-neutral-400">
-  <li>Industry reports on AI-driven UX systems.</li>
-  <li>Public case studies from enterprise platforms.</li>
-  <li>Selected trend analyses from recognized design publications.</li>
-</ul>
-```
-
-⸻
-
-3. Editorial Principles
-	•	Do not fabricate citations.
-	•	Do not imply academic validation.
-	•	Do not list AI as a source.
-	•	Avoid link spam.
-	•	Prioritize synthesis over aggregation.
-
-⸻
-
-4. Why This Exists
-
-This section reinforces:
-	•	Intellectual ownership
-	•	Research transparency
-	•	Credibility
-	•	Long-term authority positioning
-
-Insights pages are not blog posts.
-They are structured thought pieces.
-
 ### Images (if any):
 
 - Max width: container width
@@ -534,7 +584,7 @@ They are structured thought pieces.
 
 ---
 
-# 11. SEO Structure for Insights
+# 13. SEO Structure for Insights
 
 Each article must include:
 
@@ -550,7 +600,7 @@ Authority through clarity.
 
 ---
 
-# 12. Performance Rules
+# 14. Performance Rules
 
 ### Never add:
 
@@ -579,7 +629,7 @@ Authority through clarity.
 
 ---
 
-# 13. Analytics & Tracking
+# 15. Analytics & Tracking
 
 The site includes Google Analytics and Microsoft Clarity with developer mode protection.
 
@@ -595,24 +645,50 @@ Console will show: `🚫 Analytics disabled (dev mode active)`
 
 ---
 
-# 14. When Generating Pages with AI
+# 16. When Generating Pages with AI
 
 If generating new pages, the AI must:
 
 - Follow this README strictly
-- Use index.html and 404.html as layout references
+- Use index.html, about.html, and insights/index.html as layout references
 - Place new content inside /insights/
+- **Update /insights/index.html** with new article entry
 - Preserve spacing, typography, and header pattern
 - Keep design minimal and architectural
 - Include micro-interactions.css link
 - Add article elements (scroll progress, back to top) for long content
-- **Never use `hover:underline` on links** (CSS handles it)
+- Follow exact footer pattern (disclosure optional, back-to-top required, navigation required)
 
 No deviation from layout system.
 
 ---
 
-# 15. Evolution Strategy
+# 17. Navigation Structure
+
+```
+Homepage (/)
+  ├── About (/about.html)
+  │   └── Link to Insights
+  ├── Insights (/insights/)
+  │   ├── Article 1 (/insights/article-1.html)
+  │   │   └── Back to Homepage
+  │   ├── Article 2 (/insights/article-2.html)
+  │   │   └── Back to Homepage
+  │   └── Case Study (/insights/case-study.html)
+  │       └── Back to Homepage
+  └── 404 (/404.html)
+```
+
+### Navigation Principles:
+- Homepage is the hub
+- Insights page lists all articles
+- Articles link back to homepage (not to insights listing)
+- About page links to insights
+- Keep navigation flat and predictable
+
+---
+
+# 18. Evolution Strategy
 
 Possible future additions:
 
