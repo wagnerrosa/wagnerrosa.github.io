@@ -1,8 +1,0 @@
-title: Wagner Rosa
-description: Portfólio pessoal
-baseurl: "" # se o site estiver na raiz
-url: "https://wagnerrosa.github.io" # ou seu domínio personalizado
-
-sass:
-  style: compressed
-  sourcemap: never
