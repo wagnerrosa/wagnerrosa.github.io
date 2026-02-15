@@ -15,25 +15,61 @@
         if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
       })();
     </script>
-    <script>
-    // To disable analytics locally:
-    // localStorage.setItem('dev_mode', 'true');
-    // To re-enable:
-    // localStorage.removeItem('dev_mode');
-    (function(){
-      if (localStorage.getItem('dev_mode') === 'true') {
-        window['ga-disable-G-VTCEP9QKNC'] = true;
-      }
-    })();
-    </script>
     <!-- Google tag (gtag.js) -->
+    <script>
+      // ===== DEVELOPER TRACKING CONTROL =====
+      // 
+      // THREE WAYS TO DISABLE TRACKING:
+      //
+      // 1. PERMANENT (until you clear cache):
+      //    Open browser console and run:
+      //    localStorage.setItem('dev_mode', 'true')
+      //    To re-enable: localStorage.removeItem('dev_mode')
+      //
+      // 2. SESSION-BASED (until you close browser):
+      //    Visit any page with: ?preview=dev
+      //    Example: https://wagnerrosa.com/?preview=dev
+      //
+      // 3. AUTOMATIC (always works):
+      //    Localhost and 127.0.0.1 are ALWAYS excluded
+      //
+      // =======================================
+      
+      (function(){
+        // Check 1: Localhost detection
+        var isLocal = 
+          location.hostname === 'localhost' ||
+          location.hostname === '127.0.0.1' ||
+          location.hostname === '';
+        
+        // Check 2: Permanent dev mode (localStorage)
+        var isDevMode = localStorage.getItem('dev_mode') === 'true';
+        
+        // Check 3: Query parameter detection
+        var urlParams = new URLSearchParams(window.location.search);
+        var hasPreviewParam = urlParams.get('preview') === 'dev';
+        
+        // If preview param detected, save to sessionStorage
+        if (hasPreviewParam && !sessionStorage.getItem('dev_preview')) {
+          sessionStorage.setItem('dev_preview', 'true');
+        }
+        
+        // Check 4: Session-based dev mode
+        var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+        
+        // Disable if ANY condition is true
+        if (isLocal || isDevMode || hasPreviewParam || hasDevSession) {
+          window['ga-disable-G-VTCEP9QKNC'] = true;
+          console.log('🚫 Analytics disabled (dev mode active)');
+        }
+      })();
+    </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-VTCEP9QKNC');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-VTCEP9QKNC');
     </script>
     <!-- Person Schema -->
     <script type="application/ld+json">
@@ -57,15 +93,29 @@
     <meta property="og:type" content="website">
     <!-- Clarity -->
     <script>
-        (function(){
-            if (localStorage.getItem('dev_mode') === 'true') return;
+      (function(){
+        // Same checks as Google Analytics
+        var isLocal = 
+          location.hostname === 'localhost' ||
+          location.hostname === '127.0.0.1' ||
+          location.hostname === '';
+        
+        var isDevMode = localStorage.getItem('dev_mode') === 'true';
+        var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+        
+        // Disable if ANY condition is true
+        if (isLocal || isDevMode || hasDevSession) {
+          console.log('🚫 Clarity disabled (dev mode active)');
+          return;
+        }
 
-            (function(c,l,a,r,i,t,y){
-                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "vhbu1gthme");
-        })();
+        // Load Clarity only if NOT in dev mode
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "vhbu1gthme");
+      })();
     </script>
 </head>
 <body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
