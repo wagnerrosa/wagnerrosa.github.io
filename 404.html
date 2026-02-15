@@ -43,7 +43,7 @@
       <h1 class="text-base leading-relaxed text-neutral-900 dark:text-neutral-100">404. This isn’t where you meant to be.</h1>
       <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">Outside of building digital systems, I ride motorcycles.</p>
       <img src="./assets/wagmoto.webp" alt="Wagner Rosa on a motorcycle" class="w-full rounded-md mt-6" loading="lazy">
-      <a href="/" class="inline-block mt-8 text-base text-blue-600 dark:text-blue-400 hover:underline">Back to homepage</a>
+      <a href="/" class="inline-block mt-8 text-base text-blue-600 dark:text-blue-400 hover:underline" data-track="internal_home_from_404" data-category="navigation" data-location="404">Back to homepage</a>
     </main>
     <footer class="mt-8"></footer>
   </div>
@@ -56,6 +56,19 @@
         localStorage.setItem('theme', d?'dark':'light');
       });}
     })();
+  </script>
+  <script>
+    document.querySelectorAll('[data-track]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (typeof gtag === 'function') {
+          gtag('event', 'site_interaction', {
+            event_category: el.dataset.category,
+            event_label: el.dataset.track,
+            event_location: el.dataset.location
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>

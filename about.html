@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Wagner Rosa</title>
+  <meta name="description" content="Wagner Rosa is a Senior UX Designer focused on scalable systems and applied AI. Born in Porto Alegre, Brazil, now based in Lisbon.">
+  <meta property="og:title" content="About | Wagner Rosa">
+  <meta property="og:description" content="Senior UX Designer focused on scalable systems and applied AI.">
+  <meta property="og:image" content="https://wagnerrosa.com/assets/wagnerrosa-picture.jpg">
+  <meta property="og:type" content="profile">
+  <link rel="canonical" href="https://wagnerrosa.com/about.html">
+  <link rel="icon" href="./assets/wagnerrosa.ico" type="image/x-icon">
+  <script>
+    (function(){
+      var d=document.documentElement;
+      var t=localStorage.getItem('theme');
+      if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
+    })();
+  </script>
+  <link href="./output.css" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VTCEP9QKNC');
+  </script>
+  <!-- Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "vhbu1gthme");
+  </script>
+</head>
+<body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
+  <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+    <header class="flex items-center mb-8">
+      <img class="w-10 h-10 rounded-full mr-4" src="./assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
+      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300 hover:underline"><a href="/" data-track="internal_home_from_header" data-category="navigation" data-location="about">Wagner Rosa</a></h2>
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 hover:underline px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+    </header>
+    <main class="space-y-8">
+      <h1 class="text-base leading-relaxed text-neutral-900 dark:text-neutral-100">About</h1>
+
+      <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
+        I was born in Porto Alegre, Brazil, and began my career in communication and marketing before moving to Lisbon, where I graduated in Advertising and Marketing at the Institute of Arts and Design of Lisbon in 2016.
+      </p>
+
+      <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
+        My professional path started in audiovisual production and graphic design, gradually evolving into web design and digital products. Over time, this transition shaped the way I approach UX: structured, system-oriented, and grounded in real implementation constraints.
+      </p>
+
+      <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
+        I taught myself front-end fundamentals to better understand the boundaries and possibilities of interfaces. This allows me to collaborate closely with engineering teams and design solutions that are conceptually clear and technically feasible.
+      </p>
+
+      <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
+        Today, I focus on scalable digital systems and applied AI, contributing to products that require clarity, architecture, and operational thinking.
+      </p>
+
+      <div class="space-y-4 mt-12">
+        <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
+          Outside of work, I run long distances (including a completed marathon), climb, and ride motorcycles. These practices reinforce focus, patience, and long-term thinking.
+        </p>
+
+        <div class="grid grid-cols-2 gap-4 mt-8">
+          <img src="./assets/wagmoto.webp"
+               alt="Wagner Rosa riding a motorcycle"
+               class="w-full rounded-md"
+               loading="lazy">
+
+          <img src="./assets/wagmarathon.webp"
+               alt="Wagner Rosa running a marathon"
+               class="w-full rounded-md"
+               loading="lazy">
+        </div>
+      </div>
+    </main>
+    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <a href="/" class="text-blue-600 dark:text-blue-400 hover:underline text-base" data-track="internal_home_from_about" data-category="navigation" data-location="about">
+        ← Back to homepage
+      </a>
+    </footer>
+  </div>
+  <script>
+    (function(){
+      var r=document.documentElement;
+      var b=document.getElementById('theme-toggle');
+      if(b){b.addEventListener('click',function(){
+        var d=r.classList.toggle('dark');
+        localStorage.setItem('theme', d?'dark':'light');
+      });}
+    })();
+  </script>
+  <script>
+    document.querySelectorAll('[data-track]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (typeof gtag === 'function') {
+          gtag('event', 'site_interaction', {
+            event_category: el.dataset.category,
+            event_label: el.dataset.track,
+            event_location: el.dataset.location
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
