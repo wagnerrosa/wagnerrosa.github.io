@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About | Wagner Rosa</title>
-  <meta name="description" content="Wagner Rosa is a Senior UX Designer focused on scalable systems and applied AI. Born in Porto Alegre, Brazil, now based in Lisbon.">
-  <meta property="og:title" content="About | Wagner Rosa">
-  <meta property="og:description" content="Senior UX Designer focused on scalable systems and applied AI.">
+  <title>Insights | Wagner Rosa</title>
+  <meta name="description" content="Long-form essays on scalable UX systems, applied AI, performance architecture, and product thinking.">
+  <meta property="og:title" content="Insights | Wagner Rosa">
+  <meta property="og:description" content="Long-form essays on scalable UX systems, applied AI, performance architecture, and product thinking.">
   <meta property="og:image" content="https://wagnerrosa.com/assets/wagnerrosa-picture.jpg">
-  <meta property="og:type" content="profile">
-  <link rel="canonical" href="https://wagnerrosa.com/about.html">
-  <link rel="icon" href="./assets/wagnerrosa.ico" type="image/x-icon">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://wagnerrosa.com/insights/">
+  <link rel="icon" href="../assets/wagnerrosa.ico" type="image/x-icon">
   <script>
     (function(){
       var d=document.documentElement;
@@ -18,9 +18,9 @@
       if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
     })();
   </script>
-  <link href="./output.css" rel="stylesheet">
+  <link href="../output.css" rel="stylesheet">
   <!-- Micro-interactions (animations only) -->
-  <link href="./assets/micro-interactions.css" rel="stylesheet">
+  <link href="../assets/micro-interactions.css" rel="stylesheet">
   <!-- Google tag (gtag.js) -->
   <script>
     // ===== DEVELOPER TRACKING CONTROL =====
@@ -94,7 +94,7 @@
         console.log('🚫 Clarity disabled (dev mode active)');
         return;
       }
-
+  
       // Load Clarity only if NOT in dev mode
       (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -107,53 +107,61 @@
 <body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
   <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
     <header class="flex items-center mb-8">
-      <img class="w-10 h-10 rounded-full mr-4" src="./assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
-      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300"><a href="/" data-track="internal_home_from_header" data-category="navigation" data-location="about">Wagner Rösa</a></h2>
+      <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
+      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300">
+        <a href="/" data-track="internal_home_from_header" data-category="navigation" data-location="insights">
+          Wagner Rösa
+        </a>
+      </h2>
       <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
     </header>
     <main class="space-y-8">
-      <h1 class="text-base leading-relaxed text-neutral-900 dark:text-neutral-100">About</h1>
+      <h1 class="text-base leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Insights
+      </h1>
 
       <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
-        I was born in Porto Alegre, Brazil, and began my career in communication and marketing before moving to Lisbon, where I graduated in Advertising and Marketing at the Institute of Arts and Design of Lisbon in 2016.
+        Long-form essays exploring scalable UX systems, applied AI, performance architecture, and product thinking.
       </p>
 
-      <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
-        My professional path started in audiovisual production and graphic design, gradually evolving into web design and digital products. Over time, this transition shaped the way I approach UX: structured, system-oriented, and grounded in real implementation constraints.
-      </p>
+      <section class="space-y-10">
+        <article class="space-y-2">
+          <h2 class="text-base font-medium">
+            <a href="/insights/building-a-sub-500ms-site-2026.html" class="text-blue-600 dark:text-blue-400" data-track="internal_article_sub500ms" data-category="navigation" data-location="insights">
+              Building a Sub-500ms Personal Site in 2026
+            </a>
+          </h2>
+          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            Why static HTML still wins for personal sites: constraints, performance, and maintainability.
+          </p>
+        </article>
 
-      <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
-        I taught myself front-end fundamentals to better understand the boundaries and possibilities of interfaces. This allows me to collaborate closely with engineering teams and design solutions that are conceptually clear and technically feasible.
-      </p>
+        <article class="space-y-2">
+          <h2 class="text-base font-medium">
+            <a href="/insights/the-invisible-frontier.html" class="text-blue-600 dark:text-blue-400" data-track="internal_article_invisible_frontier" data-category="navigation" data-location="insights">
+              The Invisible Frontier
+            </a>
+          </h2>
+          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            Microinteractions, multimodality, and ethical restraint as the new interface standard.
+          </p>
+        </article>
 
-      <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
-        Today, I focus on scalable digital systems and applied AI, contributing to products that require clarity, architecture, and operational thinking.
-      </p>
-
-      <div class="space-y-4 mt-12">
-        <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
-          Outside of work, I run long distances (including a completed marathon), climb, and ride motorcycles. These practices reinforce focus, patience, and long-term thinking.
-        </p>
-
-        <div class="grid grid-cols-2 gap-4 mt-8">
-          <img src="./assets/wagmoto.webp"
-               alt="Wagner Rosa riding a motorcycle"
-               class="w-full rounded-md"
-               loading="lazy">
-
-          <img src="./assets/wagmarathon.webp"
-               alt="Wagner Rosa running a marathon"
-               class="w-full rounded-md"
-               loading="lazy">
-        </div>
-      </div>
+        <article class="space-y-2">
+          <h2 class="text-base font-medium">
+            <a href="/insights/architecture-of-intelligence.html" class="text-blue-600 dark:text-blue-400" data-track="internal_article_architecture_intelligence" data-category="navigation" data-location="insights">
+              The Architecture of Intelligence
+            </a>
+          </h2>
+          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            Designing scalable UX systems for complex products in 2026.
+          </p>
+        </article>
+      </section>
     </main>
-    <footer class="flex justify-between mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
-      <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_about" data-category="navigation" data-location="about">
+    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_insights" data-category="navigation" data-location="insights">
         ← Back to homepage
-      </a>
-      <a href="/insights/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_insights_from_about" data-category="navigation" data-location="about">
-        Explore published insights →
       </a>
     </footer>
   </div>
