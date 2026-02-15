@@ -456,6 +456,76 @@ Example: `/insights/ai-in-frontend.html`
 - No unrelated visual elements
 - Use text as primary medium
 
+### Research & References (Mandatory for Insights)
+
+All long-form articles inside /insights/ must include a final section containing:
+
+1. Research Methodology
+
+A short paragraph clarifying:
+	•	The article is synthesized from AI-assisted research
+	•	Sources were reviewed and curated
+	•	Insights were organized by Wagner Rösa
+	•	The text reflects structured interpretation, not automated output
+
+Standard Pattern:
+```html
+<hr class="border-neutral-200 dark:border-neutral-800">
+
+<p class="text-base text-neutral-600 dark:text-neutral-400">
+<strong class="font-medium text-neutral-700 dark:text-neutral-300">Research methodology:</strong> This article synthesizes findings from AI-assisted research. Sources were reviewed, curated, and interpreted by <a href="/about.html" class="text-blue-600 dark:text-blue-400">Wagner Rosa</a>.
+</p>
+```
+
+⸻
+
+2. References Section
+
+All insights articles must end with a references section.
+
+Rules:
+	•	Include only primary or authoritative sources
+	•	Avoid listing every consulted link
+	•	Prefer:
+	•	Industry reports
+	•	Institutional publications
+	•	Research-backed analysis
+	•	Reputable platforms
+	•	Group similar sources instead of listing dozens
+
+Standard Structure:
+```html
+<h2 class="text-xl font-medium mt-12">References</h2>
+
+<ul class="space-y-3 text-base text-neutral-700 dark:text-neutral-400">
+  <li>Industry reports on AI-driven UX systems.</li>
+  <li>Public case studies from enterprise platforms.</li>
+  <li>Selected trend analyses from recognized design publications.</li>
+</ul>
+```
+
+⸻
+
+3. Editorial Principles
+	•	Do not fabricate citations.
+	•	Do not imply academic validation.
+	•	Do not list AI as a source.
+	•	Avoid link spam.
+	•	Prioritize synthesis over aggregation.
+
+⸻
+
+4. Why This Exists
+
+This section reinforces:
+	•	Intellectual ownership
+	•	Research transparency
+	•	Credibility
+	•	Long-term authority positioning
+
+Insights pages are not blog posts.
+They are structured thought pieces.
+
 ### Images (if any):
 
 - Max width: container width

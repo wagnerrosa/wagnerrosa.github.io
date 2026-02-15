@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building a Sub-500ms Personal Site in 2026 | Wagner Rosa</title>
+  <meta name="description" content="Why I chose static HTML over modern frameworks to build a sub-500ms personal site in 2026: constraint-led architecture, Tailwind CLI, minimal JS, and long-term maintainability.">
+  <meta property="og:title" content="Building a Sub-500ms Personal Site in 2026 | Wagner Rosa">
+  <meta property="og:description" content="Why I chose static HTML over modern frameworks: constraint-led architecture, Tailwind CLI, minimal JS, and long-term maintainability.">
+  <meta property="og:image" content="https://wagnerrosa.com/assets/wagnerrosa-picture.jpg">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://wagnerrosa.com/insights/building-a-sub-500ms-site-2026.html">
+  <link rel="icon" href="../assets/wagnerrosa.ico" type="image/x-icon">
+  <script>
+    (function(){
+      var d=document.documentElement;
+      var t=localStorage.getItem('theme');
+      if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
+    })();
+  </script>
+  <link href="../output.css" rel="stylesheet">
+  <!-- Micro-interactions (animations only) -->
+  <link href="../assets/micro-interactions.css" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script>
+    // ===== DEVELOPER TRACKING CONTROL =====
+    // 
+    // THREE WAYS TO DISABLE TRACKING:
+    //
+    // 1. PERMANENT (until you clear cache):
+    //    Open browser console and run:
+    //    localStorage.setItem('dev_mode', 'true')
+    //    To re-enable: localStorage.removeItem('dev_mode')
+    //
+    // 2. SESSION-BASED (until you close browser):
+    //    Visit any page with: ?preview=dev
+    //    Example: https://wagnerrosa.com/?preview=dev
+    //
+    // 3. AUTOMATIC (always works):
+    //    Localhost and 127.0.0.1 are ALWAYS excluded
+    //
+    // =======================================
+    
+    (function(){
+      // Check 1: Localhost detection
+      var isLocal = 
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+      
+      // Check 2: Permanent dev mode (localStorage)
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      
+      // Check 3: Query parameter detection
+      var urlParams = new URLSearchParams(window.location.search);
+      var hasPreviewParam = urlParams.get('preview') === 'dev';
+      
+      // If preview param detected, save to sessionStorage
+      if (hasPreviewParam && !sessionStorage.getItem('dev_preview')) {
+        sessionStorage.setItem('dev_preview', 'true');
+      }
+      
+      // Check 4: Session-based dev mode
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+      
+      // Disable if ANY condition is true
+      if (isLocal || isDevMode || hasPreviewParam || hasDevSession) {
+        window['ga-disable-G-VTCEP9QKNC'] = true;
+        console.log('🚫 Analytics disabled (dev mode active)');
+      }
+    })();
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VTCEP9QKNC');
+  </script>
+  <!-- Clarity -->
+  <script>
+    (function(){
+      // Same checks as Google Analytics
+      var isLocal = 
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+      
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+      
+      // Disable if ANY condition is true
+      if (isLocal || isDevMode || hasDevSession) {
+        console.log('🚫 Clarity disabled (dev mode active)');
+        return;
+      }
+  
+      // Load Clarity only if NOT in dev mode
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "vhbu1gthme");
+    })();
+  </script>
+</head>
+<body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
+  <!-- Scroll progress (Tailwind classes!) -->
+  <div 
+    class="scroll-progress fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-700 to-blue-500 dark:from-blue-300 dark:to-blue-200 z-[9999]" 
+    role="progressbar" 
+    aria-label="Reading progress">
+  </div>
+  
+  <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+    <header class="flex items-center mb-8">
+      <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
+      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300"><a href="/">Wagner Rösa</a></h2>
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+    </header>
+    <main class="space-y-8">
+      <h1 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Building a Sub-500ms Personal Site in 2026: Why I Chose Static HTML Over Modern Frameworks
+      </h1>
+
+      <p class="text-base leading-relaxed">
+        In 2026, when most portfolio sites ship with 3MB of JavaScript and take 4 seconds to load, I built mine with plain HTML, Tailwind CSS, and ~2KB of vanilla JavaScript. It loads in under 500 milliseconds and scores 100/100 on Lighthouse.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        This wasn't a technical challenge. It was a deliberate return to fundamentals and an admission that I missed something.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        The Nostalgia Problem
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        I learned to code in 2014, in an elective class at the Institute of Arts and Design in Lisbon. We wrote HTML by hand. We debugged CSS in Firefox's developer tools. We uploaded files via FTP and watched our sites go live, one <span class="font-mono text-[0.95em]">index.html</span> at a time.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        There was something immediate about it. You wrote <span class="font-mono text-[0.95em]">&lt;h1&gt;Hello&lt;/h1&gt;</span>, refreshed the browser, and it appeared. No build step. No bundler config. No <span class="font-mono text-[0.95em]">node_modules</span> folder consuming half your disk space.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Somewhere between 2014 and 2026, that disappeared.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        I spent years working with React, Next.js, design systems at scale. I built component libraries, implemented token architectures, and deployed sites with Vercel pipelines. The work was sophisticated. The products were powerful. But building my own site, something that should be simple, felt heavy.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        When I sat down to create <span class="font-mono text-[0.95em]">wagnerrosa.com</span>, I realized I wasn't excited about setting up another React project. I wanted to write HTML again. I wanted to feel the code, not configure the toolchain.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        So I didn't use a framework. And it turned out to be the right decision.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Why Static HTML Still Wins in 2026
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        The case for frameworks is compelling: component reusability, state management, dynamic rendering. But personal sites don't need any of that.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Here's what I needed:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Four pages</li>
+        <li>Dark mode</li>
+        <li>A blog structure for occasional articles</li>
+        <li>Fast load times</li>
+        <li>Easy to maintain</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        Here's what I didn't need:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Client-side routing</li>
+        <li>Hydration</li>
+        <li>Bundle splitting</li>
+        <li>State libraries</li>
+        <li>Virtual DOM</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        The entire site is a handful of HTML files, one compiled CSS file (Tailwind), and a tiny amount of JavaScript for dark mode and micro-interactions. No build complexity beyond the Tailwind CLI.
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        The Performance Result
+      </h3>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li><strong class="font-medium text-neutral-900 dark:text-neutral-100">First Paint:</strong> ~300ms</li>
+        <li><strong class="font-medium text-neutral-900 dark:text-neutral-100">Largest Contentful Paint:</strong> ~450ms</li>
+        <li><strong class="font-medium text-neutral-900 dark:text-neutral-100">Total Load:</strong> &lt; 500ms</li>
+        <li><strong class="font-medium text-neutral-900 dark:text-neutral-100">Layout Shifts:</strong> 0</li>
+        <li><strong class="font-medium text-neutral-900 dark:text-neutral-100">JavaScript:</strong> ~2KB</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        Compare that to the average Next.js portfolio in 2026:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>First Paint: ~1200ms</li>
+        <li>LCP: ~2500ms</li>
+        <li>Total Load: ~4000ms</li>
+        <li>JavaScript: 200–500KB (even after code splitting)</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        I'm not arguing that frameworks are bad. I'm arguing that they're often unnecessary. And unnecessary complexity is the enemy of maintainability.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        The Architecture: Constraint as Design
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        The site follows a strict set of constraints:
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Layout
+      </h3>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Single centered column (<span class="font-mono text-[0.95em]">max-w-xl</span>)</li>
+        <li>No sidebars, no multi-column grids</li>
+        <li>Vertical rhythm via consistent spacing</li>
+        <li>Mobile-first, scales naturally to desktop</li>
+      </ul>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Typography
+      </h3>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Body text: ~22px / ~32px line height</li>
+        <li>Neutral palette</li>
+        <li>Restrained headings</li>
+        <li>Hierarchy used sparingly</li>
+      </ul>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Interactions
+      </h3>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>Minimal CSS-only animations</li>
+        <li>Hover states: subtle feedback</li>
+        <li>Focus states: custom outline (accessibility)</li>
+        <li>Scroll progress bar on long articles</li>
+        <li>Back-to-top button (appears after 300px scroll)</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        Total CSS for interactions is tiny. No animation libraries. No heavy dependencies. Just CSS transitions and <span class="font-mono text-[0.95em]">requestAnimationFrame</span> for the scroll indicator.
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Dark Mode
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        Dark mode is initialized before the CSS loads to prevent flash:
+      </p>
+
+      <pre class="text-sm bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-800 rounded-md p-4 overflow-x-auto"><code>(function(){
+  var d=document.documentElement;
+  var t=localStorage.getItem('theme');
+  if(t?t==='dark':(window.matchMedia&amp;&amp;window.matchMedia('(prefers-color-scheme: dark)').matches)){
+    d.classList.add('dark');
+  }
+})();</code></pre>
+
+      <p class="text-base leading-relaxed">
+        Minimal JavaScript. Works reliably. Respects system preferences. Persists across sessions.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        What You Lose (And Why It Doesn't Matter)
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Choosing static HTML means giving up some conveniences.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">No component reuse:</strong> If I update the header, I edit multiple files instead of one component.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Reality: the header is a small, readable block of HTML. Editing it is fast and predictable. Not worth a build system.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">No hot module replacement:</strong> I refresh the browser manually.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Reality: Tailwind watch mode rebuilds quickly. A refresh is not a bottleneck.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">No server-side rendering:</strong> Everything is pre-rendered as static HTML.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Reality: that's exactly the point. Static hosting serves it instantly. No server overhead.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The "conveniences" of modern frameworks come with hidden costs: build time, configuration complexity, dependency management, deployment pipelines. For a small site, those costs can exceed the benefits.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        The Human Element
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        There's something satisfying about opening <span class="font-mono text-[0.95em]">index.html</span> and seeing the entire page structure. No imports. No components. Just HTML.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        When I look at the file tree, I see a small set of files I can explain completely. There are no abstractions I don't understand. No magic.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        This is the site I wanted to build in 2014 but didn't have the skills for. Now, in 2026, I have the skills to build complex systems and I'm choosing to build simple ones.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        When You Should (and Shouldn't) Do This
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Static HTML is the right choice when:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>You have fewer than ~10 pages</li>
+        <li>Content changes infrequently</li>
+        <li>You prioritize performance and simplicity</li>
+        <li>You enjoy writing HTML</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        Static HTML is the wrong choice when:
+      </p>
+
+      <ul class="list-disc pl-5 space-y-1 text-base leading-relaxed">
+        <li>You need dynamic data fetching</li>
+        <li>You have user authentication</li>
+        <li>You have hundreds of pages</li>
+        <li>You need real-time features</li>
+      </ul>
+
+      <p class="text-base leading-relaxed">
+        For <span class="font-mono text-[0.95em]">wagnerrosa.com</span>, it's perfect. For a SaaS product, it would be absurd.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        The Bigger Lesson
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        The web industry spent a decade optimizing for developer experience. We built tools that make complex applications manageable. That's valuable.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        But we also normalized complexity where it isn't needed. We reach for frameworks by default, not by necessity.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        In 2026, choosing simplicity is a deliberate act. It requires confidence-confidence that you don't need the safety net of a framework, confidence that plain HTML is good enough, confidence that fast is better than fancy.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        I built this site because I wanted something fast, maintainable, and mine. No starter template. No "powered by" footer. Just HTML, CSS, and a little JavaScript.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        It loads in half a second. It will work exactly the same in 10 years. And I enjoyed building it.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        That's enough.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Technical Specifications
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        For those curious about implementation details:
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">Stack:</strong> HTML5, Tailwind CSS (CLI build), vanilla JavaScript, GitHub Pages.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">Performance:</strong> Lighthouse 100/100 targets, fast paint times, and stable layout.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong class="font-medium text-neutral-900 dark:text-neutral-100">Source:</strong> Available on <a href="https://github.com/wagnerrosa/wagnerrosa.github.io" class="text-blue-600 dark:text-blue-400">GitHub</a>.
+      </p>
+
+      <p class="text-sm text-neutral-500 dark:text-neutral-500">
+        <strong class="font-medium text-neutral-700 dark:text-neutral-300">About this article:</strong> Personal reflection on architectural decisions. Technical claims were checked via local audits (DevTools and Lighthouse).
+      </p>
+
+      <div class="mt-12 pt-8 border-t border-neutral-300 dark:border-neutral-700">
+        <div class="mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+          <p class="text-sm text-neutral-500 dark:text-neutral-500">
+            <strong class="font-medium text-neutral-700 dark:text-neutral-300">
+              Research methodology:
+            </strong>
+            This article synthesizes findings from AI-assisted research.
+            Sources were audited, patterns cross-referenced, and insights organized by
+            <a href="/about.html" class="text-blue-600 dark:text-blue-400">
+              Wagner Rosa
+            </a>.
+          </p>
+        </div>
+
+        <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mb-4">
+          References
+        </h2>
+
+        <ol class="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+          <li>Core Web Vitals and performance guidance (e.g., <a href="https://web.dev/vitals/" class="text-blue-600 dark:text-blue-400">web.dev</a>).</li>
+          <li>Lighthouse auditing methodology and scoring model (e.g., <a href="https://developer.chrome.com/docs/lighthouse/" class="text-blue-600 dark:text-blue-400">Chrome for Developers</a>).</li>
+          <li>Tailwind CSS documentation on utility-driven styling and build workflow (e.g., <a href="https://tailwindcss.com/docs/installation" class="text-blue-600 dark:text-blue-400">Tailwind docs</a>).</li>
+          <li>Static hosting constraints and best practices (e.g., <a href="https://docs.github.com/en/pages" class="text-blue-600 dark:text-blue-400">GitHub Pages docs</a>).</li>
+          <li>Research and guidance on motion sensitivity and interaction comfort (e.g., <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion" class="text-blue-600 dark:text-blue-400">MDN: prefers-reduced-motion</a>).</li>
+          <li>Industry discussions on framework tradeoffs, DX vs complexity, and long-term maintainability.</li>
+          <li>Case studies and practitioner writeups on static-first personal sites and minimal toolchains.</li>
+        </ol>
+      </div>
+    </main>
+    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <!-- Back to top button (Tailwind classes!) -->
+      <button 
+        id="back-to-top" 
+        aria-label="Back to top"
+        class="fixed bottom-8 right-8 w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-xl font-medium rounded-full shadow-lg z-[9998]">
+        ↑
+      </button>
+      
+      <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_article" data-category="navigation" data-location="article">
+        ← Back to homepage
+      </a>
+    </footer>
+  </div>
+  <script>
+    (function(){
+      var r=document.documentElement;
+      var b=document.getElementById('theme-toggle');
+      if(b){b.addEventListener('click',function(){
+        var d=r.classList.toggle('dark');
+        localStorage.setItem('theme', d?'dark':'light');
+      });}
+    })();
+  </script>
+  <script>
+    document.querySelectorAll('[data-track]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (typeof gtag === 'function') {
+          gtag('event', 'site_interaction', {
+            event_category: el.dataset.category,
+            event_label: el.dataset.track,
+            event_location: el.dataset.location
+          });
+        }
+      });
+    });
+  </script>
+
+  <!-- Micro-interactions scripts -->
+  <script>
+    // Scroll progress bar
+    (function(){
+      const progress = document.querySelector('.scroll-progress');
+      if (!progress) return;
+      
+      function update() {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = winScroll / height;
+        progress.style.transform = 'scaleX(' + scrolled + ')';
+      }
+      
+      let ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            update();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+      
+      update();
+    })();
+  </script>
+
+  <script>
+    // Back to top button
+    (function(){
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      
+      function checkScroll() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      }
+      
+      window.addEventListener('scroll', checkScroll);
+      checkScroll();
+      
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+</body>
+</html>
