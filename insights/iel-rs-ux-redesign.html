@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IEL-RS: Navigation and UX Restructuring | Wagner Rosa</title>
+  <meta name="description" content="Complete navigation restructuring and UX redesign for IEL-RS, part of the FIERGS System in Brazil. From initial diagnosis to final design and development delivery.">
+  <meta property="og:title" content="IEL-RS: Navigation and UX Restructuring | Wagner Rosa">
+  <meta property="og:description" content="Case study on navigation restructuring and UX improvements for IEL-RS within the FIERGS System.">
+  <meta property="og:image" content="https://wagnerrosa.com/assets/wagnerrosa-picture.jpg">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://wagnerrosa.com/insights/iel-rs-ux-redesign.html">
+  <link rel="icon" href="../assets/wagnerrosa.ico" type="image/x-icon">
+  <script>
+    (function(){
+      var d=document.documentElement;
+      var t=localStorage.getItem('theme');
+      if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
+    })();
+  </script>
+  <link href="../output.css" rel="stylesheet">
+  <!-- Micro-interactions (animations only) -->
+  <link href="../assets/micro-interactions.css" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script>
+    (function(){
+      var isLocal = 
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+      
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var urlParams = new URLSearchParams(window.location.search);
+      var hasPreviewParam = urlParams.get('preview') === 'dev';
+      
+      if (hasPreviewParam && !sessionStorage.getItem('dev_preview')) {
+        sessionStorage.setItem('dev_preview', 'true');
+      }
+      
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+      
+      if (isLocal || isDevMode || hasPreviewParam || hasDevSession) {
+        window['ga-disable-G-VTCEP9QKNC'] = true;
+        console.log('🚫 Analytics disabled (dev mode active)');
+      }
+    })();
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VTCEP9QKNC');
+  </script>
+  <!-- Clarity -->
+  <script>
+    (function(){
+      var isLocal = 
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+      
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+      
+      if (isLocal || isDevMode || hasDevSession) {
+        console.log('🚫 Clarity disabled (dev mode active)');
+        return;
+      }
+
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "vhbu1gthme");
+    })();
+  </script>
+</head>
+<body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
+  <!-- Scroll progress indicator -->
+  <div 
+    class="scroll-progress fixed top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-400 dark:to-blue-300 z-[9999]" 
+    role="progressbar" 
+    aria-label="Reading progress">
+  </div>
+  
+  <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+    <header class="flex items-center mb-8">
+      <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
+      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300">
+        <a href="/">Wagner Rösa</a>
+      </h2>
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+    </header>
+    
+    <main class="space-y-8">
+      <h1 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+        IEL-RS: Navigation and UX Restructuring
+      </h1>
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+        2025
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+        My Role and Scope
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        I was responsible for the entire UX and navigation restructuring process, from initial diagnosis to final design and development delivery. I conducted information architecture, flows, prototyping, and testing, in partnership with a copywriter (content) and the development team (implementation).
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        Impact and Potential
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        The new architecture eliminated navigation barriers, facilitated quick access to information, and was planned to grow in an organized way, allowing new products to be included like items on a market shelf: each in the right place, clear and accessible.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        The Challenge Presented
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        In 2025, there was a need to completely remodel the IEL-RS website, whose structure had remained unchanged since 2018. Over this period, the set of solutions and services offered by the company grew and became more diverse, making the existing information organization insufficient to handle the volume and diversity of current content.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The complexity of the challenge increased because IEL-RS does not operate independently. It is part of the FIERGS System, a solid and unified organization, formed by FIERGS, CIERGS, SESI-RS, SENAI-RS, and IEL-RS. This meant that the IEL-RS website renovation needed to be in harmony with a "Major Portal" and, mainly, follow a "Macro Design System" used by all units of the System. My mission was to rethink the entire organization from scratch, maintaining the Drupal platform already in use and ensuring visual and functional unity with the rest of FIERGS' digital environment.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        How I Approached the Problem
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        To ensure that the new structure met both business needs and user expectations, and fit perfectly into the FIERGS ecosystem, I followed a consistent, data-driven method:
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        1. Immersion and Business Understanding
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        I started with a deep dive into the IEL-RS universe and the FIERGS System context. I held several meetings with stakeholders to understand IEL's new portfolio, strategic objectives, and which services and products should be highlighted on the website. I understood IEL-RS's mission to "Transform industry through innovation and development of people, careers, and companies" and its focus on Innovation Management, Executive Education, and Talent Integration.
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        2. Market and Competition Analysis
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        I conducted detailed benchmarking with websites of other IELs in Brazil and companies offering similar services and products. This allowed me to identify best practices, navigation trends, and differentiation opportunities, always seeking synergy with the FIERGS System.
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        3. Study and Application of the Macro Design System
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        A crucial aspect was the thorough study of the FIERGS System's Macro Design System. Understanding the brand guidelines, UI components, and interaction patterns was fundamental to ensuring that the new IEL-RS website was a coherent extension of the "major portal." In Figma, I created and used components from this Design System, ensuring that the IEL-RS prototype was fully aligned with the unified visual identity of the FIERGS System.
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        4. Content Analysis with AI
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        To make sense of the large volume of portfolio data, I used NotebookLM. This tool was essential for analyzing and creating a first version of the taxonomy, which I displayed and organized in FigJam to facilitate teamwork.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <a href="https://www.figma.com/board/RcRplVbtGSCt6OsgmPfkXr/SITE-IEL-Taxonomia--FigJam-?node-id=0-1&t=BBdpYHOz75OeCrT3-1" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400">Click here to see the complete navigation and journeys mapping in FigJam.</a>
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        5. Taxonomy and Information Architecture Validation
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        With this foundation, I moved on to validate the structure with users:
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Card Sorting:</strong> We conducted group Card Sorting dynamics with colleagues, which greatly helped understand how users think about categories and improve names.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Tree Testing:</strong> I used tree tests to verify if the hierarchy and navigation levels made sense, ensuring users could find what they were looking for without difficulty.
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        6. Core Structure and Hierarchy Definition
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        With the collected insights, we decided that the easiest and fastest way for users to find what they need was to divide the site into two main areas: "For Your Company" (Legal Entity) and "For You" (Individual). This division considers IEL-RS's different audiences (Interns, HR, and Entrepreneurs), simplifying navigation and showing how the FIERGS System works together to offer complete solutions for industries.
+      </p>
+
+      <h3 class="text-base font-medium leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        7. Prototyping and Template Creation
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        In Figma, and using the Macro Design System, I created a complete prototype for the "For You" area. This prototype served as a model and set of templates, ensuring that design and experience were consistent when creating the "For Your Company" section, following the visual and interactive guidelines of the system.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <a href="https://www.figma.com/design/cawrJoETjQegX9V7HDiYAn/IEL-2025?node-id=53-20&t=qsew4EwpvwvhIhos-1" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400">Click here to see the complete project in Figma.</a>
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        Technical Constraints and Creative Solutions
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Beyond rethinking the user experience and reorganizing information architecture, the project required studying the limitations and possibilities of the Drupal technology used in the Major Portal. This platform already operated with a base template, outdated aesthetically and functionally (launched in 2018), and there was no budget to replace it or develop something entirely new, especially since the IEL website is not independent: it is a space within the Major Portal, which also houses other entities of the FIERGS System.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Faced with this scenario, it was necessary to maximize the potential of the existing structure, adapting design and usability to technical constraints. An example of this approach was creating an online store using the module originally intended for blog publications. Instead of directing the user to an article, the interaction led directly to the course purchase page, ensuring functionality and clarity without requiring complex development.
+      </p>
+
+      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        Results
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        With the approval of the structure and prototypes, the project was delivered to the development team. The new IEL-RS website is live, with much better and easier navigation, showcasing the institution's current and diverse portfolio, and fitting into the visual identity and strategy of the FIERGS System.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <a href="https://www.ielrs.org.br" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400">Click here to check out the live website with the new architecture implemented.</a>
+      </p>
+    </main>
+    
+    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <!-- Case Study Details -->
+      <div class="mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+        <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">Case study details:</span> 
+          This project was conducted in 2025 for IEL-RS, part of the FIERGS System in Rio Grande do Sul, Brazil. 
+          The complete case study with visual documentation is available on 
+          <a href="https://www.behance.net/gallery/230938679/IEL-RS-Reestruturacao-de-Navegacao-e-UX" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400">Behance</a>.
+        </p>
+      </div>
+      
+      <!-- Back to top button -->
+      <button 
+        id="back-to-top" 
+        aria-label="Back to top"
+        class="fixed bottom-8 right-8 w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-xl font-medium rounded-full shadow-lg z-[9998]">
+        ↑
+      </button>
+      
+      <!-- Navigation -->
+      <div class="flex justify-between pt-8">
+        <a href="/insights/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_insights_from_article" data-category="navigation" data-location="article">
+          ← Back to insights
+        </a>
+        <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_article" data-category="navigation" data-location="article">
+          Go to homepage →
+        </a>
+      </div>
+    </footer>
+  </div>
+  
+  <script>
+    (function(){
+      var r=document.documentElement;
+      var b=document.getElementById('theme-toggle');
+      if(b){b.addEventListener('click',function(){
+        var d=r.classList.toggle('dark');
+        localStorage.setItem('theme', d?'dark':'light');
+      });}
+    })();
+  </script>
+  
+  <script>
+    document.querySelectorAll('[data-track]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (typeof gtag === 'function') {
+          gtag('event', 'site_interaction', {
+            event_category: el.dataset.category,
+            event_label: el.dataset.track,
+            event_location: el.dataset.location
+          });
+        }
+      });
+    });
+  </script>
+  
+  <!-- Micro-interactions scripts -->
+  <script>
+    // Scroll progress bar
+    (function(){
+      const progress = document.querySelector('.scroll-progress');
+      if (!progress) return;
+      
+      function update() {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = winScroll / height;
+        progress.style.transform = 'scaleX(' + scrolled + ')';
+      }
+      
+      let ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            update();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+      
+      update();
+    })();
+  </script>
+
+  <script>
+    // Back to top button
+    (function(){
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      
+      function checkScroll() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      }
+      
+      window.addEventListener('scroll', checkScroll);
+      checkScroll();
+      
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+</body>
+</html>
