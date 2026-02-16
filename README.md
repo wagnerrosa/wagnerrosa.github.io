@@ -631,7 +631,7 @@ Authority through clarity.
 
 The site includes Google Analytics and Microsoft Clarity with developer mode protection.
 
-### Dev Mode (prevents self-tracking):
+## Dev Mode (prevents self-tracking):
 
 Three methods to disable tracking:
 
@@ -642,6 +642,122 @@ Three methods to disable tracking:
 Console will show: `🚫 Analytics disabled (dev mode active)`
 
 ---
+
+## UTM Tracking Standard
+
+Purpose
+
+UTM parameters are used to track external traffic sources and measure:
+	•	Where visitors come from
+	•	Why they arrived (intent)
+	•	Which content drives engagement
+	•	Which outreach efforts generate meaningful visits
+
+UTMs must only be used for external links pointing to the site.
+Never use UTMs on internal links.
+
+⸻
+
+### Structure
+
+All tracked links must follow:
+
+?utm_source=SOURCE&utm_medium=MEDIUM&utm_campaign=CAMPAIGN
+
+Optional:
+
+&utm_content=DETAIL
+
+All values must be lowercase and use underscores.
+
+⸻
+
+### Allowed Values
+
+**utm_source**
+
+Where the link is placed.
+	•	linkedin
+	•	instagram
+	•	github
+	•	behance
+	•	medium
+	•	cv
+	•	email
+	•	recruiter
+	•	community
+	•	event
+
+**utm_medium**
+
+Type of channel.
+	•	social
+	•	document
+	•	email
+	•	referral
+	•	direct_outreach
+	•	messaging
+	•	community
+
+**utm_campaign**
+
+Strategic intent of the link.
+
+**Portfolio Presentation**
+	•	portfolio
+	•	portfolio_profile
+	•	portfolio_networking
+
+**Insights Distribution**
+	•	insights
+	•	insight_post
+	•	thought_leadership
+
+Job Outreach
+Format:
+
+job_[company]_[year]
+
+Example:
+
+job_nubank_2026
+
+Case Study Promotion
+	•	case_study
+	•	case_promotion
+
+⸻
+
+Examples
+
+LinkedIn profile:
+
+https://wagnerrosa.com/?utm_source=linkedin&utm_medium=social&utm_campaign=portfolio
+
+Article shared on LinkedIn:
+
+https://wagnerrosa.com/insights/the-architecture-of-intelligence.html?utm_source=linkedin&utm_medium=social&utm_campaign=insight_post
+
+CV sent to company:
+
+https://wagnerrosa.com/?utm_source=cv&utm_medium=document&utm_campaign=job_stripe_2026
+
+
+⸻
+
+Naming Rules
+	•	Lowercase only
+	•	Use underscores
+	•	No accents
+	•	No random campaign names
+	•	Keep naming consistent
+
+⸻
+
+This structure ensures consistent analytics data and supports long-term tracking clarity.
+
+
+
 
 # 16. When Generating Pages with AI
 

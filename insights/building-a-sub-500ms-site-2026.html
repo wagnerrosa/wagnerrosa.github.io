@@ -11,6 +11,9 @@
   <meta property="og:type" content="article">
   <link rel="canonical" href="https://wagnerrosa.com/insights/building-a-sub-500ms-site-2026.html">
   <link rel="icon" href="../assets/wagnerrosa.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
   <script>
     (function(){
       var d=document.documentElement;
@@ -18,7 +21,7 @@
       if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
     })();
   </script>
-  <link href="../output.css" rel="stylesheet">
+  <link href="../output.css?v=20260216-2" rel="stylesheet">
   <!-- Micro-interactions (animations only) -->
   <link href="../assets/micro-interactions.css" rel="stylesheet">
   <!-- Google tag (gtag.js) -->
@@ -115,7 +118,7 @@
   <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
     <header class="flex items-center mb-8">
       <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
-      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300"><a href="/">Wagner Rösa</a></h2>
+      <h2 class="text-base font-semibold text-neutral-600 dark:text-neutral-300"><a href="/">Wagner Rösa</a></h2>
       <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
     </header>
     <main class="space-y-8">
@@ -135,7 +138,7 @@
         This wasn't a technical challenge. It was a deliberate return to fundamentals and an admission that I missed something.
       </p>
 
-      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         The Nostalgia Problem
       </h2>
 
@@ -163,7 +166,7 @@
         So I didn't use a framework. And it turned out to be the right decision.
       </p>
 
-      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         Why Static HTML Still Wins in 2026
       </h2>
 
@@ -199,7 +202,7 @@
         The entire site is a handful of HTML files, one compiled CSS file (Tailwind), and a tiny amount of JavaScript for dark mode and micro-interactions. No build complexity beyond the Tailwind CLI.
       </p>
 
-      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         The Performance Result
       </h3>
 
@@ -226,7 +229,7 @@
         I'm not arguing that frameworks are bad. I'm arguing that they're often unnecessary. And unnecessary complexity is the enemy of maintainability.
       </p>
 
-      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         The Architecture: Constraint as Design
       </h2>
 
@@ -234,7 +237,7 @@
         The site follows a strict set of constraints:
       </p>
 
-      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         Layout
       </h3>
 
@@ -245,7 +248,7 @@
         <li>Mobile-first, scales naturally to desktop</li>
       </ul>
 
-      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         Typography
       </h3>
 
@@ -256,7 +259,7 @@
         <li>Hierarchy used sparingly</li>
       </ul>
 
-      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         Interactions
       </h3>
 
@@ -272,7 +275,7 @@
         Total CSS for interactions is tiny. No animation libraries. No heavy dependencies. Just CSS transitions and <span class="font-mono text-[0.95em]">requestAnimationFrame</span> for the scroll indicator.
       </p>
 
-      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         Dark Mode
       </h3>
 
@@ -292,7 +295,7 @@
         Minimal JavaScript. Works reliably. Respects system preferences. Persists across sessions.
       </p>
 
-      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         What You Lose (And Why It Doesn't Matter)
       </h2>
 
@@ -328,7 +331,7 @@
         The "conveniences" of modern frameworks come with hidden costs: build time, configuration complexity, dependency management, deployment pipelines. For a small site, those costs can exceed the benefits.
       </p>
 
-      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         The Human Element
       </h2>
 
@@ -345,7 +348,7 @@
          and I'm choosing to build simple ones.
       </p>
 
-      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         When You Should (and Shouldn't) Do This
       </h2>
 
@@ -375,7 +378,7 @@
         For <span class="font-mono text-[0.95em]">wagnerrosa.com</span>, it's perfect. For a SaaS product, it would be absurd.
       </p>
 
-      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         The Bigger Lesson
       </h2>
 
@@ -403,7 +406,7 @@
         That's enough.
       </p>
 
-      <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         Technical Specifications
       </h2>
 
@@ -441,7 +444,7 @@
           </p>
         </div>
 
-        <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mb-4">
+        <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mb-4">
           References
         </h2>
 
