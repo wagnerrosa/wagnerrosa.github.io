@@ -74,7 +74,6 @@ No runtime hydration.
 ├── package.json
 ├── package-lock.json
 ├── README.md
-├── PROJECT_ARCHITECTURE.md
 ├── assets/
 │   ├── wagnerrosa-picture.jpg
 │   ├── wagmoto.webp
