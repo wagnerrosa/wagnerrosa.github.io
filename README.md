@@ -172,7 +172,7 @@ Header markup should mirror index.html.
 <header class="flex items-center mb-8">
   <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
   <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300">
-    <a href="/">Wagner Rösa</a>
+    <a href="/">Wagner Rosa</a>
   </h2>
   <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
 </header>
