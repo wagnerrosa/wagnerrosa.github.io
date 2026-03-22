@@ -7,7 +7,8 @@
     "build": "tailwindcss -i ./input.css -o ./output.css --minify",
     "watch": "tailwindcss -i ./input.css -o ./output.css --watch",
     "dev": "tailwindcss -i ./input.css -o ./output.css --watch",
-    "serve": "live-server"
+    "serve": "live-server",
+    "all": "concurrently \"npm run dev\" \"npm run serve\""
   },
   "keywords": [
     "portfolio",
@@ -18,6 +19,7 @@
   "author": "Wagner Rosa",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "live-server": "^1.2.2",
     "tailwindcss": "^3.4.1"
   }
