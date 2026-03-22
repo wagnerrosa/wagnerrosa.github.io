@@ -182,22 +182,42 @@ Header markup should mirror index.html.
 
 # 6. Typography Rules
 
-Main content area:
+### Homepage main content area:
 
 ```html
 <main class="space-y-8 text-[22px] leading-8">
 ```
 
+### Article/About main content area:
+
+```html
+<main class="space-y-6">
+```
+
+### Heading Hierarchy (base layer in input.css):
+
+```css
+h1, h2 { font-family: Source Serif 4; font-weight: 600; }
+h3     { font-family: Source Serif 4; font-weight: 500; }
+```
+
+- **h1** (article title): `text-lg` (18px), serif, semibold — page landmark
+- **h2** (sections): `text-base` (16px), serif, semibold, `mt-12` — section breaks
+- **h3** (subsections): `text-base` (16px), serif, medium, `mt-8` — lighter tier
+- **Body**: `text-base` (16px), sans (Inter), regular
+
 ### Guidelines:
 
-- Body scale ≈ 22px (homepage and about)
-- Body scale = 16px (insights listing and articles)
-- Line height ≈ 32px (homepage/about), relaxed (insights)
+- Body scale ≈ 22px (homepage only)
+- Body scale = 16px (about, case studies listing, and articles)
+- Line height: 32px (homepage), 1.75 ratio / 28px (articles and about)
+- Paragraph spacing: `space-y-6` (24px) in articles and about
+- Section spacing: `mt-12` (48px) before h2, `mt-8` (32px) before h3
 - Neutral palette
 - No bold-heavy paragraphs
 - Headings restrained (no oversized hero typography)
 
-Use hierarchy sparingly.
+Hierarchy is structural, not decorative. Three tiers (h1 > h2 > h3) differentiated by size, weight, and spacing.
 
 ---
 
@@ -538,20 +558,28 @@ Example: `/insights/new-article.html`
 3. Follow this content pattern:
 
 ```html
-<main class="space-y-8">
-  <h1 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+<main class="space-y-6">
+  <h1 class="text-lg font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
     Article Title
   </h1>
 
-  <p class="text-base leading-relaxed">
+  <p class="text-base leading-[1.75]">
     Intro paragraph.
   </p>
 
-  <h2 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+  <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
     Section
   </h2>
 
-  <p class="text-base leading-relaxed">
+  <p class="text-base leading-[1.75]">
+    Content.
+  </p>
+
+  <h3 class="text-base font-medium leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+    Subsection
+  </h3>
+
+  <p class="text-base leading-[1.75]">
     Content.
   </p>
 </main>

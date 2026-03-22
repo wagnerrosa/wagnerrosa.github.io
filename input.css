@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 @layer base {
-  h1, h2, h3 {
+  h1, h2 {
     @apply font-serif font-semibold;
+  }
+  h3 {
+    @apply font-serif font-medium;
   }
 }

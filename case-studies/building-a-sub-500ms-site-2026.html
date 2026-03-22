@@ -121,8 +121,8 @@
       <h2 class="text-base font-semibold text-neutral-600 dark:text-neutral-300"><a href="/">Wagner Rosa</a></h2>
       <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
     </header>
-    <main class="space-y-8">
-      <h1 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+    <main class="space-y-6">
+      <h1 class="text-lg font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
         Building a Sub-500ms Personal Site in 2026: Why I Chose Static HTML Over Modern Frameworks
       </h1>
 
@@ -130,11 +130,11 @@
         2026
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         In 2026, when most portfolio sites ship with 3MB of JavaScript and take 4 seconds to load, I built mine with plain HTML, Tailwind CSS, and ~2KB of vanilla JavaScript. It loads in under 500 milliseconds and scores 100/100 on Lighthouse.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         This wasn't a technical challenge. It was a deliberate return to fundamentals and an admission that I missed something.
       </p>
 
@@ -142,27 +142,27 @@
         The Nostalgia Problem
       </h2>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         I learned to code in 2014, in an elective class at the Institute of Arts and Design in Lisbon. We wrote HTML by hand. We debugged CSS in Firefox's developer tools. We uploaded files via FTP and watched our sites go live, one <span class="font-mono text-[0.95em]">index.html</span> at a time.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         There was something immediate about it. You wrote <span class="font-mono text-[0.95em]">&lt;h1&gt;Hello&lt;/h1&gt;</span>, refreshed the browser, and it appeared. No build step. No bundler config. No <span class="font-mono text-[0.95em]">node_modules</span> folder consuming half your disk space.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Somewhere between 2014 and 2026, that disappeared.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         I spent years working with React, Next.js, design systems at scale. I built component libraries, implemented token architectures, and deployed sites with Vercel pipelines. The work was sophisticated. The products were powerful. But building my own site, something that should be simple, felt heavy.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         When I sat down to create <span class="font-mono text-[0.95em]">wagnerrosa.com</span>, I realized I wasn't excited about setting up another React project. I wanted to write HTML again. I wanted to feel the code, not configure the toolchain.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         So I didn't use a framework. And it turned out to be the right decision.
       </p>
 
@@ -170,11 +170,11 @@
         Why Static HTML Still Wins in 2026
       </h2>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         The case for frameworks is compelling: component reusability, state management, dynamic rendering. But personal sites don't need any of that.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Here's what I needed:
       </p>
 
@@ -186,7 +186,7 @@
         <li>Easy to maintain</li>
       </ul>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Here's what I didn't need:
       </p>
 
@@ -198,11 +198,11 @@
         <li>Virtual DOM</li>
       </ul>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         The entire site is a handful of HTML files, one compiled CSS file (Tailwind), and a tiny amount of JavaScript for dark mode and micro-interactions. No build complexity beyond the Tailwind CLI.
       </p>
 
-      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
         The Performance Result
       </h3>
 
@@ -214,7 +214,7 @@
         <li><strong class="font-medium text-neutral-900 dark:text-neutral-100">JavaScript:</strong> ~2KB</li>
       </ul>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Compare that to the average Next.js portfolio in 2026:
       </p>
 
@@ -225,7 +225,7 @@
         <li>JavaScript: 200–500KB (even after code splitting)</li>
       </ul>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         I'm not arguing that frameworks are bad. I'm arguing that they're often unnecessary. And unnecessary complexity is the enemy of maintainability.
       </p>
 
@@ -233,11 +233,11 @@
         The Architecture: Constraint as Design
       </h2>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         The site follows a strict set of constraints:
       </p>
 
-      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
         Layout
       </h3>
 
@@ -248,7 +248,7 @@
         <li>Mobile-first, scales naturally to desktop</li>
       </ul>
 
-      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
         Typography
       </h3>
 
@@ -259,7 +259,7 @@
         <li>Hierarchy used sparingly</li>
       </ul>
 
-      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
         Interactions
       </h3>
 
@@ -271,15 +271,15 @@
         <li>Back-to-top button (appears after 300px scroll)</li>
       </ul>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Total CSS for interactions is tiny. No animation libraries. No heavy dependencies. Just CSS transitions and <span class="font-mono text-[0.95em]">requestAnimationFrame</span> for the scroll indicator.
       </p>
 
-      <h3 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <h3 class="text-base font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
         Dark Mode
       </h3>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Dark mode is initialized before the CSS loads to prevent flash:
       </p>
 
@@ -291,7 +291,7 @@
   }
 })();</code></pre>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Minimal JavaScript. Works reliably. Respects system preferences. Persists across sessions.
       </p>
 
@@ -299,35 +299,35 @@
         What You Lose (And Why It Doesn't Matter)
       </h2>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Choosing static HTML means giving up some conveniences.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         <strong class="font-medium text-neutral-900 dark:text-neutral-100">No component reuse:</strong> If I update the header, I edit multiple files instead of one component.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Reality: the header is a small, readable block of HTML. Editing it is fast and predictable. Not worth a build system.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         <strong class="font-medium text-neutral-900 dark:text-neutral-100">No hot module replacement:</strong> I refresh the browser manually.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Reality: Tailwind watch mode rebuilds quickly. A refresh is not a bottleneck.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         <strong class="font-medium text-neutral-900 dark:text-neutral-100">No server-side rendering:</strong> Everything is pre-rendered as static HTML.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Reality: that's exactly the point. Static hosting serves it instantly. No server overhead.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         The "conveniences" of modern frameworks come with hidden costs: build time, configuration complexity, dependency management, deployment pipelines. For a small site, those costs can exceed the benefits.
       </p>
 
@@ -335,15 +335,15 @@
         The Human Element
       </h2>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         There's something satisfying about opening <span class="font-mono text-[0.95em]">index.html</span> and seeing the entire page structure. No imports. No components. Just HTML.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         When I look at the file tree, I see a small set of files I can explain completely. There are no abstractions I don't understand. No magic.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         This is the site I wanted to build in 2014 but didn't have the skills for. Now, in 2026, I have the skills to build complex systems
          and I'm choosing to build simple ones.
       </p>
@@ -352,7 +352,7 @@
         When You Should (and Shouldn't) Do This
       </h2>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Static HTML is the right choice when:
       </p>
 
@@ -363,7 +363,7 @@
         <li>You enjoy writing HTML</li>
       </ul>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         Static HTML is the wrong choice when:
       </p>
 
@@ -374,7 +374,7 @@
         <li>You need real-time features</li>
       </ul>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         For <span class="font-mono text-[0.95em]">wagnerrosa.com</span>, it's perfect. For a SaaS product, it would be absurd.
       </p>
 
@@ -382,27 +382,27 @@
         The Bigger Lesson
       </h2>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         The web industry spent a decade optimizing for developer experience. We built tools that make complex applications manageable. That's valuable.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         But we also normalized complexity where it isn't needed. We reach for frameworks by default, not by necessity.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         In 2026, choosing simplicity is a deliberate act. It requires confidence-confidence that you don't need the safety net of a framework, confidence that plain HTML is good enough, confidence that fast is better than fancy.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         I built this site because I wanted something fast, maintainable, and mine. No starter template. No "powered by" footer. Just HTML, CSS, and a little JavaScript.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         It loads in half a second. It will work exactly the same in 10 years. And I enjoyed building it.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         That's enough.
       </p>
 
@@ -410,19 +410,19 @@
         Technical Specifications
       </h2>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         For those curious about implementation details:
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         <strong class="font-medium text-neutral-900 dark:text-neutral-100">Stack:</strong> HTML5, Tailwind CSS (CLI build), vanilla JavaScript, GitHub Pages.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         <strong class="font-medium text-neutral-900 dark:text-neutral-100">Performance:</strong> Lighthouse 100/100 targets, fast paint times, and stable layout.
       </p>
 
-      <p class="text-base leading-relaxed">
+      <p class="text-base leading-[1.75]">
         <strong class="font-medium text-neutral-900 dark:text-neutral-100">Source:</strong> Available on <a href="https://github.com/wagnerrosa/wagnerrosa.github.io" class="text-blue-600 dark:text-blue-400">GitHub</a>.
       </p>
 
