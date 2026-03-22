@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planton Website: From Vision to Production | Wagner Rosa</title>
+  <meta name="description" content="Designing and implementing a multilingual B2B climate tech website in 18 days. From AI-first exploration to Figma prototyping to production with Next.js 16.">
+  <meta property="og:title" content="Planton Website: From Vision to Production | Wagner Rosa">
+  <meta property="og:description" content="Case study on designing and building the Planton website: visual system, section architecture, and AI-assisted development across 221 commits.">
+  <meta property="og:image" content="https://wagnerrosa.com/assets/wagnerrosa-picture.jpg">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://wagnerrosa.com/case-studies/planton-website-vision-to-production.html">
+  <link rel="icon" href="../assets/wagnerrosa.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <script>
+    (function(){
+      var d=document.documentElement;
+      var t=localStorage.getItem('theme');
+      if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
+    })();
+  </script>
+  <link href="../output.css?v=20260216-2" rel="stylesheet">
+  <!-- Micro-interactions (animations only) -->
+  <link href="../assets/micro-interactions.css" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script>
+    (function(){
+      var isLocal =
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var urlParams = new URLSearchParams(window.location.search);
+      var hasPreviewParam = urlParams.get('preview') === 'dev';
+
+      if (hasPreviewParam && !sessionStorage.getItem('dev_preview')) {
+        sessionStorage.setItem('dev_preview', 'true');
+      }
+
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+
+      if (isLocal || isDevMode || hasPreviewParam || hasDevSession) {
+        window['ga-disable-G-VTCEP9QKNC'] = true;
+        console.log('🚫 Analytics disabled (dev mode active)');
+      }
+    })();
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VTCEP9QKNC');
+  </script>
+  <!-- Clarity -->
+  <script>
+    (function(){
+      var isLocal =
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+
+      if (isLocal || isDevMode || hasDevSession) {
+        console.log('🚫 Clarity disabled (dev mode active)');
+        return;
+      }
+
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "vhbu1gthme");
+    })();
+  </script>
+</head>
+<body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
+  <!-- Scroll progress indicator -->
+  <div
+    class="scroll-progress fixed top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-400 dark:to-blue-300 z-[9999]"
+    role="progressbar"
+    aria-label="Reading progress">
+  </div>
+
+  <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+    <header class="flex items-center mb-8">
+      <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
+      <h2 class="text-base font-semibold text-neutral-600 dark:text-neutral-300">
+        <a href="/">Wagner Rosa</a>
+      </h2>
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+    </header>
+
+    <main class="space-y-8">
+      <h1 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+        Planton Website: From Vision to Production
+      </h1>
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+        February 2026 · Case Study
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Redesigning the Planton website meant designing and implementing a multilingual product site while defining the visual system, component architecture, and interactive storytelling that would carry the brand. On top of that, I could not treat implementation as isolated experimentation. The visual direction needed stakeholder approval before I committed to full production buildout. That constraint shaped everything.
+      </p>
+
+      <blockquote class="border-l-2 border-neutral-300 dark:border-neutral-700 pl-4 text-sm text-neutral-600 dark:text-neutral-400 italic">
+        Next.js 16 · React 19 · TypeScript · next-intl · Tailwind CSS v4 · GSAP · motion/react<br>
+        18 days · 221 commits · 9 fully localized pages
+      </blockquote>
+
+      <div class="flex flex-col gap-2 text-sm">
+        <a href="https://site.planton.eco.br/en" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400">Live website ↗</a>
+        <a href="https://github.com/wagnerrosa/planton-website" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400">Source code on GitHub ↗</a>
+      </div>
+
+      <!-- My Role -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        My Role
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        I led this project end to end as a Senior UX Designer working directly in the implementation layer, responsible for the visual system, interaction design, and front-end architecture of the site. There was no separate design-to-development handoff. I defined the visual direction, prototyped the interaction patterns in Figma, got stakeholder approval on those prototypes, and then translated that direction into production code using AI-assisted development tools without giving up authorship of the system.
+      </p>
+
+      <!-- The Challenge -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        The Challenge
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        What made this project difficult was not the number of pages. It was the number of systems that had to agree with each other. The site needed multilingual routing in Portuguese and English, several product narratives that were related but not interchangeable, a visual tone that felt premium enough for a B2B climate tech company, and one unusually complex interactive module for Planton Genius that behaved more like a product demonstration than a marketing section. On top of that, I could not treat implementation as isolated experimentation. The visual direction needed stakeholder approval before I committed to full production buildout, which meant I had to separate exploration from execution in a more disciplined way than I usually would.
+      </p>
+
+      <!-- Phase 1 -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        Phase 1: AI-First Exploration
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        My first instinct was to lean hard into direct generation. I already had enough strategic context to describe the brand, the audience, and the tone I wanted, so I let the AI generate visual output directly and used that as the starting point. It was fast, and at first it felt productive in the way these tools often do. There was volume. There were options. There were plausible screens. But the more I looked at the results, the more obvious the problem became: plausibility is not the same thing as direction.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        What I got back was competent in the broadest sense and wrong in the way that matters most for a portfolio-level B2B product site. It did not feel premium. It did not feel editorial. It did not feel like a climate tech company speaking to serious business stakeholders. The hierarchy was too generic, the layouts felt interchangeable with other AI-generated SaaS sites, and the visual tone was solving for "modern website" rather than Planton's actual market position. The issue was not that the AI failed. The issue was that I had asked it to generate before I had imposed enough authorship on the problem.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        That first phase was useful precisely because it was unsatisfying. It showed me where generation breaks down when the design intent is still too implicit. I could get speed, but not conviction. I could get output, but not a visual argument. That was the point where I stopped treating AI generation as a substitute for design development and moved the project into Figma.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The output had what I can only describe as an AI signature: a visual language that is becoming increasingly recognizable as more sites are generated rather than designed. Technically coherent, broadly modern, and somehow interchangeable with everything else. The issue was not quality in the conventional sense. It was the absence of authorship. I decided to treat what the AI had produced as reference material rather than direction, take the project into Figma, and design the visual system from scratch. The logic was simple: let the AI do what it does well (speed, variation, pattern completion) and let the designer do what only a designer can do, which is impose a point of view.
+      </p>
+
+      <!-- Phase 2 -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        Phase 2: Figma First, Then Code
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Moving into Figma was not a retreat from implementation. It was how I restored control over the project. Once I stopped asking the AI to invent the visual system for me and started using Figma to define it directly, the work became specific. I could decide how much editorial density the pages should carry, where contrast should appear, how the typography should pace the page, and how the site should feel in motion before any production code locked those decisions in.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        That change also transformed the stakeholder conversation. Presenting a visual direction that had already been shaped, edited, and deliberately constrained is a different kind of meeting than presenting generated possibilities that still feel unstable. Stakeholders could evaluate a position rather than choose between options that all felt equally provisional.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        There was a practical advantage to this sequence that I had not fully anticipated. When stakeholders requested changes during the approval process (and they always do) I was working in Figma, not in the codebase. Adjusting a typeface, shifting a layout, or reworking a hierarchy took minutes instead of the kind of careful Tailwind edits that ripple through a production build. The Figma prototype absorbed all the inevitable iteration before it could cost anything in implementation. By the time the code phase began, the decisions were stable.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The approved Figma files became more than design artifacts. They became a contract. Once the visual direction was accepted, implementation stopped being a debate about aesthetics and became a problem of translation, architecture, and fidelity. In an AI-assisted workflow, it is easy to collapse ideation and production into the same motion. For this project, separating them was what preserved quality. Figma gave me a place to make design decisions before the codebase started inheriting them, and a standard against which AI-generated code could be judged.
+      </p>
+
+      <!-- Phase 3 -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        Phase 3: From Design to Production
+      </h2>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        The Section Architecture
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        Once implementation began, the codebase had to reflect the way the design was actually structured. I did not want a system where each page became its own isolated build, and I also did not want a rigid page template that flattened every product narrative into the same shape. The solution was to organize the site around reusable sections rather than page templates: thin route files and a growing set of section components that owned their own layout, translation namespace, and variation logic.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        This became one of the most important structural decisions in the project. Planton has multiple product pages, and they needed to feel like part of the same company without feeling copy-pasted. Shared components such as the hero, journey, applications, testimonial, and CTA sections could evolve through props, namespace overrides, and slot-based variations instead of duplication. Each page could have its own argument without forcing the design system to start over every time.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        That architecture was not present in its final form at the start. It emerged because earlier, broader structures were too generic. As the site became more specific, I rebuilt it around sections because that was the level at which the design actually wanted to operate.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        The Genius Module
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The Planton Genius interactive section was the project inside the project. Its purpose was not just to describe the product, but to make a complex system understandable through interaction. Instead of reading about the product, users experience the logic of the system as they scroll: documents enter, data is processed, and structured insight emerges. In a few seconds, the module communicates what would otherwise require several paragraphs of explanation.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The module was built with GSAP and ScrollTrigger as a multi-scene, scroll-driven experience. It absorbed a disproportionate amount of iteration because it sat at the point where visual storytelling and technical fragility meet. Small changes had larger consequences there than anywhere else in the site. One adjustment to pacing or transition logic could affect the whole sequence.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        This was one of the clearest moments in the project where maturity meant imposing limits. After enough iteration, the right decision was not to keep it endlessly flexible. The right decision was to freeze it. In the current architecture, the Genius module is explicitly treated as a protected feature module whose internals should not be casually modified. I do not see that as a limitation. I see it as the point where the team acknowledged that some parts of a system become stable by design. If everything stays open to casual regeneration, nothing becomes trustworthy.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        AI-Assisted Development in Practice
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The implementation phase was AI-assisted from start to finish, but it was not smooth, automatic, or especially glamorous. Over 221 commits, the tools were most useful when they accelerated translation work, helped me scaffold sections, generated first passes on repetitive structural tasks, or let me test implementation approaches quickly against the approved design. Claude Code, GPT, and Antigravity all played roles in that process, but none of them replaced the need to decide what belonged in the system.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Two moments capture the reality of that better than any abstract claim. The first was the homepage transition around the AI section. I wanted a cinematic shift in tone as the user moved from the product grid into the darker, more technical storytelling below. The first implementation reached too far across component boundaries and created an architectural problem. The correction required a structural redesign so the effect could exist without sections breaking their isolation rules. That is the kind of issue AI can surface quickly and also the kind of issue it will not resolve correctly unless someone is protecting the architecture.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The second was the removal of dark mode. Early in the build, it existed because it was technically easy and culturally expected. But once the visual system matured, it became clear that the site did not want global theming. It wanted a light-first editorial surface with deliberate dark sections used as emphasis. That was a technically valid feature being removed in service of a stronger design direction, and it is the kind of change that only happens when the same person is accountable for both the experience and the implementation consequences.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The prompt archive from this phase is one of its most useful artifacts. Not as a command history, but as a decision log. It records where the initial approach was too generic, where sections had to be rebuilt, where interaction logic had to be protected, and where implementation reality forced a different choice than the original plan.
+      </p>
+
+      <blockquote class="border-l-2 border-neutral-300 dark:border-neutral-700 pl-4 text-sm text-neutral-600 dark:text-neutral-400 italic">
+        AI-assisted development is not a cleaner version of normal work. It is normal work with the iteration speed turned up, which means judgment has to become more visible, not less.
+      </blockquote>
+
+      <!-- Results -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        Results
+      </h2>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        The Impact in Numbers
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        <strong>Timeline:</strong> 18 days from concept to production deployment.<br>
+        <strong>Scope:</strong> 9 fully localized pages (Portuguese and English).<br>
+        <strong>Architecture:</strong> 30+ reusable components built on a section-based system.<br>
+        <strong>Stack:</strong> Production implementation with Next.js 16, React 19, and TypeScript.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The site is in production as a fully multilingual Portuguese and English experience across 9 pages, with localized routing and localized pathnames for every route. The section architecture covers more than 30 reusable components. The Planton Genius interactive module is live with its full scroll-driven, multi-scene experience. Integrations include HubSpot Forms for lead capture, Google Analytics, and Microsoft Clarity for behavioral tracking. The entire project (design, implementation, and production deployment) was completed across 221 commits in 18 days.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The site launched with a home page, five product pages, and an about page: seven routes in total, fully localized in Portuguese and English. Sections were deliberately reused across pages rather than rebuilt. The same structural components appear throughout the site, but with content, copy, and calls to action adapted to the context of each product. The CTA section is a clear example of this. Rather than a generic contact invitation, it responds to where the user is in the site: inviting someone reading about emissions inventory to start their inventory, and someone on the carbon footprint page to begin their footprint assessment. The same component, different conversations.
+      </p>
+
+      <!-- What I Learned -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        What I Learned
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        What this project reinforced for me is that design judgment becomes sharper, not softer, when you work directly in the implementation layer. AI can shorten the distance between idea and code, but that only increases the need for explicit authorship. The most valuable decisions in this project were not the ones that produced more output, but the ones that imposed better constraints: moving from AI-generated visuals into Figma, removing a technically valid feature that weakened the tone, rebuilding the system around reusable sections, and freezing the one module that had become too important to keep casually mutable.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        When design and implementation belong to the same person, weak decisions become visible very quickly. That pressure is not a disadvantage. It is what makes the work honest.
+      </p>
+    </main>
+
+    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <!-- Case Study Disclosure -->
+      <div class="mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+        <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">Note:</span>
+          This case study documents the end-to-end design and implementation of the Planton institutional website, completed in February/March 2026. The project was delivered as a Senior UX Designer working directly in the implementation layer with AI-assisted development tools.
+        </p>
+      </div>
+
+      <!-- Back to top button -->
+      <button
+        id="back-to-top"
+        aria-label="Back to top"
+        class="fixed bottom-8 right-8 w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-xl font-medium rounded-full shadow-lg z-[9998]">
+        ↑
+      </button>
+
+      <!-- Navigation -->
+      <div class="flex justify-between pt-8">
+        <a href="/case-studies/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_case_studies_from_article" data-category="navigation" data-location="article">
+          ← Back to case studies
+        </a>
+        <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_article" data-category="navigation" data-location="article">
+          Go to homepage →
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var r=document.documentElement;
+      var b=document.getElementById('theme-toggle');
+      if(b){b.addEventListener('click',function(){
+        var d=r.classList.toggle('dark');
+        localStorage.setItem('theme', d?'dark':'light');
+      });}
+    })();
+  </script>
+
+  <script>
+    document.querySelectorAll('[data-track]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (typeof gtag === 'function') {
+          gtag('event', 'site_interaction', {
+            event_category: el.dataset.category,
+            event_label: el.dataset.track,
+            event_location: el.dataset.location
+          });
+        }
+      });
+    });
+  </script>
+
+  <!-- Micro-interactions scripts -->
+  <script>
+    // Scroll progress bar
+    (function(){
+      const progress = document.querySelector('.scroll-progress');
+      if (!progress) return;
+
+      function update() {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = winScroll / height;
+        progress.style.transform = 'scaleX(' + scrolled + ')';
+      }
+
+      let ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            update();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+
+      update();
+    })();
+  </script>
+
+  <script>
+    // Back to top button
+    (function(){
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+
+      function checkScroll() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      }
+
+      window.addEventListener('scroll', checkScroll);
+      checkScroll();
+
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+</body>
+</html>

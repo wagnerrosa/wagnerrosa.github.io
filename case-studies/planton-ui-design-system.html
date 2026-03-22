@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From Editorial Brand to Product System: Building Planton UI | Wagner Rosa</title>
+  <meta name="description" content="How I extracted an implicit brand language into a structured design system: tokens, primitives, and product screens for a B2B sustainability learning platform.">
+  <meta property="og:title" content="From Editorial Brand to Product System: Building Planton UI | Wagner Rosa">
+  <meta property="og:description" content="Case study on building a design system that preserves editorial restraint while enabling a product team to ship real features.">
+  <meta property="og:image" content="https://wagnerrosa.com/assets/wagnerrosa-picture.jpg">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://wagnerrosa.com/case-studies/planton-ui-design-system.html">
+  <link rel="icon" href="../assets/wagnerrosa.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <script>
+    (function(){
+      var d=document.documentElement;
+      var t=localStorage.getItem('theme');
+      if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
+    })();
+  </script>
+  <link href="../output.css?v=20260216-2" rel="stylesheet">
+  <!-- Micro-interactions (animations only) -->
+  <link href="../assets/micro-interactions.css" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script>
+    (function(){
+      var isLocal =
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var urlParams = new URLSearchParams(window.location.search);
+      var hasPreviewParam = urlParams.get('preview') === 'dev';
+
+      if (hasPreviewParam && !sessionStorage.getItem('dev_preview')) {
+        sessionStorage.setItem('dev_preview', 'true');
+      }
+
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+
+      if (isLocal || isDevMode || hasPreviewParam || hasDevSession) {
+        window['ga-disable-G-VTCEP9QKNC'] = true;
+        console.log('🚫 Analytics disabled (dev mode active)');
+      }
+    })();
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VTCEP9QKNC');
+  </script>
+  <!-- Clarity -->
+  <script>
+    (function(){
+      var isLocal =
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+
+      if (isLocal || isDevMode || hasDevSession) {
+        console.log('🚫 Clarity disabled (dev mode active)');
+        return;
+      }
+
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "vhbu1gthme");
+    })();
+  </script>
+</head>
+<body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
+  <!-- Scroll progress indicator -->
+  <div
+    class="scroll-progress fixed top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-400 dark:to-blue-300 z-[9999]"
+    role="progressbar"
+    aria-label="Reading progress">
+  </div>
+
+  <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+    <header class="flex items-center mb-8">
+      <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
+      <h2 class="text-base font-semibold text-neutral-600 dark:text-neutral-300">
+        <a href="/">Wagner Rosa</a>
+      </h2>
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+    </header>
+
+    <main class="space-y-8">
+      <h1 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+        From Editorial Brand to Product System: Building Planton UI
+      </h1>
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+        2026 · Case Study
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Planton's visual language is built on restraint: 1px borders instead of shadows, accent green reserved strictly for action signals, and a serif typeface that only appears in the brand's emotional register (testimonials and taglines). The interface reads like a financial newspaper redesigned by someone who grew up in a rainforest. Three colors. No shadows. Sharp corners everywhere.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        None of this was encoded anywhere. The brand existed as one designer's implicit decisions: fragile, undocumented, and impossible to hand off.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        When the product needed to expand into Planton Academy, a B2B learning platform for ESG and sustainability, the risk became concrete: every new feature would either dilute these constraints into generic SaaS patterns, or require the original designer to manually enforce them. Neither scales.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        I extracted the logic behind these choices and encoded them as system primitives: tokens, components, rules, and documentation that enforce the brand's editorial identity at the component level.
+      </p>
+
+      <blockquote class="border-l-2 border-neutral-300 dark:border-neutral-700 pl-4 text-sm text-neutral-600 dark:text-neutral-400 italic">
+        5 custom primitives · 38 adapted components · 12-step auth flow · 4 content types · full dark mode in oklch · in-app documentation with component registry
+      </blockquote>
+
+      <div class="flex flex-col gap-2 text-sm">
+        <a href="https://design.planton.eco.br/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400">Live design system ↗</a>
+        <a href="https://github.com/wagnerrosa/planton-ui" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400">Source code on GitHub ↗</a>
+      </div>
+
+      <!-- 1. The Problem -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        1. The Problem
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        The challenge was not creating more components. It was defining which parts of the brand were structural enough to become enforceable system rules, and which were surface-level preferences that could flex.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Planton's visual identity relied on specific constraints:
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Borders over shadows.</strong> No box-shadow vocabulary. Depth is communicated through 1px lines at low opacity, visible but never heavy. Structure is explicit, not simulated.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Color restraint as institutional signal.</strong> Three meaningful colors: forest teal (#145559), accent lime (#ADCF78), and cream (#F7F3DB). The accent never fills large surfaces. It only appears at the edge of interaction: hover bars, button outlines, labels.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Typography carries identity, not color.</strong> Four typefaces with strict separation: Space Grotesk for headlines with tight negative tracking, Instrument Sans for body, Geist Mono for utility labels and eyebrows, and Roca (serif) reserved exclusively for the emotional register. Testimonial quotes and brand taglines only.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Sharp geometry.</strong> Zero border-radius on content surfaces. Cards, grids, and panels are rectangles. The only softness appears on small utility elements.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Without clear systemization, these principles would fragment the moment a second designer or developer touched the product. Every new screen would become a negotiation between brand intent and implementation speed. Speed would always win.
+      </p>
+
+      <!-- 2. The Audit -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        2. The Audit: Extracting the Design Language
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        Before building anything, I reverse-engineered the live brand into a structured framework. The result was a document called DESIGN_LANGUAGE.md, a 350-line source of truth organized in three layers:
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        Layer 1: Surface UI (what you see)
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        Direct observations from the existing product: the minimal palette, the border-based separation, the three-step responsive padding scale (24px → 48px → 96px), the absence of radius. Raw facts, no interpretation.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        Layer 2: Design Patterns (recurring structures)
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The patterns that repeat across pages: the Grid Frame (a max-w-[1400px] container with border-l and border-r creating an editorial column structure), the Eyebrow + Headline + Body three-tier text stack, the Sweep CTA (accent-bordered button that fills left-to-right on hover), and the Hover Indicator Bar (a 3px vertical accent strip that reveals on card hover).
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        Layer 3: Design Principles (why it works)
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The philosophy behind the choices: "Editorial layout, not app layout." "Color restraint as institutional signal." "Typography is the personality layer." These principles became the decision framework for every component built afterward. When in doubt, refer to Layer 3.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The target tone, captured in one line from the document:
+      </p>
+
+      <blockquote class="border-l-2 border-neutral-300 dark:border-neutral-700 pl-4 text-sm text-neutral-600 dark:text-neutral-400 italic">
+        "The product should feel like a Goldman Sachs report redesigned by someone who grew up in a rainforest."
+      </blockquote>
+
+      <p class="text-base leading-relaxed">
+        This audit was the most important step of the project. It made every subsequent decision traceable to a documented principle, not to personal preference.
+      </p>
+
+      <!-- 3. The System -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        3. The System: Tokens and Primitives
+      </h2>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        Token architecture
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The token layer operates at four levels:
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>1. Brand tokens.</strong> Raw palette values, motion easings (custom curves for directional sweep and lift), and duration values for consistent timing across the system.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>2. Surface tokens.</strong> Semantic mappings for backgrounds that automatically invert in dark mode. A component built on --surface-default works correctly in both themes without any overrides.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>3. Semantic system tokens.</strong> Success, warning, error, and info states with foreground, surface, and border variants each.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>4. Dark mode overrides.</strong> All semantic colors use the oklch() color space for perceptual uniformity, ensuring colors feel equally balanced regardless of hue.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        This layered approach means a new feature inherits brand-correct colors, spacing, and motion by default, reducing visual drift without requiring manual review.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <a href="https://www.figma.com/design/79v9qJ0fdOW2RuqxiofkGL/Planton-UI---Academy?node-id=0-1&t=kw28gGcZGaxa8Vvc-1" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400">See the full token and variable structure in Figma ↗</a>
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        The primitive/commodity split
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        Not all components carry brand identity equally. The system separates them explicitly:
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Primitives</strong> (custom-built, brand-carrying):
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Button</strong> is the system's most visible interaction. Accent border, zero radius, directional sweep animation on hover. 6 variants: primary, primary-dark, secondary, outline, ghost, icon.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Heading</strong> uses Space Grotesk with fluid responsive sizing, tight negative tracking, surface-aware color. Every heading in the system passes through this component.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Body</strong> uses Instrument Sans with relaxed line-height and surface-aware text color.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Eyebrow</strong> is Geist Mono, small uppercase with wide tracking. Functions as a category signal, not a label.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Label</strong> is Geist Mono, small uppercase. Used for utility text and metadata.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        These five components encode the typographic hierarchy and interaction language that make Planton recognizable. Brand rules are enforced by default. Not by documentation, but by the component contract itself.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Commodity</strong> (shadcn/Radix, adapted via tokens): Input, Textarea, Select, Checkbox, Radio Group, Dialog, Calendar, Tabs, Accordion. 38 components total. These use the token layer for theming but preserve their standard behavior. They don't need to carry brand identity; they need to work.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        This split was a deliberate trade-off: invest design effort only where it creates differentiation. Let infrastructure handle the rest. The result is a system where brand identity is concentrated in 5 components, and the other 38 just work: accessible, tested, and visually consistent through the token layer.
+      </p>
+
+      <!-- 4. Architecture and Governance -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        4. Architecture and Governance
+      </h2>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        Layer structure
+      </h3>
+
+      <p class="text-base leading-relaxed text-sm font-mono text-neutral-600 dark:text-neutral-400">
+        src/<br>
+        ├── components/<br>
+        │&nbsp;&nbsp;&nbsp;├── primitives/ → Brand-carrying (Button, Heading, Body, Eyebrow, Label)<br>
+        │&nbsp;&nbsp;&nbsp;├── ui/ → Composed (Card, Surface, TopNotificationBar, CourseGrid)<br>
+        │&nbsp;&nbsp;&nbsp;├── shadcn/ → Commodity (38 components via shadcn/Radix)<br>
+        │&nbsp;&nbsp;&nbsp;└── navigation/ → Navigation shell (Navbar, Sidebar, Footer)<br>
+        ├── screens/ → Real product screens (Academy auth, home, trail, content)<br>
+        ├── styles/theme.css → All tokens (brand, surface, semantic, dark mode)<br>
+        └── lib/components-registry.ts → Typed component index
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        The component registry
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The system documents itself. components-registry.ts is a typed index that maps every component to its category, description, and source file path. This registry drives the design system's navigation UI. Components are browsable as a structured catalog, not a flat list.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Each component page displays live interactive examples, the source file path for developer handoff, and variant and prop documentation. A new developer joining the project can find, understand, and use any component without leaving the browser.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        Adoption tools
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        A system that isn't used is documentation, not infrastructure. These features were designed to reduce friction between knowing the system exists and actually using it:
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Logo downloads</strong> in multiple formats (square, vertical, horizontal, with/without tagline), so marketing and product teams stop asking "where's the logo?"
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Color tokens with copy-to-clipboard.</strong> Click a swatch, get the CSS variable or hex value. Eliminates the gap between design spec and implementation.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Brazilian biome imagery.</strong> 5 curated photos (Mata Atlantica, Pantanal, Caatinga, Pampa, Serra do Sul) available as brand-approved assets, reducing the need for external stock searches.
+      </p>
+
+      <!-- 5. Application -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        5. Application: Academy Product Screens
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        The system was not designed in abstraction. I applied it to real Academy product flows (authentication, content discovery, learning progression) to test whether the tokens, primitives, and patterns could survive the pressure of real product requirements, edge cases, and business logic.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        5.1 Authentication Flow: 12 states, 3 business scenarios
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The auth flow is a B2B onboarding system that handles domain validation, voucher-based access, and progressive profile completion across 12 states.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Each branch maps to a distinct business scenario: company has an active subscription (user is onboarded directly), company subscription is inactive (user enters a voucher code to reactivate), or domain is unknown (access denied with support redirect).
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The background cycles through Brazilian biome photography with crossfade transitions, connecting the auth experience to the brand's environmental identity.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        5.2 Home Screen: streaming-style content discovery
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The Academy home uses a content model with 4 types: video, podcast, article, and guide. Each type renders through the same ContentCard component (4:5 aspect ratio) but with distinct visual treatments. Different image filters, overlays, and hover behaviors per type. Videos show a GIF preview on hover; non-video types receive a brand-tinted overlay to maintain visual cohesion across mixed content rows.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The hero section uses HLS video streaming with native Safari fallback, automatic carousel rotation, and Apple TV+ style progress pills. The transition between items coordinates a fade from static thumbnail to live video.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        On desktop, the home layout splits into a 2/3 + 1/3 grid: "Continue watching" carousel on the left, in-progress learning trails with progress bars on the right, separated by a vertical border (not a shadow), consistent with the editorial grid language.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        5.3 Trail Screen: learning progression with quiz and certification
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The trail screen implements a complete learning management flow: sequential content consumption with status tracking, a quiz system with 3 attempts and 80% minimum score, and a certificate that unlocks after quiz completion.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The quiz has 4 distinct states: in progress (question-by-question with radio group selection), passed (success view with score and "Generate certificate" CTA), failed (warning with attempt counter and "Review content" CTA), and failed final (destructive alert after 3rd failed attempt).
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The sidebar lists all trail contents with numbered items, status icons (not started / viewed / completed), and content type indicators. On mobile, the sidebar collapses and the content list appears below the player.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        5.4 Content type adaptation
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        Each content type gets a dedicated player view: video (HLS embed), podcast (audio player), article (centered prose), and guide (PDF metadata with download). The system resolves content type at the component level. The consuming screen selects the right view component, and the layout adapts automatically. Adding a fifth content type would require one new view component, not changes across multiple screens.
+      </p>
+
+      <!-- 6. Responsive Strategy -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        6. Responsive Strategy
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        The system uses a mobile-first approach with one key architectural decision: the sidebar transforms from a persistent push layout (desktop) to an overlay panel (mobile), keeping navigation accessible without sacrificing content area.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        Key responsive patterns: all heading sizes use fluid scaling with no fixed breakpoints for text. Content cards use responsive widths within horizontal carousels. Navigation shifts from hamburger trigger on mobile to breadcrumb trail on desktop. The trail screen sidebar becomes an inline content list below the player on mobile.
+      </p>
+
+      <!-- 7. Trade-offs -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        7. Trade-offs and Tensions
+      </h2>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        Editorial purity vs. streaming conventions
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The design language specifies: no shadows, no scale transforms, no rounded corners on content surfaces. The ContentCard in Academy Home uses scale, shadow, and rounded corners on hover.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        This was a deliberate exception. Content discovery in a streaming context relies on hover affordances that signal "this is selectable." The editorial grid approach (indicator bar, border darkening) didn't translate to thumbnail-based browsing. The trade-off: streaming sections follow platform conventions; editorial sections follow brand rules. The system accommodates both through different component contracts rather than forcing one philosophy everywhere.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        Roca as voice layer, and its absence in the product
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        The design language defines Roca (serif) as the brand's emotional register. It only appears in testimonials and the footer tagline. The decision to keep Roca out of the Academy product was intentional: the learning platform needs to read as functional and credible, not editorial. But this means the Academy lacks the emotional warmth that Roca provides on the institutional site. The cost is real, and it's a design debt I'd revisit as the product matures.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        shadcn as accelerator vs. differentiation risk
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        38 of the system's components are shadcn/Radix with token-level theming. They work. They're accessible, well-tested, and consistent. But they also look like shadcn. The primitive layer (Button, Heading, typography) creates enough differentiation at the surface, but deeper components (Dialog, Sheet, Select) are functionally identical to any shadcn project. If differentiation at the overlay level becomes important, these would need custom treatment. For now, the pragmatic choice is to invest design effort only where it creates visible brand value.
+      </p>
+
+      <h3 class="text-base font-semibold leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+        Specification vs. implementation gap
+      </h3>
+
+      <p class="text-base leading-relaxed">
+        DESIGN_LANGUAGE.md defines behaviors that the current implementation doesn't fully enforce. Some visual consistency still depends on page-level className overrides rather than component contracts. For example, surfaces sometimes rely on the consuming page to set text color correctly, rather than the Surface component enforcing it. My next step would be to harden these rules into the component API, making it impossible to use a component incorrectly rather than relying on documentation to prevent misuse.
+      </p>
+
+      <!-- 8. What the System Produces -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        8. What the System Produces
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        In practice, this system enables a product team to build and scale a complex learning platform without losing visual coherence or brand integrity. A developer can ship a new feature using only the token layer and existing primitives, and the result will look like Planton, not like generic shadcn.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Tokens:</strong> 7 brand colors, 4 surfaces, 2 border modes, 4 semantic states (success/warning/error/info), motion easings and durations. Full dark mode in oklch().
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Primitives:</strong> 5 custom components encoding typography and interaction identity.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Commodity UI:</strong> 38 shadcn/Radix components themed via token layer.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Navigation:</strong> Navbar with breadcrumbs + user menu, collapsible sidebar (push/overlay), footer.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Screens:</strong> Auth flow (12 states), Home (hero + content rows), Trail (sidebar + player + quiz + certificate), Content player (4 types).
+      </p>
+
+      <p class="text-base leading-relaxed">
+        <strong>Documentation:</strong> 54 pages, component registry with file paths, logo downloads, color copy-to-clipboard, biome image assets.
+      </p>
+
+      <!-- Positioning Summary -->
+      <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+        Positioning Summary
+      </h2>
+
+      <p class="text-base leading-relaxed">
+        This is not "another design system." This is a system built to preserve a specific brand logic (editorial restraint, typographic hierarchy, color discipline) while enabling a product team to ship real features without diluting that logic.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The differentiator is the audit-first approach: extract principles before building components, then encode those principles as enforceable contracts. The screens are proof, not decoration. They exposed where the system held, where it needed exceptions, and where product reality demanded pragmatism over purity.
+      </p>
+
+      <p class="text-base leading-relaxed">
+        The strongest design systems are opinionated. This one is opinionated about restraint. And that restraint is what makes it scale.
+      </p>
+
+      <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-8 italic">
+        Built with Next.js 16, React 19, Tailwind CSS 4, shadcn/ui, TypeScript 5. Deployed on Vercel.
+      </p>
+    </main>
+
+    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <!-- Case Study Disclosure -->
+      <div class="mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+        <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">Note:</span>
+          This case study documents the design system and product screens built for Planton Academy. The system was developed as a portfolio project demonstrating end-to-end design system architecture, from brand audit to token implementation, component primitives, and production-ready product screens.
+        </p>
+      </div>
+
+      <!-- Back to top button -->
+      <button
+        id="back-to-top"
+        aria-label="Back to top"
+        class="fixed bottom-8 right-8 w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-xl font-medium rounded-full shadow-lg z-[9998]">
+        ↑
+      </button>
+
+      <!-- Navigation -->
+      <div class="flex justify-between pt-8">
+        <a href="/case-studies/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_case_studies_from_article" data-category="navigation" data-location="article">
+          ← Back to case studies
+        </a>
+        <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_article" data-category="navigation" data-location="article">
+          Go to homepage →
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var r=document.documentElement;
+      var b=document.getElementById('theme-toggle');
+      if(b){b.addEventListener('click',function(){
+        var d=r.classList.toggle('dark');
+        localStorage.setItem('theme', d?'dark':'light');
+      });}
+    })();
+  </script>
+
+  <script>
+    document.querySelectorAll('[data-track]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (typeof gtag === 'function') {
+          gtag('event', 'site_interaction', {
+            event_category: el.dataset.category,
+            event_label: el.dataset.track,
+            event_location: el.dataset.location
+          });
+        }
+      });
+    });
+  </script>
+
+  <!-- Micro-interactions scripts -->
+  <script>
+    // Scroll progress bar
+    (function(){
+      const progress = document.querySelector('.scroll-progress');
+      if (!progress) return;
+
+      function update() {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = winScroll / height;
+        progress.style.transform = 'scaleX(' + scrolled + ')';
+      }
+
+      let ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            update();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+
+      update();
+    })();
+  </script>
+
+  <script>
+    // Back to top button
+    (function(){
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+
+      function checkScroll() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      }
+
+      window.addEventListener('scroll', checkScroll);
+      checkScroll();
+
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+</body>
+</html>
