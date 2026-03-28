@@ -80,12 +80,14 @@ No runtime hydration.
 │   ├── wagmarathon.webp
 │   ├── wagnerrosa.ico
 │   └── micro-interactions.css
-└── insights/
+└── case-studies/
     ├── index.html
-    ├── architecture-of-intelligence.html
-    ├── the-invisible-frontier.html
+    ├── planton-ui-design-system.html
+    ├── planton-website-vision-to-production.html
     ├── building-a-sub-500ms-site-2026.html
-    └── iel-rs-ux-redesign.html
+    ├── iel-rs-ux-redesign.html
+    ├── architecture-of-intelligence.html
+    └── the-invisible-frontier.html
 ```
 
 ### Responsibilities
@@ -93,8 +95,8 @@ No runtime hydration.
 - `index.html` → Homepage (primary reference layout)
 - `about.html` → Personal background and colophon
 - `404.html` → Custom error page (same layout system)
-- `insights/` → Article hub and all long-form content
-- `insights/index.html` → **Article listing page** (centralized navigation)
+- `case-studies/` → Article hub and all long-form content
+- `case-studies/index.html` → **Article listing page** (centralized navigation)
 - `input.css` → Tailwind entry
 - `output.css` → Compiled CSS (committed)
 - `tailwind.config.js` → Dark mode + content scan
@@ -109,13 +111,13 @@ All pages must follow this layout structure:
 
 ```html
 <body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
-  <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+  <div class="max-w-2xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
 ```
 
 ### Container Rules
 
 - Single centered column
-- max-w-xl
+- max-w-2xl (672px) — consistent across all pages
 - Responsive horizontal padding
 - Generous top spacing
 - Vertical rhythm via space-y-*
@@ -182,48 +184,54 @@ Header markup should mirror index.html.
 
 # 6. Typography Rules
 
-### Homepage main content area:
+### Font Pairing
+
+- **Source Serif 4** (400, 600) → article/about body text (the reading font)
+- **Inter** (400, 500, 600) → UI elements, headings h2–h4, navigation, meta
+
+Google Fonts loads: `Source+Serif+4:ital,wght@0,400;0,600;1,400` and `Inter:wght@400;500;600`
+
+### All pages main content area:
 
 ```html
-<main class="space-y-8 text-[22px] leading-8">
+<main class="article-body space-y-7">
 ```
 
-### Article/About main content area:
+The `article-body` class activates serif body text (Source Serif 4, 18px) and styling for tables, lists, and figcaptions via `input.css`. This applies to **all pages** — homepage, about, case studies listing, and individual articles.
 
-```html
-<main class="space-y-6">
-```
+**Homepage exception:** the role label line uses explicit `font-sans text-base font-normal` to stay sans-serif. The bio paragraph inherits serif from `article-body`.
 
 ### Heading Hierarchy (base layer in input.css):
 
 ```css
-h1, h2 { font-family: Source Serif 4; font-weight: 600; }
-h3     { font-family: Source Serif 4; font-weight: 500; }
+h1     { font-family: Source Serif 4; font-weight: 600; }
+h2, h3 { font-family: Inter; font-weight: 600; }
+h3     { font-weight: 500; }
 ```
 
-- **h1** (article title): `text-lg` (18px), serif, semibold — page landmark
-- **h2** (sections): `text-base` (16px), serif, semibold, `mt-12` — section breaks
-- **h3** (subsections): `text-base` (16px), serif, medium, `mt-8` — lighter tier
-- **Body**: `text-base` (16px), sans (Inter), regular
+- **h1** (page/article title): `text-3xl` (30px), serif, semibold, `leading-snug` — all pages
+- **h2** (sections): `text-2xl` (24px), sans, semibold, `leading-snug`, `mt-14` — section breaks
+- **h3** (subsections): `text-xl` (20px), sans, medium, `leading-snug`, `mt-9` — lighter tier
+- **Body** (all pages): `text-lg` (18px), serif (Source Serif 4), regular, `leading-[1.667]`
 
 ### Guidelines:
 
-- Body scale ≈ 22px (homepage only)
-- Body scale = 16px (about, case studies listing, and articles)
-- Line height: 32px (homepage), 1.75 ratio / 28px (articles and about)
-- Paragraph spacing: `space-y-6` (24px) in articles and about
-- Section spacing: `mt-12` (48px) before h2, `mt-8` (32px) before h3
+- Body scale = 18px serif everywhere via `article-body` class
+- Line height: 1.667 ratio (~30px)
+- Paragraph spacing: `space-y-7` (28px)
+- Heading-to-paragraph coupling: h2+p and h3+p have `margin-top: 0.75rem` (tighter gap after headings)
+- Section spacing: `mt-14` (56px) before h2, `mt-9` (36px) before h3
 - Neutral palette
 - No bold-heavy paragraphs
-- Headings restrained (no oversized hero typography)
+- Dark mode article text uses `neutral-400` (reduced contrast for reading comfort)
 
-Hierarchy is structural, not decorative. Three tiers (h1 > h2 > h3) differentiated by size, weight, and spacing.
+Hierarchy is structural, not decorative. Three tiers (h1 > h2 > h3) clearly differentiated by size, weight, font family, and spacing.
 
 ---
 
-# 7. Insights System
+# 7. Case Studies System
 
-## The Insights Hub (`/insights/index.html`)
+## The Case Studies Hub (`/case-studies/index.html`)
 
 Central listing page for all articles and case studies.
 
@@ -235,36 +243,41 @@ Central listing page for all articles and case studies.
 ### Structure:
 
 ```html
-<main class="space-y-8">
-  <h1 class="text-base leading-relaxed text-neutral-900 dark:text-neutral-100">
-    Insights
+<main class="article-body space-y-7">
+  <h1 class="text-3xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
+    Case Studies
   </h1>
 
-  <p class="text-base leading-relaxed text-neutral-700 dark:text-neutral-400">
-    This collection gathers insights on scalable UX systems, intelligent 
-    interfaces, and product architecture. Each piece combines AI-assisted 
-    research with human curation and structured editorial review.
+  <p>
+    Case studies on design systems and product architecture...
   </p>
 
-  <section class="space-y-10 mt-10">
-    <!-- Article entries -->
+  <hr class="border-neutral-200 dark:border-neutral-800 my-14">
+
+  <section class="space-y-12">
     <article class="space-y-2">
-      <h2 class="text-base font-medium text-neutral-900 dark:text-neutral-100">
-        <a href="/insights/article-slug.html">Article Title</a>
+      <span class="text-xs font-sans text-neutral-400 dark:text-neutral-500">2026 · Category</span>
+      <h2 class="text-xl font-semibold leading-snug">
+        <a href="/case-studies/article-slug.html" class="text-blue-600 dark:text-blue-400"
+           data-track="..." data-category="navigation" data-location="case-studies">
+          Article Title
+        </a>
       </h2>
-      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+      <p class="text-sm font-sans">
         Brief description of the article content.
       </p>
-      <div class="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
-        <span>2026 · Category</span>
-        <a href="/insights/article-slug.html" class="text-blue-600 dark:text-blue-400">
-          Read →
-        </a>
-      </div>
     </article>
   </section>
+
+  <hr class="border-neutral-200 dark:border-neutral-800 my-14">
 </main>
 ```
+
+**Key rules for the listing page:**
+- Titles are blue links (`text-blue-600 dark:text-blue-400`) — no "Read →" buttons
+- Date/category is an eyebrow above the title (`text-xs font-sans`)
+- Descriptions inherit body color (no explicit color class)
+- `<hr>` separates the intro from the article list and closes the section
 
 ### Article Categories:
 - **Technical Essay** - Code, architecture, performance
@@ -274,9 +287,9 @@ Central listing page for all articles and case studies.
 
 ### When Adding New Articles:
 
-1. Create article file in `/insights/`
-2. **Update `/insights/index.html`** with new entry
-3. Follow the article template pattern
+1. Create article file in `/case-studies/`
+2. **Update `/case-studies/index.html`** with new entry
+3. Follow the article template pattern (see section 12)
 4. Maintain chronological order (newest first)
 
 ---
@@ -324,7 +337,7 @@ Add in `<head>` after `output.css`:
 <link href="./assets/micro-interactions.css" rel="stylesheet">
 ```
 
-**For pages in `/insights/` subdirectory:**
+**For pages in `/case-studies/` subdirectory:**
 
 ```html
 <link href="../assets/micro-interactions.css" rel="stylesheet">
@@ -332,7 +345,7 @@ Add in `<head>` after `output.css`:
 
 ### Article Pages (Additional Elements)
 
-For long-form content in `/insights/`, add:
+For long-form content in `/case-studies/`, add:
 
 **1. Scroll Progress (first line of `<body>`):**
 
@@ -506,7 +519,7 @@ Never rely on media strategy.
   
   <!-- Navigation (required) -->
       <div class="flex justify-between pt-8">
-        <a href="/insights/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_insights_from_article" data-category="navigation" data-location="article">
+        <a href="/case-studies/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_insights_from_article" data-category="navigation" data-location="article">
           ← Back to insights
         </a>
         <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_article" data-category="navigation" data-location="article">
@@ -539,58 +552,66 @@ Never rely on media strategy.
 
 ---
 
-# 12. Creating New Article Pages (insights/)
+# 12. Creating New Article Pages (case-studies/)
 
 All articles must:
 
-1. Be placed inside `/insights/`
+1. Be placed inside `/case-studies/`
 
-Example: `/insights/new-article.html`
+Example: `/case-studies/new-article.html`
 
 2. Reuse:
 
-- Same `<head>` structure
-- Same layout container
-- Same header
+- Same `<head>` structure (including Source Serif 4 at weights 400 and 600)
+- Same layout container (`max-w-2xl`)
+- Same header pattern (see section 5)
 - Same dark mode logic
 - Link to `../assets/micro-interactions.css`
 
 3. Follow this content pattern:
 
 ```html
-<main class="space-y-6">
-  <h1 class="text-lg font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
+<main class="article-body space-y-7">
+  <h1 class="text-3xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
     Article Title
   </h1>
 
-  <p class="text-base leading-[1.75]">
-    Intro paragraph.
+  <p class="text-sm text-neutral-500 dark:text-neutral-400 font-sans">
+    2026 · Case Study · X min read
   </p>
 
-  <h2 class="text-base font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100 mt-12">
+  <p>Intro paragraph. (Body text inherits serif 18px from article-body class.)</p>
+
+  <h2 class="text-2xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 mt-14">
     Section
   </h2>
 
-  <p class="text-base leading-[1.75]">
-    Content.
-  </p>
+  <p>Content.</p>
 
-  <h3 class="text-base font-medium leading-relaxed text-neutral-700 dark:text-neutral-200 mt-8">
+  <h3 class="text-xl font-medium leading-snug text-neutral-700 dark:text-neutral-200 mt-9">
     Subsection
   </h3>
 
-  <p class="text-base leading-[1.75]">
-    Content.
-  </p>
+  <p>Content.</p>
 </main>
 ```
+
+### Content Elements Available:
+
+- **Pull quotes**: `<blockquote class="pull-quote"><p>Quote text</p></blockquote>`
+- **Figures with captions**: `<figure class="my-10"><img ...><figcaption class="mt-3 text-sm text-neutral-500 dark:text-neutral-400 text-center font-sans">Caption</figcaption></figure>`
+- **Code blocks**: `<div class="code-block"><div class="flex ..."><span>Language</span></div><pre><code>...</code></pre></div>`
+- **Inline code**: `<code>term</code>` (styled automatically via input.css)
+- **Badges**: `<span class="badge">Tech Name</span>` inside a `<div class="flex flex-wrap gap-2">`
+- **Definition lists**: `<dl class="space-y-5 my-6"><div class="pl-4 border-l-2 border-neutral-200 dark:border-neutral-800"><dt>Term</dt><dd>Definition</dd></div></dl>`
+- **Section dividers**: `<hr class="border-neutral-200 dark:border-neutral-800 my-14">` between major act breaks
 
 4. Include article-specific elements:
 - Scroll progress bar
 - Back to top button
 - Required scripts
 
-5. **Update `/insights/index.html`** with new entry
+5. **Update `/case-studies/index.html`** with new entry
 
 ### Article Guidelines
 
@@ -764,7 +785,7 @@ https://wagnerrosa.com/?utm_source=linkedin&utm_medium=social&utm_campaign=portf
 
 Article shared on LinkedIn:
 
-https://wagnerrosa.com/insights/the-architecture-of-intelligence.html?utm_source=linkedin&utm_medium=social&utm_campaign=insight_post
+https://wagnerrosa.com/case-studies/the-architecture-of-intelligence.html?utm_source=linkedin&utm_medium=social&utm_campaign=insight_post
 
 CV sent to company:
 
@@ -793,8 +814,8 @@ If generating new pages, the AI must:
 
 - Follow this README strictly
 - Use index.html, about.html, and insights/index.html as layout references
-- Place new content inside /insights/
-- **Update /insights/index.html** with new article entry
+- Place new content inside /case-studies/
+- **Update /case-studies/index.html** with new article entry
 - Preserve spacing, typography, and header pattern
 - Keep design minimal and architectural
 - Include micro-interactions.css link
@@ -811,12 +832,12 @@ No deviation from layout system.
 Homepage (/)
   ├── About (/about.html)
   │   └── Link to Insights
-  ├── Insights (/insights/)
-  │   ├── Article 1 (/insights/article-1.html)
+  ├── Insights (/case-studies/)
+  │   ├── Article 1 (/case-studies/article-1.html)
   │   │   └── Back to Homepage
-  │   ├── Article 2 (/insights/article-2.html)
+  │   ├── Article 2 (/case-studies/article-2.html)
   │   │   └── Back to Homepage
-  │   └── Case Study (/insights/case-study.html)
+  │   └── Case Study (/case-studies/case-study.html)
   │       └── Back to Homepage
   └── 404 (/404.html)
 ```

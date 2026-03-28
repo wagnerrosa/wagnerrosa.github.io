@@ -3,10 +3,104 @@
 @tailwind utilities;
 
 @layer base {
-  h1, h2 {
+  h1 {
     @apply font-serif font-semibold;
   }
+  h2, h3, h4 {
+    @apply font-sans font-semibold;
+  }
   h3 {
-    @apply font-serif font-medium;
+    @apply font-medium;
+  }
+
+  /* Article body: serif reading experience */
+  .article-body p {
+    @apply font-serif text-lg leading-[1.667];
+  }
+  .article-body li {
+    @apply font-serif text-lg leading-[1.667];
+  }
+
+  /* Heading-to-paragraph coupling: tighter gap after headings */
+  .article-body h2 + p,
+  .article-body h3 + p {
+    margin-top: 0.75rem;
+  }
+
+  /* Inline code */
+  code:not(pre code) {
+    font-size: 0.875em;
+    padding: 0.15em 0.4em;
+    border-radius: 0.25rem;
+    @apply bg-neutral-200/60 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300;
+  }
+
+  /* Dark mode: reduce body contrast for reading comfort */
+  .dark .article-body p,
+  .dark .article-body li,
+  .dark .article-body dd {
+    @apply text-neutral-400;
+  }
+
+  /* Lists: softer markers */
+  .article-body ul {
+    @apply list-disc pl-5;
+  }
+  .article-body ol {
+    @apply list-decimal pl-5;
+  }
+  .article-body ul li::marker,
+  .article-body ol li::marker {
+    color: rgb(163 163 163); /* neutral-400 */
+  }
+  .dark .article-body ul li::marker,
+  .dark .article-body ol li::marker {
+    color: rgb(82 82 82); /* neutral-600 */
+  }
+
+  /* Tables */
+  .article-body table {
+    @apply w-full text-sm font-sans;
+  }
+  .article-body th {
+    @apply text-left py-3 pr-4 font-medium text-neutral-900 dark:text-neutral-100 border-b-2 border-neutral-200 dark:border-neutral-700;
+  }
+  .article-body td {
+    @apply py-3 pr-4 text-neutral-600 dark:text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/50;
+  }
+
+  /* Figcaptions should not inherit serif */
+  .article-body figcaption {
+    @apply font-sans text-sm;
+  }
+}
+
+@layer components {
+  /* Pull quote */
+  .pull-quote {
+    @apply my-10 pl-6 border-l-[3px] border-blue-500 dark:border-blue-400;
+  }
+  .pull-quote p {
+    @apply font-serif text-xl leading-relaxed text-neutral-700 dark:text-neutral-300 not-italic;
+  }
+
+  /* Code block container */
+  .code-block {
+    @apply my-8 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-800;
+  }
+  .code-block pre {
+    @apply p-4 bg-neutral-50 dark:bg-neutral-950 overflow-x-auto;
+  }
+  .code-block code {
+    @apply text-sm font-mono leading-relaxed text-neutral-700 dark:text-neutral-300;
+    font-size: inherit;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium font-sans bg-neutral-200/60 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400;
   }
 }

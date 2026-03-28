@@ -13,7 +13,7 @@
   <link rel="icon" href="./assets/wagnerrosa.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <script>
     (function(){
       var d=document.documentElement;
@@ -108,48 +108,49 @@
   </script>
 </head>
 <body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
-  <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+  <div class="max-w-2xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
     <header class="flex items-center mb-8">
       <img class="w-10 h-10 rounded-full mr-4" src="./assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
-      <h2 class="text-base font-semibold font-serif text-neutral-600 dark:text-neutral-300"><a href="/" data-track="internal_home_from_header" data-category="navigation" data-location="about">Wagner Rosa</a></h2>
+      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300"><a href="/" data-track="internal_home_from_header" data-category="navigation" data-location="about">Wagner Rosa</a></h2>
       <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
     </header>
-    <main class="space-y-6">
-      <h1 class="text-base font-serif leading-relaxed text-neutral-900 dark:text-neutral-100">About</h1>
+    <main class="article-body space-y-7">
+      <h1 class="text-3xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100">About</h1>
 
-      <p class="text-base leading-[1.75] text-neutral-700 dark:text-neutral-400">
+      <p>
         I was born in Porto Alegre, Brazil, and began my career in communication and marketing before moving to Lisbon, where I graduated in Advertising and Marketing at the Institute of Arts and Design of Lisbon in 2016.
       </p>
 
-      <p class="text-base leading-[1.75] text-neutral-700 dark:text-neutral-400">
+      <p>
         My professional path started in audiovisual production and graphic design, gradually evolving into web design and digital products. Over time, this transition shaped the way I approach UX: structured, system-oriented, and grounded in real implementation constraints.
       </p>
 
-      <p class="text-base leading-[1.75] text-neutral-700 dark:text-neutral-400">
+      <p>
         I taught myself front-end fundamentals to better understand the boundaries and possibilities of interfaces. This allows me to collaborate closely with engineering teams and design solutions that are conceptually clear and technically feasible.
       </p>
 
-      <p class="text-base leading-[1.75] text-neutral-700 dark:text-neutral-400">
+      <p>
         Today, I focus on scalable digital systems and applied AI, contributing to products that require clarity, architecture, and operational thinking.
       </p>
 
-      <div class="space-y-4 mt-12">
-        <p class="text-base leading-[1.75] text-neutral-700 dark:text-neutral-400">
-          Outside of work, I run long distances (including a completed marathon), climb, and ride motorcycles. These practices reinforce focus, patience, and long-term thinking.
-        </p>
+      <hr class="border-neutral-200 dark:border-neutral-800 my-14">
 
-        <div class="grid grid-cols-2 gap-4 mt-8">
+      <p>
+        Outside of work, I run long distances (including a completed marathon), climb, and ride motorcycles. These practices reinforce focus, patience, and long-term thinking.
+      </p>
+
+      <figure class="my-10">
+        <div class="grid grid-cols-2 gap-4">
           <img src="./assets/wagmoto.webp"
                alt="Wagner Rosa riding a motorcycle"
                class="w-full rounded-md"
                loading="lazy">
-
           <img src="./assets/wagmarathon.webp"
                alt="Wagner Rosa running a marathon"
                class="w-full rounded-md"
                loading="lazy">
         </div>
-      </div>
+      </figure>
     </main>
     <footer class="flex justify-between mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
       <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_about" data-category="navigation" data-location="about">
