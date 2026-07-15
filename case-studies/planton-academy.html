@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planton Academy: Designing a Corporate Learning Platform, End to End | Wagner Rosa</title>
+  <meta name="description" content="How I designed and built a B2B learning platform for ESG training: three user roles, a certification-driven learning flow, an AI tutor, and a React front-end shipped on a shared design system.">
+  <meta property="og:title" content="Planton Academy: Designing a Corporate Learning Platform, End to End | Wagner Rosa">
+  <meta property="og:description" content="Product case study: from business model to shipped React code. Three user roles, quiz-gated certification, an AI tutor with human handoff, and a design system that kept it all coherent.">
+  <meta property="og:image" content="https://wagnerrosa.com/assets/wagnerrosa-picture.jpg">
+  <meta property="og:type" content="article">
+  <link rel="canonical" href="https://wagnerrosa.com/case-studies/planton-academy.html">
+  <link rel="alternate" hreflang="en" href="https://wagnerrosa.com/case-studies/planton-academy.html">
+  <link rel="alternate" hreflang="pt-BR" href="https://wagnerrosa.com/case-studies/planton-academy-pt.html">
+  <link rel="icon" href="../assets/wagnerrosa.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <script>
+    (function(){
+      var d=document.documentElement;
+      var t=localStorage.getItem('theme');
+      if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
+    })();
+  </script>
+  <link href="../output.css?v=20260715" rel="stylesheet">
+  <!-- Micro-interactions (animations only) -->
+  <link href="../assets/micro-interactions.css" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script>
+    (function(){
+      var isLocal =
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var urlParams = new URLSearchParams(window.location.search);
+      var hasPreviewParam = urlParams.get('preview') === 'dev';
+
+      if (hasPreviewParam && !sessionStorage.getItem('dev_preview')) {
+        sessionStorage.setItem('dev_preview', 'true');
+      }
+
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+
+      if (isLocal || isDevMode || hasPreviewParam || hasDevSession) {
+        window['ga-disable-G-VTCEP9QKNC'] = true;
+        console.log('🚫 Analytics disabled (dev mode active)');
+      }
+    })();
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VTCEP9QKNC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VTCEP9QKNC');
+  </script>
+  <!-- Clarity -->
+  <script>
+    (function(){
+      var isLocal =
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname === '';
+
+      var isDevMode = localStorage.getItem('dev_mode') === 'true';
+      var hasDevSession = sessionStorage.getItem('dev_preview') === 'true';
+
+      if (isLocal || isDevMode || hasDevSession) {
+        console.log('🚫 Clarity disabled (dev mode active)');
+        return;
+      }
+
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "vhbu1gthme");
+    })();
+  </script>
+</head>
+<body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
+  <!-- Scroll progress indicator -->
+  <div
+    class="scroll-progress fixed top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-400 dark:to-blue-300 z-[9999]"
+    role="progressbar"
+    aria-label="Reading progress">
+  </div>
+
+  <div class="max-w-2xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+    <header class="flex items-center mb-8">
+      <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
+      <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300">
+        <a href="/">Wagner Rosa</a>
+      </h2>
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
+    </header>
+
+    <main class="article-body space-y-7">
+      <h1 class="text-3xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
+        Planton Academy: Designing a Corporate Learning Platform, End to End
+      </h1>
+      <p class="text-sm text-neutral-500 dark:text-neutral-400 font-sans">
+        2026 · Case Study · 5 min read · <a href="/case-studies/planton-academy-pt.html" class="text-blue-600 dark:text-blue-400" data-track="internal_academy_pt_version" data-category="navigation" data-location="article">Ler em português</a>
+      </p>
+
+      <p class="font-sans text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
+        I led the end-to-end design of this product: the UX, the design system, and the React front-end running in production. The interface in the video below is my code, shipped alongside the engineering team, not a prototype thrown over the wall. Planton Academy is where that way of working came together.
+      </p>
+
+      <figure class="my-8 -mx-6 sm:-mx-8 lg:-mx-12">
+        <video class="w-full sm:rounded-md ring-1 ring-neutral-200/80 dark:ring-neutral-800"
+               autoplay muted loop playsinline preload="metadata"
+               aria-label="Planton Academy interface in motion: learner home, learning tracks, and certification flow">
+          <source src="../assets/planton-academy/academy-hero.mp4" type="video/mp4">
+        </video>
+        <figcaption class="mt-3 px-6 sm:px-0 text-sm text-neutral-500 dark:text-neutral-400 text-center font-sans">
+          The real product in motion. Every screen here is working React code, not a mockup
+        </figcaption>
+      </figure>
+
+      <!-- Project facts -->
+      <section class="font-sans my-10 py-7 border-y border-neutral-200 dark:border-neutral-800" aria-label="Project facts">
+        <dl class="grid grid-cols-2 sm:grid-cols-3 gap-6 text-sm">
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Role</dt>
+            <dd class="mt-1.5 text-neutral-900 dark:text-neutral-100">Senior UX / Product Designer</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Duration</dt>
+            <dd class="mt-1.5 text-neutral-900 dark:text-neutral-100">2026 – Present</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Team</dt>
+            <dd class="mt-1.5 text-neutral-900 dark:text-neutral-100">Solo designer, alongside a small engineering team</dd>
+          </div>
+          <div class="col-span-2 sm:col-span-3">
+            <dt class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Responsibilities</dt>
+            <dd class="mt-2.5 flex flex-wrap gap-2">
+              <span class="badge">Product Design</span>
+              <span class="badge">UX</span>
+              <span class="badge">UI</span>
+              <span class="badge">Design System</span>
+              <span class="badge">React Front-end</span>
+              <span class="badge">Motion</span>
+              <span class="badge">AI-assisted Workflow</span>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- What this demonstrates -->
+      <section class="font-sans my-10" aria-label="What this project demonstrates">
+        <p class="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">What this project demonstrates</p>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5 text-sm text-neutral-700 dark:text-neutral-300" style="list-style:none;padding-left:0">
+          <li class="flex items-start"><span class="text-blue-600 dark:text-blue-400 mr-2.5" aria-hidden="true">✓</span>Product strategy from a business model</li>
+          <li class="flex items-start"><span class="text-blue-600 dark:text-blue-400 mr-2.5" aria-hidden="true">✓</span>UX for complex, multi-role systems</li>
+          <li class="flex items-start"><span class="text-blue-600 dark:text-blue-400 mr-2.5" aria-hidden="true">✓</span>Information architecture</li>
+          <li class="flex items-start"><span class="text-blue-600 dark:text-blue-400 mr-2.5" aria-hidden="true">✓</span>Scalable design systems</li>
+          <li class="flex items-start"><span class="text-blue-600 dark:text-blue-400 mr-2.5" aria-hidden="true">✓</span>Close collaboration with engineering</li>
+          <li class="flex items-start"><span class="text-blue-600 dark:text-blue-400 mr-2.5" aria-hidden="true">✓</span>React front-end in production</li>
+          <li class="flex items-start"><span class="text-blue-600 dark:text-blue-400 mr-2.5" aria-hidden="true">✓</span>AI-assisted product development</li>
+          <li class="flex items-start"><span class="text-blue-600 dark:text-blue-400 mr-2.5" aria-hidden="true">✓</span>Shipping products, not just prototypes</li>
+        </ul>
+      </section>
+
+      <p>
+        Academy is the corporate learning platform of Planton, a Brazilian climate tech company, and it trains company workforces on ESG: emissions inventories, GHG Protocol, carbon markets, sustainability reporting. I joined to turn a commercial model into a working product, and stayed close to it from the first flow to the shipped code.
+      </p>
+
+      <blockquote class="pull-quote">
+        3 user roles on one dataset · 12-state B2B onboarding · quiz-gated certification · AI tutor with human handoff · shipped as working React code
+      </blockquote>
+
+      <div class="flex flex-col gap-2 text-sm">
+        <a href="https://design.planton.eco.br/design-system/screens/academy/home" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400" data-track="outbound_academy_prototype" data-category="outbound" data-location="article">Explore the live platform ↗</a>
+        <a href="https://planton.eco.br/academy" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400" data-track="outbound_academy_landing" data-category="outbound" data-location="article">Landing page I designed for the launch ↗</a>
+        <a href="https://design.planton.eco.br/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400" data-track="outbound_design_system_from_academy" data-category="outbound" data-location="article">The design system behind it ↗</a>
+      </div>
+
+      <!-- The Product -->
+      <h2 class="text-2xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 mt-12">
+        The Product
+      </h2>
+
+      <p>
+        Academy is B2B, and it serves real enterprise clients. Faber-Castell, listed publicly by Planton, uses it to train its value chain. There is no self-signup: a company buys access, and anyone with a corporate email on an authorized domain gets in. I treated that single business rule as the seed of the whole design.
+      </p>
+
+      <p>
+        Learner, manager, and admin work from the same data, each with a different job. The learner follows tracks, passes quizzes, earns verifiable certificates. The company's manager monitors engagement and proves training value internally. Planton's admin operates every client, the content catalog, and access vouchers. What the manager sees is a slice of what the admin sees in aggregate: one dataset, three products.
+      </p>
+
+      <figure class="my-10">
+        <img src="../assets/planton-academy/academy-admin-overview.webp"
+             alt="Planton Academy admin area: analytics dashboard, content catalog, and navigation shown across three floating screens on a laptop"
+             class="w-full rounded-md"
+             loading="lazy">
+        <figcaption class="mt-3 text-sm text-neutral-500 dark:text-neutral-400 text-center font-sans">
+          The admin side of the platform: cross-company analytics, content operations, and track management
+        </figcaption>
+      </figure>
+
+      <!-- My Role -->
+      <h2 class="text-2xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 mt-12">
+        My Role
+      </h2>
+
+      <p>
+        I translated the commercial model into flows (onboarding, certification funnel, plan lifecycle, the three-role architecture) and designed every screen on Planton UI, the token-based design system I built for the brand and extended where the product demanded it. Then I implemented the platform in React, Next.js, and TypeScript, so the screens in the video above are the working interface, not mockups. I also designed the motion language, the AI tutor experience, and shipped the public landing page that sells the product.
+      </p>
+
+      <!-- Process timeline -->
+      <div class="my-10">
+        <p class="font-sans text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">Process</p>
+        <ol class="font-sans text-sm" aria-label="Design process, from discovery to launch">
+          <li class="relative pl-7 pb-5 last:pb-0 before:content-[''] before:absolute before:left-[3px] before:top-2 before:bottom-0 before:w-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden">
+            <span class="absolute left-0 top-[5px] w-[7px] h-[7px] rounded-full bg-neutral-400 dark:bg-neutral-600"></span>
+            <span class="text-neutral-700 dark:text-neutral-300">Discovery</span>
+          </li>
+          <li class="relative pl-7 pb-5 last:pb-0 before:content-[''] before:absolute before:left-[3px] before:top-2 before:bottom-0 before:w-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden">
+            <span class="absolute left-0 top-[5px] w-[7px] h-[7px] rounded-full bg-neutral-400 dark:bg-neutral-600"></span>
+            <span class="text-neutral-700 dark:text-neutral-300">Information Architecture</span>
+          </li>
+          <li class="relative pl-7 pb-5 last:pb-0 before:content-[''] before:absolute before:left-[3px] before:top-2 before:bottom-0 before:w-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden">
+            <span class="absolute left-0 top-[5px] w-[7px] h-[7px] rounded-full bg-neutral-400 dark:bg-neutral-600"></span>
+            <span class="text-neutral-700 dark:text-neutral-300">UX Design</span>
+          </li>
+          <li class="relative pl-7 pb-5 last:pb-0 before:content-[''] before:absolute before:left-[3px] before:top-2 before:bottom-0 before:w-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden">
+            <span class="absolute left-0 top-[5px] w-[7px] h-[7px] rounded-full bg-neutral-400 dark:bg-neutral-600"></span>
+            <span class="text-neutral-700 dark:text-neutral-300">Design System</span>
+          </li>
+          <li class="relative pl-7 pb-5 last:pb-0 before:content-[''] before:absolute before:left-[3px] before:top-2 before:bottom-0 before:w-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden">
+            <span class="absolute left-0 top-[5px] w-[7px] h-[7px] rounded-full bg-neutral-400 dark:bg-neutral-600"></span>
+            <span class="text-neutral-700 dark:text-neutral-300">React Implementation</span>
+          </li>
+          <li class="relative pl-7 pb-5 last:pb-0 before:content-[''] before:absolute before:left-[3px] before:top-2 before:bottom-0 before:w-px before:bg-neutral-200 dark:before:bg-neutral-800 last:before:hidden">
+            <span class="absolute left-0 top-[5px] w-[7px] h-[7px] rounded-full bg-blue-600 dark:bg-blue-400"></span>
+            <span class="text-neutral-900 dark:text-neutral-100 font-medium">Launch</span>
+          </li>
+        </ol>
+      </div>
+
+      <hr class="border-neutral-200 dark:border-neutral-800 my-14">
+
+      <!-- Four Decisions -->
+      <h2 class="text-2xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 mt-12">
+        Four Decisions That Shaped the Product
+      </h2>
+
+      <h3 class="text-xl font-medium leading-snug text-neutral-700 dark:text-neutral-200 mt-8">
+        1. Onboarding starts with the business model
+      </h3>
+
+      <p>
+        Since the corporate domain is the access key, the flow verifies the domain before ever asking for a password, so eligibility is resolved at the cheapest possible step. Each commercial scenario became its own screen: an active company celebrates and auto-advances; an inactive one gets a voucher path with a commercial escape; an unknown domain converts the visitor into a sales lead. Twelve states, and none of them is a dead end.
+      </p>
+
+      <h3 class="text-xl font-medium leading-snug text-neutral-700 dark:text-neutral-200 mt-8">
+        2. Certification is the spine, not the reward
+      </h3>
+
+      <p>
+        Instead of hiding the certificate behind the course, I made it part of the curriculum: quiz and certificate appear as numbered items in the track's own content list, visible from the first lesson. Every locked step says exactly what unlocks it, and failing the quiz always routes back to the content. The certificate itself carries a public verification URL and a LinkedIn share action. It is a credential the learner distributes, which markets the platform back to their network.
+      </p>
+
+      <figure class="my-10">
+        <img src="../assets/planton-academy/academy-certificate.webp"
+             alt="Planton Academy certificate: numbered credential with public verification URL, completed track name, and duration"
+             class="w-full rounded-md"
+             loading="lazy">
+        <figcaption class="mt-3 text-sm text-neutral-500 dark:text-neutral-400 text-center font-sans">
+          The certificate is a live HTML component, not an image: numbered, verifiable by URL, ready for LinkedIn
+        </figcaption>
+      </figure>
+
+      <h3 class="text-xl font-medium leading-snug text-neutral-700 dark:text-neutral-200 mt-8">
+        3. An AI tutor that knows its limits
+      </h3>
+
+      <p>
+        The tutor answers in structured blocks that always end by pointing to the next piece of content in the catalog. It serves the learning funnel, not open conversation. When the bot reaches its limits, one tap hands the conversation to a human on WhatsApp, carrying a summary of the chat so the learner never repeats themselves. Designing the exit was as important as designing the answers.
+      </p>
+
+      <figure class="my-10">
+        <img src="../assets/planton-academy/academy-ai-tutor.webp"
+             alt="Planton Academy AI tutor on mobile: welcome state with quick-start prompts and a WhatsApp handoff option"
+             class="w-full rounded-md"
+             loading="lazy">
+        <figcaption class="mt-3 text-sm text-neutral-500 dark:text-neutral-400 text-center font-sans">
+          The tutor's empty state: quick prompts to start, and a human escape hatch before the first message
+        </figcaption>
+      </figure>
+
+      <h3 class="text-xl font-medium leading-snug text-neutral-700 dark:text-neutral-200 mt-8">
+        4. Managers renew contracts, so managers see outcomes
+      </h3>
+
+      <p>
+        In B2B education the learner uses the product, but the manager renews it. The manager's dashboard is built for internal accountability: contract validity as a timeline, engagement hours, certificates earned, and per-collaborator drill-down. Same data as the admin view, reshaped around a different job to be done.
+      </p>
+
+      <hr class="border-neutral-200 dark:border-neutral-800 my-14">
+
+      <!-- Designed in Code -->
+      <h2 class="text-2xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 mt-12">
+        Designed in Code
+      </h2>
+
+      <p>
+        Every flow above exists as typed React code. The onboarding is a TypeScript state machine; so are the quiz and the voucher lifecycle. Admin menus only offer actions valid for an item's current state, so the interface enforces the business rules instead of documenting them.
+      </p>
+
+      <p>
+        Working in the shared codebase changed how design decisions travel. Components born inside a screen get promoted into the design system's registry, each documented with live examples and its real source file path, so a developer can go from documentation to implementation in one click. Reviewing pull requests with the engineers, I could catch a spacing or state issue in the diff instead of in a comment thread.
+      </p>
+
+      <p>
+        AI agents had a specific job at each stage of the process. In exploration, I could stand up three or four working variants of a flow in an afternoon and compare them in the browser, instead of debating static mockups. In implementation, agents scaffolded components against the design system's tokens while I focused on interaction details and edge cases. In documentation, each component promoted into the system got its usage docs drafted from the real source code. And in validation, a decision made in the morning could be tested against real data states the same day.
+      </p>
+
+      <p>
+        <a href="/case-studies/planton-ui-design-system.html" class="text-blue-600 dark:text-blue-400" data-track="internal_ds_case_from_academy" data-category="navigation" data-location="article">How the design system itself was built → read the companion case study</a>
+      </p>
+
+      <!-- Outcomes -->
+      <h2 class="text-2xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 mt-12">
+        Outcomes
+      </h2>
+
+      <dl class="space-y-5 my-6">
+        <div class="pl-4 border-l-2 border-neutral-200 dark:border-neutral-800">
+          <dt class="font-sans font-medium text-base text-neutral-900 dark:text-neutral-100">One coherent experience across the platform</dt>
+          <dd class="font-serif text-lg leading-[1.667] mt-1">Learner, manager, and admin areas share tokens, primitives, and patterns, with a full dark mode included and no per-screen theming code.</dd>
+        </div>
+        <div class="pl-4 border-l-2 border-neutral-200 dark:border-neutral-800">
+          <dt class="font-sans font-medium text-base text-neutral-900 dark:text-neutral-100">A design system that outlived the project</dt>
+          <dd class="font-serif text-lg leading-[1.667] mt-1">Planton UI now serves other Planton products, with versioned releases and living documentation.</dd>
+        </div>
+        <div class="pl-4 border-l-2 border-neutral-200 dark:border-neutral-800">
+          <dt class="font-sans font-medium text-base text-neutral-900 dark:text-neutral-100">Less friction between design and engineering</dt>
+          <dd class="font-serif text-lg leading-[1.667] mt-1">Because the design ships as code, there is no handoff gap and no drift between prototype and product: the spec, the documentation, and the shipped interface are the same artifact.</dd>
+        </div>
+      </dl>
+
+      <p>
+        The honest caveat: the platform runs on structured mock data, and accessibility is covered where the system's primitives cover it, with a prioritized backlog for the custom parts. Instrumenting real usage and closing that backlog would be my first move after launch.
+      </p>
+
+      <hr class="border-neutral-200 dark:border-neutral-800 my-14">
+
+      <!-- Why this project mattered -->
+      <h2 class="text-2xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 mt-12">
+        Why this project mattered
+      </h2>
+
+      <p>
+        This project pulled together almost every skill I've built over my career: UX, product, design systems, motion, front-end, and AI. For most of that career those lived in separate stages, owned by separate people. Here I got to hold them in one pair of hands.
+      </p>
+
+      <p>
+        What made it matter to me was less the platform and more the distance it closed. The gap between a design decision and the code running in production is where most product quality leaks away. Working end to end let me shrink that gap deliberately, and that is the way of working I want to keep doing.
+      </p>
+
+      <div class="flex flex-wrap gap-2 mt-8">
+        <span class="badge">Next.js 16</span>
+        <span class="badge">React 19</span>
+        <span class="badge">TypeScript 5</span>
+        <span class="badge">Tailwind CSS 4</span>
+        <span class="badge">Framer Motion</span>
+        <span class="badge">Figma</span>
+        <span class="badge">AI-assisted workflow</span>
+      </div>
+    </main>
+
+    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <!-- Case Study Disclosure -->
+      <div class="mb-8 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+        <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+          <span class="font-medium text-neutral-700 dark:text-neutral-300">Note:</span>
+          This case study documents the Planton Academy platform: product design, UX flows, design system application, and React implementation. The platform screens linked above are a working front-end prototype running on structured mock data.
+        </p>
+      </div>
+
+      <!-- Back to top button -->
+      <button
+        id="back-to-top"
+        aria-label="Back to top"
+        class="fixed bottom-8 right-8 w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-xl font-medium rounded-full shadow-lg z-[9998]">
+        ↑
+      </button>
+
+      <!-- Navigation -->
+      <div class="flex justify-between pt-8">
+        <a href="/case-studies/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_case_studies_from_article" data-category="navigation" data-location="article">
+          ← Back to case studies
+        </a>
+        <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_article" data-category="navigation" data-location="article">
+          Go to homepage →
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var r=document.documentElement;
+      var b=document.getElementById('theme-toggle');
+      if(b){b.addEventListener('click',function(){
+        var d=r.classList.toggle('dark');
+        localStorage.setItem('theme', d?'dark':'light');
+      });}
+    })();
+  </script>
+
+  <script>
+    document.querySelectorAll('[data-track]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (typeof gtag === 'function') {
+          gtag('event', 'site_interaction', {
+            event_category: el.dataset.category,
+            event_label: el.dataset.track,
+            event_location: el.dataset.location
+          });
+        }
+      });
+    });
+  </script>
+
+  <!-- Micro-interactions scripts -->
+  <script>
+    // Scroll progress bar
+    (function(){
+      const progress = document.querySelector('.scroll-progress');
+      if (!progress) return;
+
+      function update() {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = winScroll / height;
+        progress.style.transform = 'scaleX(' + scrolled + ')';
+      }
+
+      let ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            update();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+
+      update();
+    })();
+  </script>
+
+  <script>
+    // Back to top button
+    (function(){
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+
+      function checkScroll() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      }
+
+      window.addEventListener('scroll', checkScroll);
+      checkScroll();
+
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+</body>
+</html>
