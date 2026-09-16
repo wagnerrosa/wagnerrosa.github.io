@@ -108,6 +108,23 @@ Class-based, localStorage-persisted. Every page needs both scripts:
 
 Article footer navigation links use `data-track`, `data-category`, `data-location` attributes for analytics.
 
+## Password-Protected Case Studies
+
+Some case studies are encrypted with staticrypt so only people with the password can read them.
+Site stays on GitHub Pages — no backend.
+
+- Source: `case-studies-src/<name>.html` (git-ignored, **edit here**)
+- Published: `case-studies/<name>.html` (encrypted blob, overwritten on every build)
+- Gate template: `case-studies-src/_password-template.html` (mirrors the design system in plain CSS, since Tailwind's build output is not available to the standalone gate page)
+- Password: `.env.local` → `STATICRYPT_PASSWORD` (git-ignored)
+- Build: `npm run build` (Tailwind + encrypt) or `npm run build:protected`
+
+Never edit the file in `case-studies/` directly — it is generated.
+Protected entries are listed in `case-studies/index.html` marked `Password required`, and
+must get a `Disallow:` line in `robots.txt`.
+
+Full details and backup warnings: `scripts/README.md`
+
 ## Performance Constraints
 
 Never add: frontend frameworks, external UI libraries, icon packs, additional CSS frameworks, heavy animations, or scroll effects beyond `micro-interactions.css`. Images: `.webp` preferred, `rounded-md` only, lazy loading, wrapped in `<figure>` with `<figcaption>`.

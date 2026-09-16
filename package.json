@@ -4,11 +4,12 @@
   "description": "A minimal static portfolio built with HTML and Tailwind CSS.",
   "main": "index.html",
   "scripts": {
-    "build": "tailwindcss -i ./input.css -o ./output.css --minify",
+    "build": "tailwindcss -i ./input.css -o ./output.css --minify && npm run build:protected",
     "watch": "tailwindcss -i ./input.css -o ./output.css --watch",
     "dev": "tailwindcss -i ./input.css -o ./output.css --watch",
     "serve": "live-server",
-    "all": "concurrently \"npm run dev\" \"npm run serve\""
+    "all": "concurrently \"npm run dev\" \"npm run serve\"",
+    "build:protected": "bash scripts/build-protected.sh"
   },
   "keywords": [
     "portfolio",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "concurrently": "^9.2.1",
     "live-server": "^1.2.2",
+    "staticrypt": "^3.5.4",
     "tailwindcss": "^3.4.1"
   }
 }

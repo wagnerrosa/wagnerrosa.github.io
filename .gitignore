@@ -3,3 +3,6 @@
 .node_modules
 /CV
 .DS_Store
+/case-studies-src
+.env.local
+.staticrypt.json
