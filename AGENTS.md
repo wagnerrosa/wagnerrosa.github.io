@@ -61,6 +61,15 @@ Do not copy cards or grids to other pages.
 
 Header h2 is always `font-medium` without `font-serif` (it's UI, not editorial).
 
+## Footer Pattern (home, about, case studies hub)
+
+`index.html`, `about.html` and `case-studies/index.html` share one footer. Keep the three in sync:
+- Serif `h2` invitation ("Open to remote Senior Product Design roles."), then the email link with a "Copy" button (`#copy-email`, hidden until the clipboard script confirms support) and an `aria-live` status span.
+- `<nav>` grid (`grid-cols-2 sm:grid-cols-3`) with three groups: **Site** (Home, Case studies, Background), **Profiles** (LinkedIn, Behance, GitHub ↗), **CV** (PDF, ATS-friendly PDF ↓). The current page is a neutral `<span aria-current="page">` without an arrow.
+- Hairline + `© 2026 Wagner Rosa · Porto Alegre, Brazil · GMT-3`.
+- `data-location` matches the page (`index`, `about`, `case-studies`). On home the footer carries its own `max-w-2xl` wrapper; on the other two it sits inside the page container with `mt-16 sm:mt-24`.
+- Article pages keep their own "Back to case studies → / Go to homepage →" navigation.
+
 ## Typography
 
 ### Font Pairing

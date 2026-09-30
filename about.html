@@ -178,25 +178,55 @@
         </div>
       </figure>
     </main>
-    <footer class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800 space-y-6">
-      <div class="flex flex-col gap-1 text-base">
-        <a href="mailto:contato@wagnerrosa.com" class="text-blue-600 dark:text-blue-400" data-track="outbound_email" data-category="outbound" data-location="about">contato@wagnerrosa.com</a>
-        <div>
-          <span class="text-neutral-500 dark:text-neutral-400">CV</span>
-          <a href="/assets/cv/wagner-rosa-cv-2026.pdf" class="text-blue-600 dark:text-blue-400" data-track="outbound_cv_pdf" data-category="outbound" data-location="about" target="_blank" rel="noopener noreferrer">PDF ↓</a>
-          <a href="/assets/cv/wagner-rosa-cv-ats-2026.pdf" class="text-blue-600 dark:text-blue-400" data-track="outbound_cv_ats" data-category="outbound" data-location="about" target="_blank" rel="noopener noreferrer">ATS ↓</a>
-        </div>
-      </div>
-      <div class="flex justify-between">
-        <a href="/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_home_from_about" data-category="navigation" data-location="about">
-          Back to homepage →
-        </a>
-        <a href="/case-studies/" class="text-blue-600 dark:text-blue-400 text-base" data-track="internal_case_studies_from_about" data-category="navigation" data-location="about">
-          Case studies →
-        </a>
-      </div>
+    <footer class="mt-16 sm:mt-24">
+        <h2 class="font-serif text-[1.375rem] font-normal leading-[1.35] text-neutral-900 dark:text-neutral-100 text-balance">Open to remote Senior Product Design roles.</h2>
+        <p class="mt-3 flex flex-wrap items-baseline gap-x-3">
+            <a href="mailto:contato@wagnerrosa.com" class="text-lg text-blue-600 dark:text-blue-400" data-track="outbound_email" data-category="outbound" data-location="about">contato@wagnerrosa.com</a>
+            <button type="button" id="copy-email" aria-label="Copy email address" hidden class="text-[13px] text-neutral-500 dark:text-neutral-400 px-1 py-1 rounded hover:text-neutral-800 dark:hover:text-neutral-200" data-track="copy_email" data-category="engagement" data-location="about">Copy</button>
+            <span id="copy-status" class="sr-only" aria-live="polite"></span>
+        </p>
+        <nav aria-label="Site, profiles and CV" class="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-8">
+            <div>
+                <p class="text-[13px] text-neutral-500 dark:text-neutral-400">Site</p>
+                <ul class="mt-2">
+                    <li><a href="/" class="inline-block py-1 text-blue-600 dark:text-blue-400" data-track="internal_home_from_about" data-category="navigation" data-location="about">Home →</a></li>
+                    <li><a href="/case-studies/" class="inline-block py-1 text-blue-600 dark:text-blue-400" data-track="internal_case_studies_from_about" data-category="navigation" data-location="about">Case studies →</a></li>
+                    <li><span aria-current="page" class="inline-block py-1 text-neutral-500 dark:text-neutral-400">Background</span></li>
+                </ul>
+            </div>
+            <div>
+                <p class="text-[13px] text-neutral-500 dark:text-neutral-400">Profiles</p>
+                <ul class="mt-2">
+                    <li><a href="https://www.linkedin.com/in/wagnerrosa/" target="_blank" rel="noopener noreferrer" class="inline-block py-1 text-blue-600 dark:text-blue-400" data-track="outbound_linkedin" data-category="outbound" data-location="about">LinkedIn ↗</a></li>
+                    <li><a href="https://www.behance.net/wagnerrosa" target="_blank" rel="noopener noreferrer" class="inline-block py-1 text-blue-600 dark:text-blue-400" data-track="outbound_behance" data-category="outbound" data-location="about">Behance ↗</a></li>
+                    <li><a href="https://github.com/wagnerrosa" target="_blank" rel="noopener noreferrer" class="inline-block py-1 text-blue-600 dark:text-blue-400" data-track="outbound_github" data-category="outbound" data-location="about">GitHub ↗</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 sm:col-span-1">
+                <p class="text-[13px] text-neutral-500 dark:text-neutral-400">CV</p>
+                <ul class="mt-2">
+                    <li><a href="/assets/cv/wagner-rosa-cv-2026.pdf" target="_blank" rel="noopener noreferrer" class="inline-block py-1 text-blue-600 dark:text-blue-400" data-track="outbound_cv_pdf" data-category="outbound" data-location="about">PDF ↓</a></li>
+                    <li><a href="/assets/cv/wagner-rosa-cv-ats-2026.pdf" target="_blank" rel="noopener noreferrer" class="inline-block py-1 text-blue-600 dark:text-blue-400" data-track="outbound_cv_ats" data-category="outbound" data-location="about">ATS-friendly PDF ↓</a></li>
+                </ul>
+            </div>
+        </nav>
+        <p class="mt-12 pt-6 border-t border-neutral-200 dark:border-neutral-800 text-[13px] text-neutral-500 dark:text-neutral-400">© 2026 Wagner Rosa · Porto Alegre, Brazil · GMT-3</p>
     </footer>
   </div>
+  <script>
+    (function(){
+      var b=document.getElementById('copy-email');
+      if(!b||!navigator.clipboard||!window.isSecureContext)return;
+      var s=document.getElementById('copy-status');var t;
+      b.hidden=false;
+      b.addEventListener('click',function(){
+        navigator.clipboard.writeText('contato@wagnerrosa.com').then(function(){
+          b.textContent='Copied';s.textContent='Email address copied';
+          clearTimeout(t);t=setTimeout(function(){b.textContent='Copy';s.textContent='';},1600);
+        });
+      });
+    })();
+  </script>
   <script>
     (function(){
       var r=document.documentElement;
