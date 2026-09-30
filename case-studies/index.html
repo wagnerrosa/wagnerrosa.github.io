@@ -27,7 +27,7 @@
       if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}
     })();
   </script>
-  <link href="../output.css?v=20260216-2" rel="stylesheet">
+  <link href="../output.css?v=20260930-2" rel="stylesheet">
   <!-- Micro-interactions (animations only) -->
   <link href="../assets/micro-interactions.css" rel="stylesheet">
   <!-- Google tag (gtag.js) -->
@@ -124,100 +124,115 @@
       </h2>
       <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
     </header>
-    <main class="article-body space-y-7">
-      <h1 class="text-3xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
-        Case Studies
-      </h1>
+    <main>
+      <div class="article-body space-y-7">
+        <h1 class="text-3xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
+          Case Studies
+        </h1>
 
-      <p>
-        Case studies on design systems and product architecture, built and tested in real production environments. Each project documents decisions, trade-offs, and implementation outcomes.
-      </p>
+        <p>
+          Case studies on design systems and product architecture, built and tested in real production environments. Each project documents decisions, trade-offs, and implementation outcomes.
+        </p>
+      </div>
 
-      <hr class="border-neutral-200 dark:border-neutral-800 my-14">
-
-      <section class="space-y-12">
-        <article class="space-y-2">
-          <span class="text-xs font-sans text-neutral-400 dark:text-neutral-500">2026 · Side Project</span>
-          <h2 class="text-xl font-semibold leading-snug">
-            <a href="/carburante/?lang=en" class="text-blue-600 dark:text-blue-400" data-track="internal_title_carburante" data-category="navigation" data-location="case-studies">
-              Carburante: A Native iOS Logbook for Motorcycles
-            </a>
+      <section aria-label="Case studies" class="mt-12 space-y-4 md:space-y-5">
+        <article class="work-card group relative flex flex-col rounded-2xl bg-white/60 dark:bg-neutral-900/60 p-6 md:p-7 transition-colors duration-150 hover:bg-white dark:hover:bg-neutral-900 active:bg-white dark:active:bg-neutral-900 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blue-500/60 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-neutral-100 dark:has-[:focus-visible]:ring-blue-400/60 dark:has-[:focus-visible]:ring-offset-neutral-950">
+          <div class="flex items-center gap-3">
+            <span class="app-icon"><img src="../assets/carburante-ico.webp" alt="" width="40" height="40" loading="lazy" decoding="async"></span>
+            <p class="text-[15px] font-medium text-neutral-900 dark:text-neutral-100">Carburante</p>
+          </div>
+          <h2 class="mt-5 font-serif text-xl md:text-[1.375rem] font-normal leading-[1.35] text-neutral-900 dark:text-neutral-100 text-balance">
+            <a href="https://carburante.motorcycles/?lang=en" target="_blank" rel="noopener noreferrer" aria-describedby="cs-carburante" class="bg-none decoration-neutral-300 dark:decoration-neutral-600 decoration-1 underline-offset-[5px] group-hover:underline after:absolute after:inset-0 after:rounded-2xl" data-track="internal_title_carburante" data-category="outbound" data-location="case-studies">Carburante: A Native iOS Logbook for Motorcycles<span class="sr-only"> (opens in new tab)</span></a>
           </h2>
-          <p class="text-sm font-sans">
-            Personal project, designed and built end to end: SwiftUI and SwiftData, offline-first sync with Supabase, on-device receipt OCR, and real fuel economy measured tank to tank. Open beta on TestFlight, code on <a href="https://github.com/wagnerrosa/carburante" class="text-blue-600 dark:text-blue-400" target="_blank" rel="noopener noreferrer" data-track="outbound_carburante_github" data-category="outbound" data-location="case-studies">GitHub <span class="font-sans">↗</span></a>
-          </p>
+          <p id="cs-carburante" class="mt-3 font-serif text-base leading-relaxed text-neutral-600 dark:text-neutral-400 text-pretty">Personal project, designed and built end to end: SwiftUI and SwiftData, offline-first sync with Supabase, on-device receipt OCR, and real fuel economy measured tank to tank. Open beta on TestFlight, code on <a href="https://github.com/wagnerrosa/carburante" class="relative z-10 text-blue-600 dark:text-blue-400" target="_blank" rel="noopener noreferrer" data-track="outbound_carburante_github" data-category="outbound" data-location="case-studies">GitHub <span class="font-sans">↗</span></a></p>
+          <div class="mt-6 flex items-baseline justify-between gap-4 text-[13px] text-neutral-500 dark:text-neutral-400 tabular-nums">
+            <span>2026 · Independent project</span>
+            <span aria-hidden="true" class="text-neutral-400 dark:text-neutral-500 transition duration-150 group-hover:translate-x-0.5 group-hover:text-blue-600 dark:group-hover:text-blue-400">↗</span>
+          </div>
         </article>
-
-        <article class="space-y-2">
-          <span class="text-xs font-sans text-neutral-400 dark:text-neutral-500">2026 · Case Study · Private</span>
-          <h2 class="text-xl font-semibold leading-snug">
-            <a href="/case-studies/planton-genius.html" class="text-blue-600 dark:text-blue-400" data-track="internal_title_planton_genius" data-category="navigation" data-location="case-studies">
-              Planton Genius
-            </a>
+        <article class="work-card group relative flex flex-col rounded-2xl bg-white/60 dark:bg-neutral-900/60 p-6 md:p-7 transition-colors duration-150 hover:bg-white dark:hover:bg-neutral-900 active:bg-white dark:active:bg-neutral-900 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blue-500/60 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-neutral-100 dark:has-[:focus-visible]:ring-blue-400/60 dark:has-[:focus-visible]:ring-offset-neutral-950">
+          <div class="flex items-center gap-3">
+            <span class="app-icon"><img src="../assets/planton-ico.webp" alt="" width="40" height="40" loading="lazy" decoding="async"></span>
+            <p class="text-[15px] font-medium text-neutral-900 dark:text-neutral-100">Planton</p>
+          </div>
+          <h2 class="mt-5 font-serif text-xl md:text-[1.375rem] font-normal leading-[1.35] text-neutral-900 dark:text-neutral-100 text-balance">
+            <a href="/case-studies/planton-genius.html" aria-describedby="cs-planton-genius" class="bg-none decoration-neutral-300 dark:decoration-neutral-600 decoration-1 underline-offset-[5px] group-hover:underline after:absolute after:inset-0 after:rounded-2xl" data-track="internal_title_planton_genius" data-category="navigation" data-location="case-studies">Planton Genius</a>
           </h2>
-          <p class="text-sm font-sans">
-            Redesigning a B2B emissions inventory SaaS: I built the functional prototype in React that the engineering team shipped from. Private case study, shared by password. More about the product at <a href="https://site.planton.eco.br/en" class="text-blue-600 dark:text-blue-400" target="_blank" rel="noopener noreferrer" data-track="outbound_planton_genius_product" data-category="outbound" data-location="case-studies">planton.eco.br <span class="font-sans">↗</span></a>
-          </p>
+          <p id="cs-planton-genius" class="mt-3 font-serif text-base leading-relaxed text-neutral-600 dark:text-neutral-400 text-pretty">Redesigning a B2B emissions inventory SaaS: I built the functional prototype in React that the engineering team shipped from. Private case study, shared by password. More about the product at <a href="https://site.planton.eco.br/en" class="relative z-10 text-blue-600 dark:text-blue-400" target="_blank" rel="noopener noreferrer" data-track="outbound_planton_genius_product" data-category="outbound" data-location="case-studies">planton.eco.br <span class="font-sans">↗</span></a></p>
+          <div class="mt-6 flex items-baseline justify-between gap-4 text-[13px] text-neutral-500 dark:text-neutral-400 tabular-nums">
+            <span>2026 · Case study · Private</span>
+            <span aria-hidden="true" class="text-neutral-400 dark:text-neutral-500 transition duration-150 group-hover:translate-x-0.5 group-hover:text-blue-600 dark:group-hover:text-blue-400">→</span>
+          </div>
         </article>
-
-        <article class="space-y-2">
-          <span class="text-xs font-sans text-neutral-400 dark:text-neutral-500">2026 · Case Study</span>
-          <h2 class="text-xl font-semibold leading-snug">
-            <a href="/case-studies/planton-academy.html" class="text-blue-600 dark:text-blue-400" data-track="internal_title_planton_academy" data-category="navigation" data-location="case-studies">
-              Planton Academy: Designing a Corporate Learning Platform, End to End
-            </a>
+        <article class="work-card group relative flex flex-col rounded-2xl bg-white/60 dark:bg-neutral-900/60 p-6 md:p-7 transition-colors duration-150 hover:bg-white dark:hover:bg-neutral-900 active:bg-white dark:active:bg-neutral-900 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blue-500/60 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-neutral-100 dark:has-[:focus-visible]:ring-blue-400/60 dark:has-[:focus-visible]:ring-offset-neutral-950">
+          <div class="flex items-center gap-3">
+            <span class="app-icon"><img src="../assets/planton-ico.webp" alt="" width="40" height="40" loading="lazy" decoding="async"></span>
+            <p class="text-[15px] font-medium text-neutral-900 dark:text-neutral-100">Planton</p>
+          </div>
+          <h2 class="mt-5 font-serif text-xl md:text-[1.375rem] font-normal leading-[1.35] text-neutral-900 dark:text-neutral-100 text-balance">
+            <a href="/case-studies/planton-academy.html" aria-describedby="cs-planton-academy" class="bg-none decoration-neutral-300 dark:decoration-neutral-600 decoration-1 underline-offset-[5px] group-hover:underline after:absolute after:inset-0 after:rounded-2xl" data-track="internal_title_planton_academy" data-category="navigation" data-location="case-studies">Planton Academy: Designing a Corporate Learning Platform, End to End</a>
           </h2>
-          <p class="text-sm font-sans">
-            From business model to shipped React code: three user roles, quiz-gated certification, an AI tutor with human handoff, and a design system keeping it coherent.
-          </p>
+          <p id="cs-planton-academy" class="mt-3 font-serif text-base leading-relaxed text-neutral-600 dark:text-neutral-400 text-pretty">From business model to shipped React code: three user roles, quiz-gated certification, an AI tutor with human handoff, and a design system keeping it coherent.</p>
+          <div class="mt-6 flex items-baseline justify-between gap-4 text-[13px] text-neutral-500 dark:text-neutral-400 tabular-nums">
+            <span>2026 · Case study · 5 min read</span>
+            <span aria-hidden="true" class="text-neutral-400 dark:text-neutral-500 transition duration-150 group-hover:translate-x-0.5 group-hover:text-blue-600 dark:group-hover:text-blue-400">→</span>
+          </div>
         </article>
-
-        <article class="space-y-2">
-          <span class="text-xs font-sans text-neutral-400 dark:text-neutral-500">2026 · Case Study</span>
-          <h2 class="text-xl font-semibold leading-snug">
-            <a href="/case-studies/planton-ui-design-system.html" class="text-blue-600 dark:text-blue-400" data-track="internal_title_planton_ui" data-category="navigation" data-location="case-studies">
-              From Editorial Brand to Product System: Building Planton UI
-            </a>
+        <article class="work-card group relative flex flex-col rounded-2xl bg-white/60 dark:bg-neutral-900/60 p-6 md:p-7 transition-colors duration-150 hover:bg-white dark:hover:bg-neutral-900 active:bg-white dark:active:bg-neutral-900 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blue-500/60 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-neutral-100 dark:has-[:focus-visible]:ring-blue-400/60 dark:has-[:focus-visible]:ring-offset-neutral-950">
+          <div class="flex items-center gap-3">
+            <span class="app-icon"><img src="../assets/planton-ico.webp" alt="" width="40" height="40" loading="lazy" decoding="async"></span>
+            <p class="text-[15px] font-medium text-neutral-900 dark:text-neutral-100">Planton</p>
+          </div>
+          <h2 class="mt-5 font-serif text-xl md:text-[1.375rem] font-normal leading-[1.35] text-neutral-900 dark:text-neutral-100 text-balance">
+            <a href="/case-studies/planton-ui-design-system.html" aria-describedby="cs-planton-ui" class="bg-none decoration-neutral-300 dark:decoration-neutral-600 decoration-1 underline-offset-[5px] group-hover:underline after:absolute after:inset-0 after:rounded-2xl" data-track="internal_title_planton_ui" data-category="navigation" data-location="case-studies">From Editorial Brand to Product System: Building Planton UI</a>
           </h2>
-          <p class="text-sm font-sans">
-            How an implicit brand language became an enforceable design system: tokens, primitives, and real product screens for a B2B sustainability platform.
-          </p>
+          <p id="cs-planton-ui" class="mt-3 font-serif text-base leading-relaxed text-neutral-600 dark:text-neutral-400 text-pretty">How an implicit brand language became an enforceable design system: tokens, primitives, and real product screens for a B2B sustainability platform.</p>
+          <div class="mt-6 flex items-baseline justify-between gap-4 text-[13px] text-neutral-500 dark:text-neutral-400 tabular-nums">
+            <span>2026 · Case study · 12 min read</span>
+            <span aria-hidden="true" class="text-neutral-400 dark:text-neutral-500 transition duration-150 group-hover:translate-x-0.5 group-hover:text-blue-600 dark:group-hover:text-blue-400">→</span>
+          </div>
         </article>
-
-        <article class="space-y-2">
-          <span class="text-xs font-sans text-neutral-400 dark:text-neutral-500">2026 · Case Study</span>
-          <h2 class="text-xl font-semibold leading-snug">
-            <a href="/case-studies/planton-website-vision-to-production.html" class="text-blue-600 dark:text-blue-400" data-track="internal_title_planton_website" data-category="navigation" data-location="case-studies">
-              Planton Website: From Vision to Production
-            </a>
+        <article class="work-card group relative flex flex-col rounded-2xl bg-white/60 dark:bg-neutral-900/60 p-6 md:p-7 transition-colors duration-150 hover:bg-white dark:hover:bg-neutral-900 active:bg-white dark:active:bg-neutral-900 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blue-500/60 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-neutral-100 dark:has-[:focus-visible]:ring-blue-400/60 dark:has-[:focus-visible]:ring-offset-neutral-950">
+          <div class="flex items-center gap-3">
+            <span class="app-icon"><img src="../assets/planton-ico.webp" alt="" width="40" height="40" loading="lazy" decoding="async"></span>
+            <p class="text-[15px] font-medium text-neutral-900 dark:text-neutral-100">Planton</p>
+          </div>
+          <h2 class="mt-5 font-serif text-xl md:text-[1.375rem] font-normal leading-[1.35] text-neutral-900 dark:text-neutral-100 text-balance">
+            <a href="/case-studies/planton-website-vision-to-production.html" aria-describedby="cs-planton-website" class="bg-none decoration-neutral-300 dark:decoration-neutral-600 decoration-1 underline-offset-[5px] group-hover:underline after:absolute after:inset-0 after:rounded-2xl" data-track="internal_title_planton_website" data-category="navigation" data-location="case-studies">Planton Website: From Vision to Production</a>
           </h2>
-          <p class="text-sm font-sans">
-            Designing and implementing a multilingual B2B climate tech website in 18 days, from AI-first exploration to Figma prototyping to production code.
-          </p>
+          <p id="cs-planton-website" class="mt-3 font-serif text-base leading-relaxed text-neutral-600 dark:text-neutral-400 text-pretty">Designing and implementing a multilingual B2B climate tech website in 18 days, from AI-first exploration to Figma prototyping to production code.</p>
+          <div class="mt-6 flex items-baseline justify-between gap-4 text-[13px] text-neutral-500 dark:text-neutral-400 tabular-nums">
+            <span>2026 · Case study · 10 min read</span>
+            <span aria-hidden="true" class="text-neutral-400 dark:text-neutral-500 transition duration-150 group-hover:translate-x-0.5 group-hover:text-blue-600 dark:group-hover:text-blue-400">→</span>
+          </div>
         </article>
-
-        <article class="space-y-2">
-          <span class="text-xs font-sans text-neutral-400 dark:text-neutral-500">2026 · Technical Essay</span>
-          <h2 class="text-xl font-semibold leading-snug">
-            <a href="/case-studies/building-a-sub-500ms-site-2026.html" class="text-blue-600 dark:text-blue-400" data-track="internal_title_sub500ms" data-category="navigation" data-location="case-studies">
-              Building a Sub-500ms Personal Site in 2026
-            </a>
+        <article class="work-card group relative flex flex-col rounded-2xl bg-white/60 dark:bg-neutral-900/60 p-6 md:p-7 transition-colors duration-150 hover:bg-white dark:hover:bg-neutral-900 active:bg-white dark:active:bg-neutral-900 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blue-500/60 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-neutral-100 dark:has-[:focus-visible]:ring-blue-400/60 dark:has-[:focus-visible]:ring-offset-neutral-950">
+          <div class="flex items-center gap-3">
+            <span class="app-icon"><img src="../assets/wagnerrosa-picture.jpg" alt="" width="40" height="40" loading="lazy" decoding="async"></span>
+            <p class="text-[15px] font-medium text-neutral-900 dark:text-neutral-100">wagnerrosa.com</p>
+          </div>
+          <h2 class="mt-5 font-serif text-xl md:text-[1.375rem] font-normal leading-[1.35] text-neutral-900 dark:text-neutral-100 text-balance">
+            <a href="/case-studies/building-a-sub-500ms-site-2026.html" aria-describedby="cs-sub500ms" class="bg-none decoration-neutral-300 dark:decoration-neutral-600 decoration-1 underline-offset-[5px] group-hover:underline after:absolute after:inset-0 after:rounded-2xl" data-track="internal_title_sub500ms" data-category="navigation" data-location="case-studies">Building a Sub-500ms Personal Site in 2026</a>
           </h2>
-          <p class="text-sm font-sans">
-            Why static HTML still wins for performance, constraints, and long-term maintainability.
-          </p>
+          <p id="cs-sub500ms" class="mt-3 font-serif text-base leading-relaxed text-neutral-600 dark:text-neutral-400 text-pretty">Why static HTML still wins for performance, constraints, and long-term maintainability.</p>
+          <div class="mt-6 flex items-baseline justify-between gap-4 text-[13px] text-neutral-500 dark:text-neutral-400 tabular-nums">
+            <span>2026 · Technical essay · 8 min read</span>
+            <span aria-hidden="true" class="text-neutral-400 dark:text-neutral-500 transition duration-150 group-hover:translate-x-0.5 group-hover:text-blue-600 dark:group-hover:text-blue-400">→</span>
+          </div>
         </article>
-
-        <article class="space-y-2">
-          <span class="text-xs font-sans text-neutral-400 dark:text-neutral-500">2025 · Case Study</span>
-          <h2 class="text-xl font-semibold leading-snug">
-            <a href="/case-studies/iel-rs-ux-redesign.html" class="text-blue-600 dark:text-blue-400" data-track="internal_title_iel_rs" data-category="navigation" data-location="case-studies">
-              IEL-RS: Navigation and UX Restructuring
-            </a>
+        <article class="work-card group relative flex flex-col rounded-2xl bg-white/60 dark:bg-neutral-900/60 p-6 md:p-7 transition-colors duration-150 hover:bg-white dark:hover:bg-neutral-900 active:bg-white dark:active:bg-neutral-900 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blue-500/60 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-neutral-100 dark:has-[:focus-visible]:ring-blue-400/60 dark:has-[:focus-visible]:ring-offset-neutral-950">
+          <div class="flex items-center gap-3">
+            <span class="app-icon"><img src="../assets/fiergs-ico.svg" alt="" width="40" height="40" loading="lazy" decoding="async"></span>
+            <p class="text-[15px] font-medium text-neutral-900 dark:text-neutral-100">Sistema FIERGS</p>
+          </div>
+          <h2 class="mt-5 font-serif text-xl md:text-[1.375rem] font-normal leading-[1.35] text-neutral-900 dark:text-neutral-100 text-balance">
+            <a href="/case-studies/iel-rs-ux-redesign.html" aria-describedby="cs-iel-rs" class="bg-none decoration-neutral-300 dark:decoration-neutral-600 decoration-1 underline-offset-[5px] group-hover:underline after:absolute after:inset-0 after:rounded-2xl" data-track="internal_title_iel_rs" data-category="navigation" data-location="case-studies">IEL-RS: Navigation and UX Restructuring</a>
           </h2>
-          <p class="text-sm font-sans">
-            Complete navigation restructuring and UX redesign for IEL-RS, within the FIERGS System.
-          </p>
+          <p id="cs-iel-rs" class="mt-3 font-serif text-base leading-relaxed text-neutral-600 dark:text-neutral-400 text-pretty">Complete navigation restructuring and UX redesign for IEL-RS, within the FIERGS System.</p>
+          <div class="mt-6 flex items-baseline justify-between gap-4 text-[13px] text-neutral-500 dark:text-neutral-400 tabular-nums">
+            <span>2025 · Case study · 6 min read</span>
+            <span aria-hidden="true" class="text-neutral-400 dark:text-neutral-500 transition duration-150 group-hover:translate-x-0.5 group-hover:text-blue-600 dark:group-hover:text-blue-400">→</span>
+          </div>
         </article>
       </section>
     </main>

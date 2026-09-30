@@ -45,7 +45,9 @@ Never introduce: sidebars, multi-column layouts, cards, grids, hero sections, or
 - The body uses stacked wrappers (header div, `<main>` with hero + work sections, `<footer>`), each with `mx-auto px-6 sm:px-8 lg:px-12`, instead of one container. Home uses `pt-16 sm:pt-24`.
 - Work cards: `bg-white/60` (dark `bg-neutral-900/60`), `rounded-2xl`, no border, no shadow, no pills. Structure: `.app-icon` + name (`h3`, Inter 15px) → serif description (`text-xl md:text-[1.375rem]`) → meta line `Role · Period` (platform only when it adds information, e.g. `iOS`) with an `aria-hidden` arrow. One stretched link per card (`after:absolute after:inset-0`), focus ring on the card via `has-[:focus-visible]:ring-2`.
 
-Do not copy cards or grids to other pages.
+The case studies hub (`case-studies/index.html`) reuses the same `.work-card` in a **single column** inside the regular `max-w-2xl` container (`space-y-4 md:space-y-5`): client `.app-icon` + client name → serif title as the stretched link (`bg-none`, subtle `group-hover:underline`) → serif description (`text-base`, neutral-600; inline links get `relative z-10` to sit above the stretched link) → meta `Year · Category · X min read` with `→` (or `↗` for external). Personal essays use `wagnerrosa-picture.jpg` as the icon with the label `wagnerrosa.com`. The hub's intro keeps `article-body`; the card list sits outside it so the serif 18px rule doesn't override card typography.
+
+Do not copy cards or grids to any other page.
 
 ## Header Pattern (required on every page)
 
@@ -123,7 +125,7 @@ Class-based, localStorage-persisted. Every page needs both scripts:
 4. Link `../assets/micro-interactions.css` (relative path from subdirectory)
 5. Add scroll progress bar (first child of `<body>`) and back-to-top button (in `<footer>`)
 6. Add required micro-interaction scripts before `</body>`
-7. **Update `case-studies/index.html`** with new entry (newest first)
+7. **Update `case-studies/index.html`** with new entry (newest first): copy an existing `.work-card`, set the client icon/name, title, description, `aria-describedby` id and meta line
 8. Run `npm run build` to rebuild CSS
 
 Article footer navigation links use `data-track`, `data-category`, `data-location` attributes for analytics.
