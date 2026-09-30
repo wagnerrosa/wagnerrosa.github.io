@@ -38,6 +38,16 @@ Every page must use this container — `max-w-2xl` is consistent across all page
 
 Never introduce: sidebars, multi-column layouts, cards, grids, hero sections, or decorative sections. Single centered column only, mobile-first.
 
+### Homepage exception
+
+`index.html` is the only page allowed to break the single-column rule, and only in one place:
+- The **Selected work** section widens to `max-w-4xl` and shows `.work-card` items in a grid (`md:grid-cols-2`, 1 column on mobile). Header, hero and footer stay in `max-w-2xl`.
+- The body uses stacked wrappers (header div, `<main>` with hero + work sections, `<footer>`), each with `mx-auto px-6 sm:px-8 lg:px-12`, instead of one container. Home uses `pt-16 sm:pt-24`.
+- Work cards: `bg-white/60` (dark `bg-neutral-900/60`), `rounded-2xl`, no border, no shadow, no pills. Structure: `.app-icon` + name (`h3`, Inter 15px) → serif description (`text-xl md:text-[1.375rem]`) → meta line `Role · Platform · Period` with an `aria-hidden` arrow. One stretched link per card (`after:absolute after:inset-0`), focus ring on the card via `has-[:focus-visible]:ring-2`.
+- Arrows: `→` internal, `↗` external (with `sr-only` "opens in new tab"), `↓` download.
+
+Do not copy cards or grids to other pages.
+
 ## Header Pattern (required on every page)
 
 ```html
@@ -79,6 +89,7 @@ Google Fonts: `Source+Serif+4:ital,wght@0,400;0,600;1,400` + `Inter:wght@400;500
 - **Definition lists**: `<dl class="space-y-5 my-6"><div class="pl-4 border-l-2 ..."><dt>Term</dt><dd>Def</dd></div></dl>`
 - **Section dividers**: `<hr class="border-neutral-200 dark:border-neutral-800 my-14">`
 - **Tables**: auto-styled inside `.article-body` (no outer border, subtle row dividers)
+- **App icons** (homepage only): `<span class="app-icon"><img src="..." alt="" width="40" height="40"></span>` — Apple-style squircle, shadow and sheen (36px, 40px from `md`). Add `app-icon--tile` for marks without their own background (white tile). Source icons live in `assets/*-ico.*` (webp 120px for raster).
 - **Lists**: auto-styled inside `.article-body` (softer markers via CSS)
 
 ## Dark Mode
