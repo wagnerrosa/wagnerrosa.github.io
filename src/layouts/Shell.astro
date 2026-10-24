@@ -76,7 +76,7 @@ const start = model.items.find(i => i.id === startId)!;
         <button class="theme" id="theme" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
         <a class="hub" id="hub" href="/" draggable="false">
           <Image src={asset('photos/portrait.jpg')} alt="" width={168} height={168} format="webp" quality={80} loading="eager" />
-          <span><b><span class="sr">Home: </span>{site.name}</b><span class="role">{site.title}</span><span class="status mono"><i></i>{site.badge}</span></span>
+          <span><b><span class="sr">Home: </span>{site.name}</b><span class="role">{site.hubRole}</span><span class="status mono"><i></i>{site.badge}</span></span>
         </a>
       </aside>
       <main class="stage" id="stage" tabindex="-1" data-start-url={start.url}>

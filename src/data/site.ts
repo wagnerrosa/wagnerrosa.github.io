@@ -8,6 +8,7 @@ export const site = {
   name: 'Wagner Rosa',
   fullName: 'Wagner da Rosa de Souza', // only About description + Person alternateName (positioning/decisions.md)
   title: 'UX Lead & Product Designer',
+  hubRole: 'Product Designer',   // the short line under the name on the wheel (the full title stays in titles and JSON-LD)
   email: 'contato@wagnerrosa.com',
   place: 'Porto Alegre, Brazil',
   timezone: 'GMT-3',
