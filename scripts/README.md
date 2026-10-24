@@ -47,8 +47,10 @@ Change it there whenever the password changes.
 2. Add a matching `npx staticrypt` block in `build-protected.sh` (copy the existing one,
    change the filename and `--template-title`)
 3. Add the entry to `case-studies/index.html`, marked `Password required`
-4. Add a `Disallow:` line for it in `robots.txt`
-5. `npm run build`
+4. `npm run build`
+
+Don't add protected pages to `robots.txt`. The gate template sends `noindex, nofollow`;
+a `Disallow:` line would hide that tag from crawlers.
 
 ## ⚠️ Backup
 

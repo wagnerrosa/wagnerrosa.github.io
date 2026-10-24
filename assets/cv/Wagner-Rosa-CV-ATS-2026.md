@@ -1,8 +1,8 @@
 # Wagner Rosa
 
-Senior Product Designer | UX Lead | Design Systems and Front-End Implementation
+Senior Product Designer | UX Lead | Design Systems
 
-Porto Alegre, Brazil
+Porto Alegre, Brazil (GMT-3)
 Email: contato@wagnerrosa.com
 Phone: +55 51 99656-6544
 Portfolio: https://wagnerrosa.com
@@ -15,22 +15,22 @@ Open to remote roles across Brazil, Europe and US time zones (GMT-3). Available 
 
 ## Professional Summary
 
-Senior Product Designer with over 10 years of experience designing and shipping digital products across education, AI and sustainability. Transforms complex business challenges into intuitive product experiences by combining product thinking, UX strategy, scalable design systems and production-ready React interfaces.
-
-Works closely with engineering to bridge the gap between design decisions and implementation, using AI-assisted workflows to accelerate exploration, development and validation. Background spans marketing, product design and front-end fundamentals, with experience in B2B SaaS, Climate Tech, EdTech and AI-driven products.
+Senior Product Designer with 10+ years of experience turning complex products, business logic and AI-powered workflows into clear interfaces and shipped experiences. Currently leads a team of 5 UX Designers at Nelogica and presents directly to the CEO. Combines end-to-end UX and design systems with a background in art direction and motion, across Financial Services, B2B SaaS, AI, Education and Climate Tech. Stays hands-on: designed and built a native iOS app solo, and uses AI-assisted workflows to move from design to working code.
 
 ---
 
 ## Core Competencies
 
-Product Design, User Experience (UX) Design, User Interface (UI) Design, Design Systems, Design Tokens, Information Architecture, User Flows, Interaction Design, Prototyping, UX Research, Usability, Design-to-Code, Art Direction, Web Design, Digital Strategy, Applied Artificial Intelligence (AI), B2B SaaS, Cross-Functional Collaboration, Stakeholder Management
+Product Design, User Experience (UX) Design, User Interface (UI) Design, Design Systems, Design Tokens, Information Architecture, User Flows, Interaction Design, Prototyping, UX Research, Usability Testing, Accessibility (WCAG), Design-to-Code, iOS Design, Art Direction, Motion Design, Web Design, Digital Strategy, Applied Artificial Intelligence (AI), Financial Services, B2B SaaS, Team Leadership, Cross-Functional Collaboration, Stakeholder Management
 
 ---
 
 ## Technical Skills
 
-- **Design:** Figma, Design Systems, Design Tokens, Prototyping, Motion Design, Adobe Creative Suite
-- **Design-to-Code:** React, Tailwind CSS, shadcn/ui, HTML5, CSS3, Git — implements production components alongside engineering, using AI-assisted workflows (Claude Code, Codex, Model Context Protocol)
+- **UX and Product:** Discovery, User Flows, Information Architecture, Prototyping, Usability Testing, Accessibility (WCAG)
+- **UI and Design Systems:** Figma (Auto Layout, Variables, Components), Design Systems, Design Tokens, iOS Design
+- **Design-to-Code (AI-assisted):** React, Next.js, TypeScript, Tailwind CSS, shadcn/ui, HTML5, CSS3, Swift, Git and GitHub — implements production components alongside engineering, using AI-assisted workflows (Claude Code, Codex, Model Context Protocol)
+- **Visual and Motion:** Art Direction, Motion Design, Adobe Creative Suite (After Effects, Premiere, Photoshop, Illustrator)
 - **Content:** Sanity CMS, next-intl (internationalization)
 
 ---
@@ -41,20 +41,20 @@ Product Design, User Experience (UX) Design, User Interface (UI) Design, Design 
 **Nelogica** — Porto Alegre, Brazil
 August 2026 - Present
 
-- Contributing to user experience direction and product experiences across Nelogica's digital ecosystem, within a team of 5 UX Designers.
-- Collaborating with Product and Engineering to establish scalable UX practices and improve consistency across platforms.
+- Lead a team of 5 UX Designers, setting UX direction for financial and trading platforms with 4M+ users in 150+ countries.
+- Present design concepts and rationale directly to the CEO, translating product strategy into prioritized UX decisions.
+- Partner with Product and Engineering on scalable UX practices, handoff standards and cross-platform consistency.
 
 ### Senior UX Designer / Product Designer
 **Planton** — Porto Alegre, Brazil
 January 2026 - August 2026
 
-- Led UX and Product Design across Planton's digital ecosystem, including carbon management software, AI-powered products, educational platforms and corporate sustainability initiatives.
-- Designed end-to-end product experiences, transforming business requirements into scalable user journeys, information architecture and interaction models.
-- Created and evolved the Planton UI Design System, establishing reusable components, design tokens and documentation shared across multiple products.
+- Led end-to-end UX and UI across B2B SaaS, AI, sustainability and education products, from discovery to developer handoff.
+- Designed Planton Genius, a B2B SaaS platform for carbon emissions management, turning complex data, business logic and AI-powered workflows into clear interfaces.
 - Designed and shipped Planton Academy, a B2B corporate learning platform serving enterprise clients: three user roles on a shared dataset, a 12-state onboarding flow, quiz-gated certification and an AI tutor with human handoff.
+- Created the Planton UI Design System: reusable components, design tokens, documentation and WCAG guidelines shared across multiple products.
 - Delivered a multilingual B2B website from visual direction to production: 9 fully localized pages in 18 days across 221 commits.
-- Implemented production front-ends in React, Next.js and TypeScript with AI-assisted workflows, collaborating closely with engineering to reduce design-to-code friction and ensure consistency between design and shipped interfaces.
-- Applied AI throughout design and development workflows to accelerate exploration, implementation, documentation and validation of product decisions.
+- Implemented production front-ends in React, Next.js and TypeScript with AI-assisted workflows, collaborating closely with engineering to reduce design-to-code friction.
 
 ### Web Art Director / Digital Art Director / Art Director
 **Sistema FIERGS** — Porto Alegre, Brazil
@@ -62,11 +62,12 @@ July 2018 - January 2026
 
 Progressed through Art Director (July 2018 - October 2020), Digital Art Director (October 2020 - February 2025) and Web Art Director (February 2025 - January 2026).
 
-- Led digital and web initiatives across the FIERGS system, including SESI, SENAI, IEL, CIERGS and FIERGS, working across websites, portals, landing pages and digital products.
+- Led digital design for websites, portals, landing pages and digital products for SESI, SENAI, IEL, CIERGS and FIERGS, the industry federation system of Rio Grande do Sul.
 - Acted as the primary designer responsible for websites and landing pages across the system, leading interface structure, information hierarchy, user flows and digital consistency standards while maintaining art direction duties.
 - Joined a newly formed team within SESI focused on Health and Education products, leading the design of websites, landing pages and portals while improving usability and clarity across touchpoints.
-- Collaborated closely with stakeholders, copywriters and engineering teams to translate diverse institutional requirements into cohesive and scalable digital experiences, managing multiple projects simultaneously.
 - Delivered a complete navigation restructuring and UX redesign for IEL-RS, published as a case study.
+- Designed and coded email marketing campaigns end to end, from concept to HTML and A/B testing.
+- Presented design concepts directly to regional and national directors, aligning creative direction with business strategy.
 
 ---
 
@@ -83,6 +84,16 @@ Audiovisual editing and production, on-set video capture and final delivery.
 
 **Designer Intern**, Banrisul, Porto Alegre, Brazil | 2011 - 2012
 Email marketing campaigns, promotional materials and digital content for institutional campaigns; first exposure to the Adobe toolset.
+
+---
+
+## Selected Work
+
+### Carburante
+Native iOS app for motorcycle riders — https://carburante.motorcycles
+
+- Designed and built solo in Swift: fuel logging in three steps with on-device photo reading of odometer and receipts, full-to-full consumption tracking, maintenance reminders, offline-first sync and a 25-badge achievement system.
+- Created the product story end to end: brand, landing page, motion demo clips and an AI-assisted visual asset pipeline. Open source on GitHub.
 
 ---
 

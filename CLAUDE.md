@@ -23,6 +23,7 @@ Static site with no framework, no bundler, no runtime hydration. HTML5 + Tailwin
 - `index.html` — homepage, primary layout reference
 - `about.html` — personal background (uses `article-body` for serif reading)
 - `case-studies/index.html` — article hub (must be updated when adding new articles)
+- `cv.html` — public HTML preview of `assets/cv/Wagner-Rosa-CV-ATS-2026.md` (footer "ATS-friendly CV →"). Hand-written mirror of the MD: when you edit the MD, update this page and its `dateModified`/sitemap `lastmod`. The raw `.md` and the PDF `assets/cv/Wagner-Rosa-CV-oct2026.pdf` are linked from it
 - `input.css` — Tailwind entry point with article-body, pull-quote, code-block, badge components
 - `output.css` — compiled output (committed)
 - `tailwind.config.js` — dark mode (`class`), content scan paths, custom fonts (Inter, Source Serif 4)
@@ -66,8 +67,8 @@ Header h2 is always `font-medium` without `font-serif` (it's UI, not editorial).
 ## Footer Pattern (home, about, case studies hub)
 
 `index.html`, `about.html` and `case-studies/index.html` share one footer. Keep the three in sync:
-- Serif `h2` invitation ("Open to remote Senior Product Design roles."), then the email link with a "Copy" button (`#copy-email`, hidden until the clipboard script confirms support) and an `aria-live` status span.
-- `<nav>` grid (`grid-cols-2 sm:grid-cols-3`) with three groups: **Site** (Home, Case studies, Background), **Profiles** (LinkedIn, Behance, GitHub ↗), **CV** (PDF, ATS-friendly PDF ↓). The current page is a neutral `<span aria-current="page">` without an arrow.
+- Serif `h2` invitation ("Open to remote Product Design opportunities."), then the email link with a "Copy" button (`#copy-email`, hidden until the clipboard script confirms support) and an `aria-live` status span.
+- `<nav>` grid (`grid-cols-2 sm:grid-cols-3`) with three groups: **Site** (Home, Case studies, Background), **Profiles** (LinkedIn, Behance, GitHub ↗), **CV** (PDF ↓, ATS-friendly CV → — `cv.html`). The current page is a neutral `<span aria-current="page">` without an arrow.
 - Hairline + `© 2026 Wagner Rosa · Porto Alegre, Brazil · GMT-3`.
 - `data-location` matches the page (`index`, `about`, `case-studies`). On home the footer carries its own `max-w-2xl` wrapper; on the other two it sits inside the page container with `mt-16 sm:mt-24`.
 - Article pages keep their own "Back to case studies → / Go to homepage →" navigation.
@@ -142,8 +143,9 @@ Site stays on GitHub Pages — no backend.
 - Build: `npm run build` (Tailwind + encrypt) or `npm run build:protected`
 
 Never edit the file in `case-studies/` directly — it is generated.
-Protected entries are listed in `case-studies/index.html` marked `Password required`, and
-must get a `Disallow:` line in `robots.txt`.
+Protected entries are listed in `case-studies/index.html` marked `Password required`. Do not
+add them to `robots.txt`: the gate template already sends `noindex, nofollow`, and a `Disallow:`
+would stop crawlers from seeing it (the URL could still be indexed from the hub link).
 
 Full details and backup warnings: `scripts/README.md`
 

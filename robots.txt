@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /case-studies/planton-genius.html
 
 Sitemap: https://wagnerrosa.com/sitemap.xml
