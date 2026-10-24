@@ -46,6 +46,7 @@ ul, ol { list-style: none; }
 .p-body.single { display: block; }
 .facts > div { padding: 10px 0; }
 .facts > div + div { border-top: 1px solid var(--line); }
+.facts.plain > div + div { border-top: 0; }   /* the email link is already underlined: no hairline under it */
 .facts > div:first-child { padding-top: 0; }
 .facts > div:last-child { padding-bottom: 0; }
 .facts dt { color: var(--mute); margin-bottom: 4px; }
