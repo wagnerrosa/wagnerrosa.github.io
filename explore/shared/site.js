@@ -21,11 +21,10 @@ window.SITE = (function () {
       id: 'nelogica', n: '', label: 'Nelogica', tag: 'UX Lead', parent: 'index', type: 'work', icon: 'nelo-ico.svg',
       role: 'UX Lead', period: 'Aug 2026 – Present',
       desc: 'Designing complex trading and investing platforms for global markets.',
-      facts: [['Scale', '4M+ users · 150+ countries'], ['Team', '5 UX Designers']],
+      facts: [['Scale', '4M+ users · 150+ countries']],
       bullets: [
-        'Lead a team of 5 UX Designers, setting UX direction for financial and trading platforms.',
-        'Present design concepts and rationale directly to the CEO, turning product strategy into prioritized UX decisions.',
-        'Partner with Product and Engineering on scalable UX practices, handoff standards and cross-platform consistency.'
+        'Leading a team of 5 UX Designers working on complex financial products used by millions of people worldwide.',
+        'Partnering with Product and Engineering to evolve product strategy, design practices and cross-platform experiences.'
       ],
       href: 'https://www.nelogica.com.br/'
     },
@@ -35,9 +34,8 @@ window.SITE = (function () {
       desc: 'A native iOS logbook for motorcycle riders, designed and built end to end.',
       facts: [['Stack', 'SwiftUI · SwiftData · Supabase'], ['Status', 'Live on the App Store']],
       bullets: [
-        'Fuel logging in three steps, with on-device photo reading of odometer and receipts.',
-        'Real fuel economy measured tank to tank, maintenance reminders, offline-first sync and a 25-badge achievement system.',
-        'Brand, landing page, motion demos and an AI-assisted asset pipeline. Open source on GitHub.'
+        'Designed and built a native iOS app for motorcycle riders, making fuel tracking and maintenance management simple and intuitive.',
+        'Developed the product end to end, from brand identity and landing page to AI-assisted visual assets. Open source on GitHub.'
       ],
       href: 'https://carburante.motorcycles/?lang=en'
     },
@@ -45,12 +43,11 @@ window.SITE = (function () {
       id: 'planton', n: '', label: 'Planton', tag: 'Sr Product Designer', parent: 'index', type: 'work', icon: 'planton-ico.webp',
       role: 'Senior Product Designer', period: 'Jan – Aug 2026',
       desc: 'A B2B climate tech platform for emissions inventory and corporate learning.',
-      facts: [['Domain', 'B2B SaaS · AI · Education'], ['Shipped', '4 projects in 8 months']],
+      facts: [['Domain', 'B2B SaaS · AI · Education']],
       bullets: [
-        'Planton Genius: complex data, business logic and AI workflows turned into clear interfaces, with a React prototype engineering shipped from.',
-        'Planton Academy: three user roles, a 12-state onboarding flow, quiz-gated certification and an AI tutor with human handoff.',
-        'Planton UI: tokens, components and WCAG guidelines shared across products.',
-        'Multilingual website: 9 localized pages in 18 days, 221 commits.'
+        'Designed Planton Genius, translating complex business logic, emissions data and AI workflows into clear product experiences.',
+        'Led end-to-end design across SaaS and education products, including Planton Academy, from onboarding flows to AI-powered learning experiences.',
+        'Built the Planton UI Design System and contributed to the company\'s multilingual website, combining scalable design foundations with hands-on implementation.'
       ],
       rel: ['planton-genius', 'planton-academy', 'planton-ui-design-system', 'planton-website-vision-to-production'],
       href: 'https://site.planton.eco.br/en'
@@ -61,10 +58,9 @@ window.SITE = (function () {
       desc: 'Seven years designing digital experiences across the industry federation system of Rio Grande do Sul.',
       facts: [['Path', 'Art Director → Digital → Web Art Director'], ['Brands', 'SESI · SENAI · IEL · CIERGS · FIERGS']],
       bullets: [
-        'Primary designer for websites and landing pages across the system: interface structure, hierarchy, flows and consistency.',
-        'Complete navigation restructuring and UX redesign for IEL-RS, published as a case study.',
-        'Designed and coded email campaigns end to end, from concept to HTML and A/B tests.',
-        'Presented concepts directly to regional and national directors.'
+        'Led digital design across websites, landing pages and digital experiences for SESI, SENAI, IEL and other organizations within the FIERGS system.',
+        'Redesigned IEL-RS navigation and user experience, delivering a complete information architecture overhaul.',
+        'Designed and coded email campaigns end to end, combining art direction, HTML development and A/B testing.'
       ],
       rel: ['iel-rs-ux-redesign'], href: 'https://www.fiergs.org.br/'
     },
@@ -104,7 +100,6 @@ window.SITE = (function () {
         <dl class="facts">
           <div><dt class="mono">Now</dt><dd>UX Lead at Nelogica</dd></div>
           <div><dt class="mono">Based</dt><dd>Porto Alegre · GMT-3</dd></div>
-          <div><dt class="mono">Open to</dt><dd>Remote Product Design roles</dd></div>
           <div><dt class="mono">Elsewhere</dt><dd class="elsewhere">${link('https://www.linkedin.com/in/wagnerrosa/', 'LinkedIn', true)} ${link('https://github.com/wagnerrosa', 'GitHub', true)}</dd></div>
         </dl>
         <div>

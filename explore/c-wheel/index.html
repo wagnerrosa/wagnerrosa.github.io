@@ -77,6 +77,21 @@
   .keys kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 7px; box-sizing: border-box; font: 600 11px/1 var(--sans); letter-spacing: 0; color: var(--ink); background: var(--chip); border: 1px solid var(--chip-line); border-bottom-width: 2px; border-radius: 6px; }
   .keys em { margin-left: 5px; font: 500 12px/1 var(--sans); font-style: normal; letter-spacing: -.005em; color: var(--mute); }
   .side.k-nav .k-nav, .side.k-enter .k-enter, .side.k-close .k-close, .side.k-next .k-next, .side.k-scroll .k-scroll { grid-template-rows: 1fr; opacity: 1; }
+  /* private case: password gate inside the layer */
+  .read-body .gate-copy { max-width: 32em; font: 400 18px/1.5 var(--sans); letter-spacing: -.01em; color: var(--mute); }
+  .read-body .gate { display: flex; gap: 10px; max-width: 420px; }
+  .read-body .gate input { flex: 1; min-width: 0; height: 44px; padding: 0 14px; font: 500 16px/1 var(--sans); letter-spacing: 0; color: var(--ink); background: transparent; border: 1px solid var(--line-strong); border-radius: 10px; outline: none; transition: border-color .2s, box-shadow .2s; }
+  .read-body .gate input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / .16); }
+  .read-body .gate button { height: 44px; padding: 0 20px; font: 600 15px/1 var(--sans); letter-spacing: -.005em; color: var(--paper); background: var(--accent); border: 0; border-radius: 10px; cursor: pointer; transition: opacity .2s; }
+  .read-body .gate button:hover { opacity: .88; }
+  .read-body .gate.busy { opacity: .55; pointer-events: none; }
+  .read-body .gate.shake { animation: shake .4s; }
+  @keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+  .read-body .gate-msg { min-height: 1.4em; margin-top: 12px; font: 500 14px/1.4 var(--sans); letter-spacing: -.005em; color: var(--mute); }
+  .read-body .gate-msg.err { color: #e5484d; }
+  .read-body .gate-note { margin-top: 28px; font: 400 14px/1.4 var(--sans); color: var(--mute); }
+  .read-body.reveal { animation: reveal .7s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes reveal { from { opacity: 0; transform: translateY(14px); } }
   .read-body .read-end { margin-top: 4em; padding-top: 22px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 28px; font-family: var(--sans); }
   .read-body .read-end .mono { color: var(--mute); flex-basis: 100%; }
   .read-body .read-end a { font-weight: 600; font-size: 16px; letter-spacing: -.01em; }
@@ -259,22 +274,41 @@
 
 
   /* ---------- reading mode (experiment: only the case studies listed here) ---------- */
-  const READABLE = new Set(['iel-rs-ux-redesign', 'building-a-sub-500ms-site-2026', 'planton-academy', 'planton-ui-design-system', 'planton-website-vision-to-production']);   // public articles; Genius (password) and Carburante (external) stay outside
+  const READABLE = new Set(['iel-rs-ux-redesign', 'building-a-sub-500ms-site-2026', 'planton-genius', 'planton-academy', 'planton-ui-design-system', 'planton-website-vision-to-production']);   // Carburante (external) stays outside
   const readOrder = items.filter(i => i.c && READABLE.has(i.c.id)).map(i => i.c.id);
+  /* Planton Genius is encrypted with staticrypt: the same password gate, but inside the reading layer. The page is fetched,
+     its salt + ciphertext are read as text (nothing executes), and the unlocked article renders like any other. The derived
+     key (not the password) is kept for the tab session, so reopening or cycling past it doesn't ask again. */
+  const PROTECTED = new Set(['planton-genius']);
+  const keyOf = id => { try { return sessionStorage.getItem('read-key:' + id); } catch (e) { return null; } };
+  const unlocked = id => !PROTECTED.has(id) || !!keyOf(id);
+  const te = new TextEncoder();
+  const hexParse = h => Uint8Array.from(h.match(/../g) || [], b => parseInt(b, 16));
+  const hexStr = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  async function pbkdf2(pw, salt, iterations, hash) {
+    const k = await crypto.subtle.importKey('raw', te.encode(pw), 'PBKDF2', false, ['deriveBits']);
+    return hexStr(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash, iterations, salt: te.encode(salt) }, k, 256));
+  }
+  async function deriveKey(pw, salt) {                  // staticrypt's three rounds: 1k SHA-1, 14k SHA-256, 585k SHA-256
+    return pbkdf2(await pbkdf2(await pbkdf2(pw, salt, 1000, 'SHA-1'), salt, 14000, 'SHA-256'), salt, 585000, 'SHA-256');
+  }
+  async function decryptWith(gate, key) {               // the decrypted HTML, or null on a wrong key
+    const sig = gate.msg.slice(0, 64), enc = gate.msg.slice(64);
+    const hk = await crypto.subtle.importKey('raw', hexParse(key), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    if (hexStr(await crypto.subtle.sign('HMAC', hk, te.encode(enc))) !== sig) return null;
+    const ak = await crypto.subtle.importKey('raw', hexParse(key), 'AES-CBC', false, ['decrypt']);
+    return new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-CBC', iv: hexParse(enc.slice(0, 32)) }, ak, hexParse(enc.slice(32))));
+  }
+  const parseGate = text => {
+    const msg = (text.match(/"staticryptEncryptedMsgUniqueVariableName":"([0-9a-f]+)"/) || [])[1];
+    const salt = (text.match(/"staticryptSaltUniqueVariableName":"([0-9a-f]+)"/) || [])[1];
+    return msg && salt ? { msg, salt } : null;
+  };
   const READ_TURN = 1.1;               // radians the dial turns over a whole article
 
-  async function openReading(id, pushed = true, swap = false) {
-    if (reading || !READABLE.has(id)) return;
-    const hid = 'case-' + id, c = SITE.byId[hid].c;
-    reading = { id: hid, el: null, pushed: false };            // claim the slot while fetching
-    let doc;
-    try {
-      const res = await fetch(c.href);
-      if (!res.ok) throw new Error(res.status);
-      doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-    } catch (err) { reading = null; location.href = c.href; return; }
+  function articleHTML(doc) {                           // the article body of a fetched page, cleaned for this layout
     const main = doc.querySelector('main');
-    if (!main) { reading = null; location.href = c.href; return; }
+    if (!main) return null;
     main.querySelectorAll('script, style').forEach(n => n.remove());
     main.querySelectorAll('*').forEach(n => {              // drop the live site's Tailwind classes, keep the few content components
       const keep = [...n.classList].filter(k => /^(pull-quote|code-block|badge)$/.test(k));
@@ -283,17 +317,42 @@
       const src = n.getAttribute('src');
       if (src) n.setAttribute('src', src.replace(/^(\.\.\/|\/)assets\//, '../../assets/'));
     });
+    return main.innerHTML;
+  }
+  const gateHTML = c => `<p class="mono eyebrow">[ Case studies / ${c.year} ]</p><h1>${c.title}</h1><div class="gate-copy"><p>This case study is private. Enter the password to read it.</p></div><form class="gate" autocomplete="off"><input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password"><button type="submit">Unlock</button></form><p class="gate-msg" role="status" aria-live="polite"></p><p class="gate-note">No password? <a href="mailto:contato@wagnerrosa.com">Ask me for access</a>.</p>`;
+  function bindBody(r) {                                 // (re)collect what the arc / photo effects move
+    r.figs = [...r.el.querySelectorAll('figure')].map(f => ({ f, imgs: [...f.querySelectorAll('img')] }));
+    r.arcEls = [...r.el.querySelectorAll('.read-body > *')];
+    r.arcEls.forEach(a => a.setAttribute('data-arc', ''));
+  }
+
+  async function openReading(id, pushed = true, swap = false) {
+    if (reading || !READABLE.has(id)) return;
+    const hid = 'case-' + id, c = SITE.byId[hid].c;
+    reading = { id: hid, el: null, pushed: false };            // claim the slot while fetching
+    let doc = null, gate = null;
+    try {
+      const res = await fetch(c.href);
+      if (!res.ok) throw new Error(res.status);
+      const text = await res.text();
+      if (PROTECTED.has(id)) {
+        gate = parseGate(text);
+        if (!gate) throw new Error('no gate');
+        const key = keyOf(id), html = key && await decryptWith(gate, key).catch(() => null);
+        if (html) { doc = new DOMParser().parseFromString(html, 'text/html'); gate = null; }
+      } else doc = new DOMParser().parseFromString(text, 'text/html');
+    } catch (err) { reading = null; location.href = c.href; return; }
+    const inner = doc ? articleHTML(doc) : null;
+    if (doc && inner == null) { reading = null; location.href = c.href; return; }
     const el = document.createElement('div');
     el.className = 'layer read';
     el.setAttribute('role', 'article'); el.tabIndex = -1;
-    el.innerHTML = `<div class="read-body"><p class="mono eyebrow">[ Case studies / ${c.year} ]</p>${main.innerHTML}<div class="read-end" data-arc><p class="mono">End of case study</p>${readOrder.length > 1 ? '<a href="#next" data-next>Next case study →</a>' : ''}<a href="#cases" data-exit>All case studies ↑</a><a href="#index" data-home>Home ↑</a></div></div>`;
+    const layerHTML = html => `<div class="read-body"><p class="mono eyebrow">[ Case studies / ${c.year} ]</p>${html}<div class="read-end" data-arc><p class="mono">End of case study</p>${readOrder.filter(unlocked).length > 1 ? '<a href="#next" data-next>Next case study →</a>' : ''}<a href="#cases" data-exit>All case studies ↑</a><a href="#index" data-home>Home ↑</a></div></div>`;
+    el.innerHTML = gate ? `<div class="read-body gated">${gateHTML(c)}</div>` : layerHTML(inner);
     el.style.transform = 'translateY(100%)';
     stage.appendChild(el);
-    const figs = [...el.querySelectorAll('figure')].map(f => ({ f, imgs: [...f.querySelectorAll('img')] }));
-    const arcEls = [...el.querySelectorAll('.read-body > *')];
-    arcEls.forEach(a => a.setAttribute('data-arc', ''));
     const readK = items.findIndex(i => i.id === hid);
-    const prog = document.createElement('sup'); prog.className = 'prog'; prog.textContent = '0%';
+    const prog = document.createElement('sup'); prog.className = 'prog'; prog.textContent = gate ? 'Private' : '0%';
     if (els[readK]) els[readK].querySelector('a').appendChild(prog);
     wheel.classList.add('locked');
     pointer.removeAttribute('aria-hidden'); pointer.setAttribute('role', 'button'); pointer.setAttribute('aria-label', 'Close case study');
@@ -302,7 +361,9 @@
     exitLi.innerHTML = '<a href="#cases" data-exit tabindex="-1"><span>All case studies ↑</span></a>';
     list.appendChild(exitLi);
     go(readK);                                             // bring the wheel to this case, wherever the link was clicked from
-    reading = { id: hid, el, figs, arcEls, pushed, readK, prog };
+    reading = { id: hid, el, pushed, readK, prog, gate, gated: !!gate };
+    bindBody(reading);
+    if (gate) el.addEventListener('submit', e => { e.preventDefault(); unlockReading(el.querySelector('input').value, layerHTML); });
     if (swap) history.replaceState(null, '', '#' + hid + '/read');
     else if (pushed) history.pushState(null, '', '#' + hid + '/read');
     el.addEventListener('scroll', () => {
@@ -315,7 +376,33 @@
     el.getBoundingClientRect();                            // commit the start position so the slide-in animates
     el.style.transform = 'translateY(0)';
     arcDirty = true;
-    el.focus({ preventScroll: true });
+    if (gate) setTimeout(() => { if (reading && reading.el === el) { el.querySelector('input').focus({ preventScroll: true }); stage.scrollTop = stage.scrollLeft = 0; } }, 850);   // after the slide-in: focusing a field while the layer is still below would make the browser scroll the stage to it
+    else el.focus({ preventScroll: true });
+  }
+
+  async function unlockReading(pw, layerHTML) {
+    const r = reading, msg = r.el.querySelector('.gate-msg'), form = r.el.querySelector('.gate'), id = r.id.replace(/^case-/, '');
+    if (!r.gated || !pw || form.classList.contains('busy')) return;
+    form.classList.add('busy'); msg.className = 'gate-msg'; msg.textContent = 'Checking…';
+    let key = null, html = null;
+    try { key = await deriveKey(pw, r.gate.salt); html = await decryptWith(r.gate, key); }
+    catch (err) { msg.textContent = 'This browser can\'t unlock it. Try Safari, Chrome or Firefox over HTTPS.'; msg.className = 'gate-msg err'; form.classList.remove('busy'); return; }
+    if (reading !== r) return;
+    if (!html) {
+      msg.textContent = 'Wrong password. Try again.'; msg.className = 'gate-msg err';
+      form.classList.remove('busy'); form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake');
+      const inp = form.querySelector('input'); inp.focus(); inp.select();
+      return;
+    }
+    try { sessionStorage.setItem('read-key:' + id, key); } catch (err) {}
+    const inner = articleHTML(new DOMParser().parseFromString(html, 'text/html'));
+    if (inner == null) { location.href = SITE.byId[r.id].c.href; return; }
+    r.el.innerHTML = layerHTML(inner);
+    r.el.querySelector('.read-body').classList.add('reveal');
+    r.gate = null; r.gated = false; r.prog.textContent = '0%';
+    r.el.scrollTop = 0; readRot = 0;
+    bindBody(r); arcDirty = true;
+    r.el.focus({ preventScroll: true });
   }
 
   function closeReading(popped, keep) {
@@ -331,9 +418,12 @@
 
   /* Space / Shift+Space (or the link at the end): jump to the next / previous readable case study */
   function switchReading(dir) {
-    if (!reading || !reading.el || readOrder.length < 2) return;
-    const cur = readOrder.indexOf(reading.id.replace(/^case-/, ''));
-    const next = readOrder[(cur + dir + readOrder.length) % readOrder.length], pushed = reading.pushed;
+    if (!reading || !reading.el) return;
+    const n = readOrder.length, cur = readOrder.indexOf(reading.id.replace(/^case-/, ''));
+    let next = null;
+    for (let st = 1; st < n && !next; st++) { const id = readOrder[(((cur + dir * st) % n) + n) % n]; if (unlocked(id)) next = id; }   // a still-locked case is skipped
+    if (!next) return;
+    const pushed = reading.pushed;
     closeReading(true, true);
     openReading(next, pushed, true);
   }
@@ -419,8 +509,8 @@
     side.classList.toggle('k-nav', interacted && !rd && !!shown);   // Home stays clean: the hint shows from Nelogica down
     side.classList.toggle('k-enter', !reading && shown != null && !!items[shown].c && READABLE.has(items[shown].c.id));
     side.classList.toggle('k-close', rd);
-    side.classList.toggle('k-next', rd && readOrder.length > 1);
-    side.classList.toggle('k-scroll', rd);
+    side.classList.toggle('k-next', rd && !reading.gated && readOrder.filter(unlocked).length > 1);
+    side.classList.toggle('k-scroll', rd && !reading.gated);
     readRotS = reduce ? readRot : readRotS + (readRot - readRotS) * (1 - Math.exp(-dt * 9));
     if (Math.abs(readRotS - readRot) < 0.0002) readRotS = readRot;
     const rotChanged = readRotS !== lastRot;
@@ -507,7 +597,14 @@
     go(k);
   });
 
+  stage.addEventListener('scroll', () => { if (stage.scrollTop || stage.scrollLeft) stage.scrollTop = stage.scrollLeft = 0; });   // only the layers scroll; a focused field must never drag the stage itself
   addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input, textarea')) {   // typing a password
+      const t = e.target;
+      if (reading && (e.key === 'Escape' || (e.key === 'ArrowLeft' && !t.value))) { e.preventDefault(); exitReading(); }   // ← leaves too while the field is empty
+      else if (reading && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { e.preventDefault(); t.blur(); reading.el.focus({ preventScroll: true }); }   // ↑ ↓ hand the keyboard back to the layer
+      return;
+    }
     if (reading) {
       if (e.key === 'Escape' || e.key === 'ArrowLeft') { e.preventDefault(); exitReading(); }
       else if (e.key === ' ') { e.preventDefault(); switchReading(e.shiftKey ? -1 : 1); }
