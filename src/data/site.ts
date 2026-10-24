@@ -11,7 +11,7 @@ export const site = {
   email: 'contato@wagnerrosa.com',
   place: 'Porto Alegre, Brazil',
   timezone: 'GMT-3',
-  badge: 'Open to remote · GMT-3',
+  badge: 'Open to remote',
   invitation: 'Open to remote Product Design opportunities.',
   ga: 'G-VTCEP9QKNC',
   clarity: 'vhbu1gthme',

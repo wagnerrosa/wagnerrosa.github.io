@@ -1,5 +1,6 @@
 /* Reset, shell and panel typography. Panels are container-query driven so the layout responds to the pane, not the viewport. */
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--paper); }   /* whatever a webview paints outside the page (in-app browsers, overscroll) is the page colour, never white */
 html, body { height: 100%; }
 body {
   background: var(--paper); color: var(--ink);
