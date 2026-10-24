@@ -17,7 +17,7 @@ const rows = [
         <div><dt class="mono">Email</dt><dd><a href={`mailto:${site.email}`} data-track="contact_email" data-category="contact" data-location="panel">{site.email}</a></dd></div>
         <div><dt class="mono">Time zone</dt><dd>GMT-3 · Brazil, Europe and US overlap</dd></div>
       </dl>
-      <ul class="rows">
+      <ul class="rows compact">
         {rows.map((r, i) => (
           <li>
             <a href={r.href} {...(r.ext ? { target: '_blank', rel: 'noopener' } : {})} data-track={`contact_${r.label.toLowerCase().replace(/[^a-z]+/g, '_')}`} data-category={r.ext ? 'outbound' : 'navigation'} data-location="contact">

@@ -87,6 +87,8 @@ ul, ol { list-style: none; }
 @container (max-width: 520px) {
   .rows a { grid-template-columns: 44px 1fr; row-gap: 4px; }
   .rows .m { grid-column: 2; text-align: left; }
+  .rows.compact a { grid-template-columns: 44px 1fr auto; }   /* rows whose meta is just an arrow keep it on the right */
+  .rows.compact .m { grid-column: auto; text-align: right; }
 }
 
 @media (prefers-reduced-motion: reduce) {
