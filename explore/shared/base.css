@@ -17,6 +17,7 @@
   --accent: var(--link);
   color-scheme: light;
   --sans: 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --display: 'Figtree', var(--sans);   /* test: titles + wheel labels, closest free match to TT Norms Pro (shakuro.com) */
   --mono: var(--sans);
 }
 
@@ -95,10 +96,10 @@ ul, ol { list-style: none; }
 .panel { container-type: inline-size; min-height: 100%; }
 .panel .in { padding: clamp(20px, 5cqi, 64px); padding-bottom: 96px; max-width: 1400px; }
 .eyebrow { color: var(--mute); margin-bottom: clamp(14px, 3cqi, 28px); }
-.title { font-weight: 650; line-height: .96; letter-spacing: -.045em; font-optical-sizing: auto; font-size: clamp(36px, 8.6cqi, 108px); display: flex; align-items: center; gap: .22em; flex-wrap: wrap; }
+.title { font-family: var(--display); font-weight: 450; line-height: .98; letter-spacing: -.04em; font-optical-sizing: auto; font-size: clamp(36px, 8.6cqi, 108px); display: flex; align-items: center; gap: .22em; flex-wrap: wrap; }
 .title.sm { font-size: clamp(28px, 4.8cqi, 60px); line-height: 1; letter-spacing: -.04em; flex-wrap: nowrap; align-items: flex-start; }
 .title.stack { flex-direction: column; gap: clamp(14px, 2.4cqi, 26px); }
-.title.big { display: block; font-size: clamp(34px, 9.4cqi, 128px); line-height: .96; }
+.title.big { display: block; font-size: clamp(34px, 9.4cqi, 128px); line-height: .98; }
 .title em { font-style: normal; }
 .title .app-icon { width: clamp(48px, 4.4cqi, 60px); height: clamp(48px, 4.4cqi, 60px); margin: 0; }
 /* iOS-style icon material, same as the live site: squircle, soft shadow, rim light + top sheen */
@@ -109,7 +110,8 @@ ul, ol { list-style: none; }
 .app-icon::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), inset 0 0 0 .5px rgb(255 255 255 / .12); background: linear-gradient(180deg, rgb(255 255 255 / .16) 0%, transparent 42%); }
 .app-icon--tile { background: #fff; padding: 9px; box-sizing: border-box; }
 .app-icon--tile img { object-fit: contain; }
-.lede { font-size: clamp(18px, 2.4cqi, 28px); line-height: 1.25; letter-spacing: -.02em; font-weight: 500; max-width: 34ch; }
+.lede { font-family: var(--display); font-size: clamp(18px, 2.4cqi, 28px); line-height: 1.25; letter-spacing: -.02em; font-weight: 450; max-width: 34ch; }
+.lede.wide { max-width: 50ch; }
 .lead-in { margin-top: clamp(16px, 3cqi, 32px); }
 .p-body { margin-top: clamp(28px, 6cqi, 72px); display: grid; gap: 32px; grid-template-columns: 1fr; align-items: start; }
 .p-body.single { display: block; }

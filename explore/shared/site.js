@@ -126,14 +126,14 @@ window.SITE = (function () {
     case: (i) => `
       <p class="mono eyebrow">[ Case studies / ${i.c.year} ]</p>
       <h1 class="title sm stack"><span class="app-icon${/nelo/.test(i.c.icon) ? ' app-icon--tile' : ''}"><img src="${IC}${i.c.icon}" alt="" width="56" height="56"></span>${i.c.title}</h1>
-      <p class="lede lead-in">${i.c.desc}</p>
+      <p class="lede lead-in wide">${i.c.desc}</p>
+      <p class="links">${link(i.c.href, i.c.ext ? 'Open project' : 'Read case study', i.c.ext)} ${link('#cases', 'All case studies', false, i.id)}</p>
       <div class="p-body">
         <dl class="facts">
           <div><dt class="mono">Client</dt><dd>${i.c.client}</dd></div>
           <div><dt class="mono">Year</dt><dd>${i.c.year}</dd></div>
           <div><dt class="mono">Format</dt><dd>${i.c.meta}</dd></div>
         </dl>
-        <p class="links">${link(i.c.href, i.c.ext ? 'Open project' : 'Read case study', i.c.ext)} ${link('#cases', 'All case studies', false, i.id)}</p>
       </div>`,
     cases: () => `
       <p class="mono eyebrow">[ Case studies ]</p>

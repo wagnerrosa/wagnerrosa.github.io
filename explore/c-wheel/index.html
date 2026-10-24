@@ -6,7 +6,7 @@
 <title>C · Wheel — Wagner Rosa (prototype)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&family=Inter:opsz,wght@14..32,400..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <script>try { var t = localStorage.getItem('theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <link rel="stylesheet" href="../shared/base.css">
 <style>
@@ -21,12 +21,12 @@
   .wheel li { position: absolute; left: 0; top: 0; will-change: transform, opacity; white-space: nowrap; }
   .wheel a {
     display: flex; align-items: baseline; gap: 10px; text-decoration: none;
-    font-size: clamp(26px, 2.6vw, 38px); font-weight: 700; letter-spacing: -.04em; line-height: 1;
+    font-family: var(--display); font-size: clamp(26px, 2.6vw, 38px); font-weight: 500; letter-spacing: -.035em; line-height: 1;
     transition: color .25s;
   }
   .wheel a .n { display: none; }
-  .wheel a { font-weight: 600; }
-  .wheel a.on { color: var(--accent); font-weight: 700; }
+  .wheel a { font-weight: 500; }
+  .wheel a.on { color: var(--accent); font-weight: 600; }
   .wheel a sup { align-self: flex-start; font-size: .36em; font-weight: 500; letter-spacing: .04em; color: var(--mute); margin-left: -2px; transform: translateY(.6em); }
   .wheel a.on sup { color: var(--accent); }
   /* children: a step smaller, lighter, indented under their section */
@@ -45,7 +45,7 @@
   }
   .hub > span { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
   .hub img { width: clamp(64px, 5.6vw, 84px); height: clamp(64px, 5.6vw, 84px); border-radius: 50%; object-fit: cover; margin-bottom: 14px; }
-  .hub b { font-size: 17px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; white-space: nowrap; }
+  .hub b { font-family: var(--display); font-size: 17px; font-weight: 600; letter-spacing: -.03em; line-height: 1.1; white-space: nowrap; }
   .hub .role { color: var(--mute); font-size: 13px; font-weight: 500; letter-spacing: -.01em; line-height: 1.3; white-space: nowrap; }
   .hub .mono { color: var(--mute); font-size: 9px; line-height: 1.35; white-space: nowrap; }
   .hub .status { margin-top: 10px; font-size: 9px; white-space: nowrap; }
@@ -74,9 +74,16 @@
   .keys p { display: grid; grid-template-rows: 0fr; margin: 0; opacity: 0; transition: grid-template-rows .45s cubic-bezier(.2, .8, .2, 1), opacity .45s; }
   .keys p > span { display: flex; align-items: center; gap: 5px; min-height: 0; overflow: hidden; padding: 4px 0; box-sizing: border-box; }
   .keys p > span > * { flex: none; }
-  .keys kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 7px; box-sizing: border-box; font: 600 11px/1 var(--sans); letter-spacing: 0; color: var(--ink); background: var(--chip); border: 1px solid var(--chip-line); border-bottom-width: 2px; border-radius: 6px; }
+  .keys .kbd { appearance: none; -webkit-appearance: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 7px; box-sizing: border-box; font: 600 11px/1 var(--sans); letter-spacing: 0; color: var(--ink); background: var(--chip); border: 1px solid var(--chip-line); border-bottom-width: 2px; border-radius: 6px; transition: color .2s, border-color .2s, background .2s, transform .1s; }
   .keys em { margin-left: 5px; font: 500 12px/1 var(--sans); font-style: normal; letter-spacing: -.005em; color: var(--mute); }
-  .side.k-nav .k-nav, .side.k-enter .k-enter, .side.k-close .k-close, .side.k-next .k-next, .side.k-scroll .k-scroll { grid-template-rows: 1fr; opacity: 1; }
+  .side.k-nav .k-nav, .side.k-enter .k-enter, .side.k-close .k-close, .side.k-next .k-next, .side.k-scroll .k-scroll { grid-template-rows: 1fr; opacity: 1; pointer-events: auto; }
+  /* the key caps are buttons: they run what the hint says. Hover turns them blue, like the links */
+  .keys p { pointer-events: none; }
+  .keys .one > span { cursor: pointer; }
+  .keys .kbd:hover, .keys .one > span:hover .kbd { color: var(--accent); border-color: var(--accent); background: rgb(var(--accent-rgb) / .08); }
+  .keys .one > span:hover em { color: var(--accent); }
+  .keys .kbd:active { transform: translateY(1px); }
+  .keys em { transition: color .2s; }
   /* private case: password gate inside the layer */
   .read-body .gate-copy { max-width: 32em; font: 400 18px/1.5 var(--sans); letter-spacing: -.01em; color: var(--mute); }
   .read-body .gate { display: flex; gap: 10px; max-width: 420px; }
@@ -100,10 +107,10 @@
   .wheel a sup.prog { align-self: baseline; transform: translateY(-2.5px);   /* sits on the label baseline, nudged up to the optical middle of the label */ margin-left: 10px; font: 600 11px/1 var(--sans); letter-spacing: .04em; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .read-body { max-width: 700px; padding: 40px 40px 160px; margin-left: clamp(0px, 3vw, 48px); font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(18px, 1.35vw, 20px); line-height: 1.7; color: var(--read); letter-spacing: 0; }
   .read-body > * + * { margin-top: 1.3em; }
-  .read-body h1 { font: 650 clamp(32px, 3.6vw, 48px)/1.1 var(--sans); letter-spacing: -.04em; color: var(--ink); }
+  .read-body h1 { font: 500 clamp(32px, 3.6vw, 48px)/1.1 var(--display); letter-spacing: -.04em; color: var(--ink); }
   .read-body h1 + p { margin-top: .9em; font: 500 12px/1.3 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
-  .read-body h2 { margin-top: 2.6em; font: 650 clamp(23px, 2vw, 28px)/1.2 var(--sans); letter-spacing: -.03em; color: var(--ink); }
-  .read-body h3 { margin-top: 2em; font: 600 clamp(18px, 1.5vw, 21px)/1.25 var(--sans); letter-spacing: -.02em; color: var(--ink); }
+  .read-body h2 { margin-top: 2.6em; font: 500 clamp(23px, 2vw, 28px)/1.2 var(--display); letter-spacing: -.03em; color: var(--ink); }
+  .read-body h3 { margin-top: 2em; font: 500 clamp(18px, 1.5vw, 21px)/1.25 var(--display); letter-spacing: -.02em; color: var(--ink); }
   .read-body h2 + *, .read-body h3 + * { margin-top: .8em; }
   .read-body strong { font-weight: 600; }
   .read-body a { color: var(--link); text-decoration: underline; text-underline-offset: .18em; text-decoration-thickness: 1px; }
@@ -163,12 +170,12 @@
       <div class="pointer" id="pointer" aria-hidden="true"></div>
       <ul id="list"></ul>
     </div>
-    <div class="keys" aria-hidden="true">
-      <p class="k-enter"><span><kbd>→</kbd><em>read the case study</em></span></p>
-      <p class="k-close"><span><kbd>Esc</kbd><kbd>←</kbd><em>close</em></span></p>
-      <p class="k-next"><span><kbd>Space</kbd><em>next case study</em></span></p>
-      <p class="k-nav"><span><kbd>↑</kbd><kbd>↓</kbd><em>browse</em></span></p>
-      <p class="k-scroll"><span><kbd>↑</kbd><kbd>↓</kbd><em>scroll</em></span></p>
+    <div class="keys">
+      <p class="k-enter one"><span data-k="enter"><button class="kbd" type="button" tabindex="-1" aria-label="Read the case study">→</button><em>read the case study</em></span></p>
+      <p class="k-close one"><span data-k="close"><button class="kbd" type="button" tabindex="-1" aria-label="Close">Esc</button><button class="kbd" type="button" tabindex="-1" aria-label="Close">←</button><em>close</em></span></p>
+      <p class="k-next one"><span data-k="next"><button class="kbd" type="button" tabindex="-1" aria-label="Next case study">Space</button><em>next case study</em></span></p>
+      <p class="k-nav"><span><button class="kbd" type="button" tabindex="-1" data-k="up" aria-label="Browse up">↑</button><button class="kbd" type="button" tabindex="-1" data-k="down" aria-label="Browse down">↓</button><em>browse</em></span></p>
+      <p class="k-scroll"><span><button class="kbd" type="button" tabindex="-1" data-k="scroll-up" aria-label="Scroll up">↑</button><button class="kbd" type="button" tabindex="-1" data-k="scroll-down" aria-label="Scroll down">↓</button><em>scroll</em></span></p>
     </div>
     <button class="theme" id="theme" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
     <a class="hub" id="hub" href="#index" aria-label="Wagner Rosa, home">
@@ -618,6 +625,20 @@
     if (e.target.closest && e.target.closest('.stage')) return;
     if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); go(nearest(target) + 1); }
     if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); go(nearest(target) - 1); }
+  });
+  /* key caps act as buttons: reuse the keyboard handler, so guards and behaviour stay in one place */
+  const keysEl = document.querySelector('.keys');
+  const press = key => dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+  keysEl.addEventListener('mousedown', e => e.preventDefault());   // keep focus where it was, so Space doesn't re-press the button
+  keysEl.addEventListener('click', e => {
+    const t = e.target.closest('[data-k]'); if (!t) return;
+    const k = t.dataset.k;
+    if (k === 'enter') press('ArrowRight');
+    else if (k === 'close') press('Escape');
+    else if (k === 'next') press(' ');
+    else if (k === 'up') press('ArrowUp');
+    else if (k === 'down') press('ArrowDown');
+    else if (reading && reading.el) reading.el.scrollBy({ top: (k === 'scroll-up' ? -1 : 1) * reading.el.clientHeight * .6, behavior: 'smooth' });
   });
   pointer.addEventListener('click', e => { if (reading) { e.stopPropagation(); exitReading(); } });
   stage.addEventListener('click', e => {
