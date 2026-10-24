@@ -1,0 +1,44 @@
+# Wagner Rosa
+
+> UX Lead and Product Designer based in Porto Alegre, Brazil (GMT-3). Currently UX Lead at Nelogica, leading a team of 5 UX Designers on financial and trading platforms. Previously Senior Product Designer at Planton and Art Director at Sistema FIERGS. Works across product design, design systems, AI-powered workflows and design-to-code. Open to remote Product Design opportunities.
+
+## About
+
+Born in Porto Alegre, Brazil. Started in communication and marketing, then moved to Lisbon and graduated in Advertising and Marketing at IADE, the Institute of Arts and Design of Lisbon, in 2016. Also completed the UX Design Institute program.
+
+The career began in audiovisual production and graphic design and evolved into web design and digital products. That path shapes the approach to product design: structured, system-oriented and grounded in real implementation constraints.
+
+Self-taught in front-end fundamentals, which allows close collaboration with engineering teams and solutions that are both conceptually clear and technically feasible. Today the focus is scalable digital systems, AI-powered products and operational workflows that require clarity, architecture and long-term thinking.
+
+Outside of work: runs long distances (including a completed marathon), climbs and rides motorcycles. Riding led to Carburante, a native iOS logbook for motorcycles that Wagner designs and builds as a personal project (https://carburante.motorcycles/).
+
+## Pages
+
+- [Home](https://wagnerrosa.com/): Selected work and experience.
+- [About](https://wagnerrosa.com/about.html): Background, approach and life outside of work.
+- [CV (HTML)](https://wagnerrosa.com/cv.html): ATS-friendly CV, public preview.
+- [CV (Markdown)](https://wagnerrosa.com/assets/cv/Wagner-Rosa-CV-ATS-2026.md): Plain-text CV, source of truth for career dates and titles.
+- [Case studies](https://wagnerrosa.com/case-studies/): Index of all articles and case studies.
+
+## Case studies
+
+- [Planton Academy: Designing a Corporate Learning Platform, End to End](https://wagnerrosa.com/case-studies/planton-academy.html): B2B ESG learning platform with three user roles, quiz-gated certification, an AI tutor and a React front-end. Also available in [Portuguese](https://wagnerrosa.com/case-studies/planton-academy-pt.html).
+- [Building Planton UI](https://wagnerrosa.com/case-studies/planton-ui-design-system.html): Extracting an editorial brand language into a design system with tokens, primitives and product screens.
+- [Planton Website: From Vision to Production](https://wagnerrosa.com/case-studies/planton-website-vision-to-production.html): Multilingual B2B climate tech website delivered in 18 days with Next.js.
+- [IEL-RS: Navigation and UX Restructuring](https://wagnerrosa.com/case-studies/iel-rs-ux-redesign.html): Navigation restructuring and UX redesign for a Sistema FIERGS organization.
+
+## Writing
+
+- [Building a Sub-500ms Personal Site in 2026](https://wagnerrosa.com/case-studies/building-a-sub-500ms-site-2026.html): Why a static HTML and Tailwind CLI stack, with minimal JS.
+- [The Architecture of Intelligence](https://wagnerrosa.com/case-studies/architecture-of-intelligence.html): Scalable UX systems for complex products, agentic AI and generative UI.
+- [The Invisible Frontier](https://wagnerrosa.com/case-studies/the-invisible-frontier.html): Microinteractions, predictive design and adaptive systems.
+
+## Profiles
+
+- [LinkedIn](https://www.linkedin.com/in/wagnerrosa)
+- [GitHub](https://github.com/wagnerrosa)
+- [Behance](https://www.behance.net/wagnerrosa)
+
+## Contact
+
+- Email: contato@wagnerrosa.com
