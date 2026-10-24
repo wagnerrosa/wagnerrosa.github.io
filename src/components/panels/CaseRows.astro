@@ -1,0 +1,17 @@
+---
+import type { Case } from '../../lib/model';
+import { metaOf, rowHref } from '../../lib/panels';
+interface Props { cases: Case[] }
+const { cases } = Astro.props;
+---
+<ul class="rows">
+  {cases.map(c => (
+    <li>
+      <a href={rowHref(c)} {...(c.data.external ? { target: '_blank', rel: 'noopener' } : {})} data-track={`case_row_${c.id}`} data-category="navigation" data-location="panel">
+        <span class="mono">{c.data.year}</span>
+        <span class="t">{c.data.title}</span>
+        <span class="mono m">{metaOf(c)} {c.data.external ? '↗' : '→'}</span>
+      </a>
+    </li>
+  ))}
+</ul>

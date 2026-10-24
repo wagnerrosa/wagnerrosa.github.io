@@ -1,0 +1,15 @@
+---
+interface Item { label: string; value?: string; badges?: string[]; wide?: boolean }
+interface Props { label: string; items: Item[] }
+const { label, items } = Astro.props;
+---
+<section class="facts-block" aria-label={label}>
+  <dl>
+    {items.map(it => (
+      <div class:list={{ wide: it.wide }}>
+        <dt>{it.label}</dt>
+        <dd>{it.badges ? <span class="badges">{it.badges.map(b => <span class="badge">{b}</span>)}</span> : it.value}</dd>
+      </div>
+    ))}
+  </dl>
+</section>

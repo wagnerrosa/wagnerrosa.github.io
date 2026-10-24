@@ -1,9 +1,16 @@
-/prompts
 /node_modules
-.node_modules
-/CV
+/dist
+/.astro
 .DS_Store
-/case-studies-src
 .env.local
 .staticrypt.json
+
+# private notebook (separate repo) and prompts
 /positioning
+/prompts
+/CV
+
+# protected case study sources: only the encrypted build is published (public/case-studies/)
+/private/*
+!/private/.gitkeep
+/case-studies-src

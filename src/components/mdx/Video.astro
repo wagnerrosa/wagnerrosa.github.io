@@ -1,0 +1,10 @@
+---
+interface Props { src: string; label: string; poster?: string }
+const { src, label, poster } = Astro.props;
+---
+<figure>
+  <video autoplay muted loop playsinline preload="metadata" aria-label={label} poster={poster}>
+    <source src={src} type="video/mp4" />
+  </video>
+  <figcaption><slot /></figcaption>
+</figure>

@@ -1,0 +1,22 @@
+---
+import Shell from '../../layouts/Shell.astro';
+import { getModel } from '../../lib/model';
+import { collectionPage } from '../../lib/jsonld';
+import { abs } from '../../data/site';
+import { rowHref } from '../../lib/panels';
+
+const model = await getModel();
+const description = 'Case studies by Wagner Rosa on product design, design systems, AI features and design-to-code, from Planton and Sistema FIERGS to independent iOS work.';
+---
+<Shell
+  model={model}
+  page="cases"
+  startId="cases"
+  seo={{ title: 'UX & Product Design Case Studies | Wagner Rosa', description, path: '/case-studies/' }}
+  jsonld={[collectionPage({
+    path: '/case-studies/',
+    name: 'Case studies',
+    description,
+    items: model.hubCases.map(c => ({ name: c.data.title, url: c.data.external ?? abs(rowHref(c)) })),
+  })]}
+/>

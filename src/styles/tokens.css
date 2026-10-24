@@ -1,0 +1,46 @@
+/* Design tokens. Light is the default; dark follows the system unless the visitor picked a theme (data-theme, set by the toggle).
+   Same neutrals + blue links as the previous site. */
+:root {
+  --paper: #fff;
+  --ink: #000;
+  --mute: #666;
+  --line: rgb(0 0 0 / .14);
+  --line-strong: rgb(0 0 0 / .26);   /* major ruler ticks, bullet hairlines, quote rules */
+  --ink-2: #3a3a3a;                  /* secondary text (child rows) */
+  --read: #1f1f1f;                   /* long-form reading text */
+  --chip: #fafafa;                   /* key caps */
+  --chip-line: rgb(0 0 0 / .16);
+  --code: #f3f3f3;                   /* inline code, code blocks, badges */
+  --code-block: #f6f6f6;
+  --accent-rgb: 37 99 235;
+  --link: #2563eb;
+  --accent: var(--link);
+  --danger: #e5484d;
+  color-scheme: light;
+  --sans: 'Inter Variable', 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --display: 'Figtree Variable', 'Figtree', var(--sans);
+  --serif: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, serif;
+  --mono: var(--sans);
+  --arc: 56px;
+}
+
+:root[data-theme="dark"] {
+  --paper: #0a0a0a; --ink: #f5f5f5; --mute: #a3a3a3;
+  --line: rgb(255 255 255 / .14); --line-strong: rgb(255 255 255 / .3);
+  --ink-2: #d4d4d4; --read: #d4d4d4;
+  --chip: #171717; --chip-line: rgb(255 255 255 / .2);
+  --code: #1f1f1f; --code-block: #151515;
+  --accent-rgb: 96 165 250; --link: #60a5fa;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0a0a0a; --ink: #f5f5f5; --mute: #a3a3a3;
+    --line: rgb(255 255 255 / .14); --line-strong: rgb(255 255 255 / .3);
+    --ink-2: #d4d4d4; --read: #d4d4d4;
+    --chip: #171717; --chip-line: rgb(255 255 255 / .2);
+    --code: #1f1f1f; --code-block: #151515;
+    --accent-rgb: 96 165 250; --link: #60a5fa;
+    color-scheme: dark;
+  }
+}

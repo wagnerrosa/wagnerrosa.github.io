@@ -1,0 +1,8 @@
+---
+interface Props { title: string; items: string[] }
+const { title, items } = Astro.props;
+---
+<section class="checks" aria-label={title}>
+  <p class="kicker">{title}</p>
+  <ul>{items.map(t => <li><span aria-hidden="true">✓</span>{t}</li>)}</ul>
+</section>

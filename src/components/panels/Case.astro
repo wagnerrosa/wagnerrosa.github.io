@@ -1,0 +1,34 @@
+---
+import { Image } from 'astro:assets';
+import { icon } from '../../lib/assets';
+import { caseUrl } from '../../lib/model';
+import { metaOf, stopLink } from '../../lib/panels';
+import type { Model, WheelItem } from '../../lib/model';
+interface Props { model: Model; item: WheelItem; level?: 1 | 2; anchor?: boolean }
+const { model, item, level = 2, anchor = false } = Astro.props;
+const H = `h${level}` as 'h1' | 'h2';
+const c = model.cases.find(x => x.id === item.slug)!;
+const d = c.data;
+const back = stopLink(model, item.id, 'cases');
+---
+<section class="panel" data-id={item.id} id={anchor ? c.id : undefined}>
+  <div class="in">
+    <H class="title sm stack">
+      <span class:list={['app-icon', { 'app-icon--tile': false }]}><Image src={icon(d.icon)} alt="" width={112} height={112} /></span>{d.title}
+    </H>
+    <p class="lede lead-in wide">{d.blurb}</p>
+    <p class="links">
+      {d.external
+        ? <a href={d.external} target="_blank" rel="noopener" data-track={`case_${c.id}`} data-category="outbound" data-location="panel">Open project ↗</a>
+        : <a href={caseUrl(c.id)} data-track={`case_${c.id}`} data-category="navigation" data-location="panel">{d.protected ? 'Unlock case study' : 'Read case study'} →</a>}
+      <a href={back.href}>All case studies {back.arrow}</a>
+    </p>
+    <div class="p-body">
+      <dl class="facts">
+        <div><dt class="mono">Client</dt><dd>{d.client}</dd></div>
+        <div><dt class="mono">Year</dt><dd>{d.year}</dd></div>
+        <div><dt class="mono">Format</dt><dd>{metaOf(c)}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>

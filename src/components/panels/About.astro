@@ -1,0 +1,28 @@
+---
+import { Image } from 'astro:assets';
+import { asset } from '../../lib/assets';
+import { about } from '../../data/site';
+import Reach from './Reach.astro';
+interface Props { level?: 1 | 2 }
+const { level = 1 } = Astro.props;
+const H = `h${level}` as 'h1' | 'h2';
+const photos = [
+  { src: 'photos/wagmoto.webp', alt: 'Wagner Rosa riding a motorcycle' },
+  { src: 'photos/wagmarathon.webp', alt: 'Wagner Rosa running a marathon' },
+];
+---
+<section class="panel" data-id="about">
+  <div class="in">
+    <H class="title sm">About Wagner Rosa</H>
+    <div class="p-body single prose">
+      <h2 class="mono">Background</h2>
+      {about.background.map(p => <p set:html={p} />)}
+      <h2 class="mono">Outside of work</h2>
+      <p set:html={about.outside} />
+      <figure class="fig">
+        {photos.map(p => <Image src={asset(p.src)} alt={p.alt} widths={[420, 640, 900]} sizes="(max-width: 820px) 48vw, 360px" quality={70} loading="lazy" decoding="async" />)}
+      </figure>
+      <Reach location="about" />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+---
+import Shell from '../layouts/Shell.astro';
+import { getModel } from '../lib/model';
+import { profilePage } from '../lib/jsonld';
+
+const model = await getModel();
+---
+<Shell
+  model={model}
+  page="about"
+  startId="about"
+  seo={{
+    title: 'About Wagner Rosa | UX Lead & Product Designer',
+    description: 'Wagner Rosa (Wagner da Rosa de Souza) is a UX Lead and Product Designer in Porto Alegre, Brazil, currently at Nelogica. Experience, education and background.',
+    ogDescription: 'UX Lead and Product Designer, currently at Nelogica. Experience at Planton and Sistema FIERGS, education and background.',
+    ogType: 'profile',
+    path: '/about.html',
+  }}
+  jsonld={[profilePage('/about.html', 'About Wagner Rosa')]}
+/>

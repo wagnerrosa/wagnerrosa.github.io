@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets';
+import { icon } from '../../lib/assets';
+import { itemById, stopLink } from '../../lib/panels';
+import CaseRows from './CaseRows.astro';
+import type { Model, WheelItem } from '../../lib/model';
+interface Props { model: Model; item: WheelItem; level?: 1 | 2; anchor?: boolean }
+const { model, item, level = 1, anchor = false } = Astro.props;
+const H = `h${level}` as 'h1' | 'h2';
+const w = model.work.find(x => x.id === item.id)!;
+const d = w.data;
+const related = d.related.map(r => model.cases.find(c => c.id === r)!).filter(Boolean);
+---
+<section class="panel" data-id={item.id} id={anchor ? item.id : undefined}>
+  <div class="in">
+    <H class:list={['title', { 'with-icon': true }]}>
+      <span class:list={['app-icon', { 'app-icon--tile': d.iconTile }]}><Image src={icon(d.icon)} alt="" width={112} height={112} /></span>{d.title ?? d.label}
+    </H>
+    <p class="lede lead-in">{d.desc}</p>
+    <div class="p-body">
+      <dl class="facts">
+        <div><dt class="mono">Role</dt><dd>{d.role}</dd></div>
+        <div><dt class="mono">Period</dt><dd>{d.period}</dd></div>
+        {d.facts.map(f => <div><dt class="mono">{f.label}</dt><dd>{f.value}</dd></div>)}
+      </dl>
+      <div>
+        <ul class="bullets">{d.bullets.map(b => <li>{b}</li>)}</ul>
+        {related.length > 0 && <><p class="mono sub">Related</p><CaseRows cases={related} /></>}
+        <p class="links"><a href={d.href} target="_blank" rel="noopener" data-track={`work_${item.id}`} data-category="outbound" data-location="panel">{d.visit} ↗</a>{d.links.map(l => <a href={l.href} target="_blank" rel="noopener" data-track={`work_${item.id}_${l.label.toLowerCase().replace(/\W+/g, '_')}`} data-category="outbound" data-location="panel">{l.label} ↗</a>)}</p>
+      </div>
+    </div>
+  </div>
+</section>

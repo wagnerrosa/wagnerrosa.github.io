@@ -1,0 +1,12 @@
+---
+// Contact and CV links at the foot of the pages that have no Contact panel of their own (About, Case studies).
+import { profiles, site } from '../../data/site';
+interface Props { location: string }
+const { location } = Astro.props;
+---
+<p class="links reach">
+  <a href={`mailto:${site.email}`} data-track="reach_email" data-category="contact" data-location={location}>{site.email}</a>
+  {profiles.map(p => <a href={p.href} target="_blank" rel="noopener" data-track={`reach_${p.label.toLowerCase()}`} data-category="outbound" data-location={location}>{p.label} ↗</a>)}
+  <a href={site.cv.pdf} data-track="reach_cv_pdf" data-category="download" data-location={location}>CV (PDF) ↓</a>
+  <a href={site.cv.html} data-track="reach_cv_ats" data-category="navigation" data-location={location}>ATS-friendly CV →</a>
+</p>

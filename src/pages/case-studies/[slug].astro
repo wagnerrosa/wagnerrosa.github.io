@@ -1,0 +1,61 @@
+---
+import { render } from 'astro:content';
+import Shell from '../../layouts/Shell.astro';
+import Article from '../../components/Article.astro';
+import { getCases, getModel, getPrivateCase, caseUrl, readMinutes, type Case } from '../../lib/model';
+import { article } from '../../lib/jsonld';
+import { abs } from '../../data/site';
+
+export async function getStaticPaths() {
+  const model = await getModel();
+  const cases = await getCases();
+  const paths = [];
+  for (const c of cases) {
+    if (c.data.external) continue;   // lives on its own site
+    // A protected case is built only in the local `build:protected` run, which has its body in private/.
+    const entry = c.data.protected ? await getPrivateCase(c.id) : c;
+    if (!entry) continue;
+    paths.push({ params: { slug: c.id }, props: { entry, cases, model } });
+  }
+  return paths;
+}
+
+const { entry, cases, model } = Astro.props as { entry: Case; cases: Case[]; model: Awaited<ReturnType<typeof getModel>> };
+const d = entry.data;
+const { Content } = await render(entry);
+const url = caseUrl(entry.id);
+
+const original = d.translationOf ? cases.find(c => c.id === d.translationOf) : undefined;
+const translation = cases.find(c => c.data.translationOf === entry.id);
+const pair = original ? [original, entry] : translation ? [entry, translation] : [];
+const alternates = pair.map(c => ({ hreflang: c.data.lang, href: abs(caseUrl(c.id)) }));
+const other = original ?? translation;
+const alt = other ? { href: caseUrl(other.id), lang: other.data.lang, label: other.data.lang === 'pt-BR' ? 'Ler em português' : 'Read in English' } : undefined;
+
+const lockId = d.wheel ? `case-${entry.id}` : original ? `case-${original.id}` : 'cases';
+const docTitle = d.metaTitle ?? `${d.title} | Wagner Rosa`;
+const meta = [d.year, d.category, `${readMinutes(entry)} min read`].join(' · ');
+---
+<Shell
+  model={model}
+  page="article"
+  startId={lockId}
+  lockId={lockId}
+  readUrl={url}
+  seo={{
+    title: docTitle,
+    description: d.description,
+    ogDescription: d.ogDescription,
+    ogType: 'article',
+    path: url,
+    noindex: d.noindex,
+    nofollow: d.protected,
+    alternates,
+    locale: d.lang,
+  }}
+  jsonld={d.noindex ? [] : [article({ path: url, headline: d.headline ?? d.title, description: d.description, lang: d.lang, datePublished: d.datePublished, dateModified: d.dateModified })]}
+>
+  <Article slug={entry.id} url={url} title={d.title} lockId={lockId} docTitle={docTitle} meta={meta} alt={alt}>
+    <Content />
+  </Article>
+</Shell>

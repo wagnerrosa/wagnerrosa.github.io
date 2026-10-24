@@ -1,0 +1,26 @@
+---
+// The reading layer's content, rendered as real HTML on the article's own URL (and fetched by the wheel for in-place reading).
+interface Props {
+  slug: string;
+  url: string;
+  title: string;
+  lockId: string;          // wheel row that stays lit while this is open
+  docTitle: string;        // <title> once opened in place
+  meta?: string;           // "2026 · Case study · 5 min read"
+  alt?: { href: string; label: string; lang: string };   // translation link
+  protected?: boolean;
+  cv?: boolean;
+  noTitle?: boolean;       // the markdown body brings its own h1 (CV)
+}
+const { slug, url, title, lockId, docTitle, meta, alt, noTitle = false } = Astro.props;
+---
+<article class="read-body" data-article data-slug={slug} data-url={url} data-lock={lockId} data-title={docTitle}>
+  {!noTitle && <h1>{title}</h1>}
+  {meta && <p class="meta">{meta}{alt && <> · <a href={alt.href} hreflang={alt.lang} data-track={`translation_${slug}`} data-category="navigation" data-location="article">{alt.label}</a></>}</p>}
+  <slot />
+  <nav class="read-end" aria-label="After the article">
+    <p class="mono">End of {slug === 'cv' ? 'CV' : 'case study'}</p>
+    <a href="/case-studies/" data-exit data-track={`article_${slug}_back`} data-category="navigation" data-location="article">All case studies →</a>
+    <a href="/" data-home data-track={`article_${slug}_home`} data-category="navigation" data-location="article">Home →</a>
+  </nav>
+</article>

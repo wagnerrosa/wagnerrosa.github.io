@@ -1,0 +1,36 @@
+---
+import { getEntry, render } from 'astro:content';
+import Shell from '../layouts/Shell.astro';
+import Article from '../components/Article.astro';
+import { getModel } from '../lib/model';
+import { profilePage } from '../lib/jsonld';
+import { site } from '../data/site';
+
+const model = await getModel();
+// Rendered from the public .md at build time: one source of truth, no hand-copied mirror.
+const entry = (await getEntry('cv', 'wagner-rosa-cv-ats-2026'))!;
+const { Content } = await render(entry);
+const title = 'Wagner Rosa CV | UX Lead & Product Designer';
+---
+<Shell
+  model={model}
+  page="article"
+  startId="contact"
+  lockId="contact"
+  readUrl="/cv.html"
+  seo={{
+    title,
+    description: 'Curriculum vitae of Wagner Rosa, UX Lead at Nelogica and Product Designer in Porto Alegre, Brazil. Experience, skills, education and selected work.',
+    ogDescription: 'UX Lead at Nelogica and Product Designer. Experience, skills, education and selected work. Open to remote.',
+    ogType: 'profile',
+    path: '/cv.html',
+  }}
+  jsonld={[profilePage('/cv.html', 'Wagner Rosa CV', site.cv.dateModified)]}
+>
+  <Article slug="cv" url="/cv.html" title="Wagner Rosa CV" lockId="contact" docTitle={title} noTitle>
+    <div class="cv-body">
+      <Content />
+      <p class="meta">Download: <a href={site.cv.pdf} data-track="cv_pdf" data-category="download" data-location="cv">PDF ↓</a> · <a href={site.cv.md} data-track="cv_md" data-category="download" data-location="cv">Markdown ↓</a></p>
+    </div>
+  </Article>
+</Shell>

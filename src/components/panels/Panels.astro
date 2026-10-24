@@ -1,0 +1,28 @@
+---
+// Every panel of the wheel on every page. The ones that belong to this URL are real HTML (indexed, readable without JS);
+// the others sit in inert <template>s so the wheel can turn instantly without duplicating content for crawlers.
+import Home from './Home.astro';
+import Work from './Work.astro';
+import Cases from './Cases.astro';
+import Case from './Case.astro';
+import About from './About.astro';
+import Contact from './Contact.astro';
+import type { Model, PageId } from '../../lib/model';
+interface Props { model: Model; page: PageId | 'article' }
+const { model, page } = Astro.props;
+const first = model.items.find(i => i.page === page);   // the page's headline panel gets the h1
+const real = (id: string) => model.items.find(i => i.id === id)!.page === page;
+---
+{model.items.map(item => {
+  const isReal = real(item.id);
+  const level = isReal && item.id === first?.id ? 1 : isReal ? 2 : 1;
+  const anchor = isReal;
+  const inner =
+    item.kind === 'home' ? <Home model={model} level={level} anchor={anchor} /> :
+    item.kind === 'work' ? <Work model={model} item={item} level={level} anchor={anchor} /> :
+    item.kind === 'cases' ? <Cases model={model} level={level} /> :
+    item.kind === 'case' ? <Case model={model} item={item} level={isReal ? 2 : 1} anchor={anchor} /> :
+    item.kind === 'about' ? <About level={level} /> :
+    <Contact level={level} anchor={anchor} />;
+  return isReal ? inner : <template data-panel={item.id}>{inner}</template>;
+})}

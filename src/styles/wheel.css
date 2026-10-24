@@ -1,0 +1,145 @@
+/* The wheel (left column / right-edge arc on small screens) and the page layers it drives. */
+.wheel { position: absolute; inset: 0; cursor: grab; touch-action: none; outline: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.wheel:active { cursor: grabbing; }
+.wheel a, .hub, .hub img { -webkit-user-drag: none; user-drag: none; }
+/* fade the rows out before they reach the footer text */
+.wheel ul { position: absolute; inset: 0 -90px 0 0; pointer-events: none; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 82%, transparent 96%); mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 82%, transparent 96%); }   /* wider than the column: the mask would clip a long label at the edge */
+.wheel li { position: absolute; left: 0; top: 0; will-change: transform, opacity; white-space: nowrap; pointer-events: auto; }   /* B3: only the labels take clicks, the rest of the column drags */
+.wheel a {
+  display: flex; align-items: baseline; gap: 10px; text-decoration: none; border-radius: 8px;
+  font-family: var(--display); font-size: 30px; font-size: clamp(26px, 2.6vw, 38px); font-weight: 500; letter-spacing: -.035em; line-height: 1;
+  transition: color .25s;
+}
+.wheel a.on { color: var(--accent); font-weight: 600; }
+.wheel a:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }   /* B13 */
+.wheel a sup { align-self: flex-start; font-size: max(11px, .36em); font-weight: 500; letter-spacing: .04em; color: var(--mute); margin-left: -2px; transform: translateY(.6em); }
+.wheel a.on sup { color: var(--accent); }
+/* children: a step smaller, lighter, indented under their section */
+.wheel li.child a { font-size: 18px; font-size: clamp(16px, 1.5vw, 21px); font-weight: 500; letter-spacing: -.02em; padding-left: 32px; color: var(--ink-2); }
+.wheel li.child a.on { color: var(--accent); font-weight: 700; }
+.wheel li.exit a { color: var(--accent); font-weight: 600; }
+.wheel li.exit a:hover { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; }
+.wheel a sup.prog { align-self: baseline; transform: translateY(-2.5px); margin-left: 10px; font: 600 11px/1 var(--sans); letter-spacing: .04em; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* the rim: only half of a big circle shows; photo + name sit inside the visible half */
+.rim { position: absolute; inset: 0; pointer-events: none; width: 100%; height: 100%; }
+.rim circle { fill: none; stroke: var(--line); stroke-width: 1; transition: stroke .6s; }
+.rim line { stroke: var(--line); stroke-width: 1; }
+.rim line.major { stroke: var(--line-strong); }
+.pointer { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); transform: translate(-50%, -50%); z-index: 2; pointer-events: none; transition: width .4s, height .4s, background .4s, box-shadow .4s; }
+.hub {
+  position: absolute; z-index: 3; left: 44px; display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+  text-align: left; text-decoration: none; transform: translateY(-50%);
+}
+.hub > span { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.hub img { width: 68px; width: clamp(64px, 5.6vw, 84px); height: 68px; height: clamp(64px, 5.6vw, 84px); border-radius: 50%; object-fit: cover; margin-bottom: 14px; }
+.hub b { font-family: var(--display); font-size: 17px; font-weight: 600; letter-spacing: -.03em; line-height: 1.1; white-space: nowrap; }
+.hub .role { color: var(--mute); font-size: 13px; font-weight: 500; letter-spacing: -.01em; line-height: 1.3; white-space: nowrap; }
+.hub .status { margin-top: 10px; color: var(--mute); white-space: nowrap; }
+.hub .status i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 6px; vertical-align: 1px; animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+
+/* reading mode: a case study article locks the gear; the dial then shows reading progress */
+.layer { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; background: var(--paper); will-change: transform; touch-action: pan-y; overscroll-behavior-y: contain; }
+.layer:focus { outline: none; }
+.layer.read { z-index: 4; transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
+[data-arc] { will-change: transform; }
+.wheel.locked .rim circle { stroke: rgb(var(--accent-rgb) / .5); }
+/* locked: the pointer turns into a close button (x) sitting on the rim */
+.wheel.locked .pointer { width: 24px; height: 24px; background: var(--paper); box-shadow: 0 0 0 1.5px var(--accent), 0 0 0 8px rgb(var(--accent-rgb) / .1); pointer-events: auto; cursor: pointer; }
+.pointer::before, .pointer::after { content: ''; position: absolute; left: 50%; top: 50%; width: 10px; height: 1.5px; margin: -.75px 0 0 -5px; border-radius: 1px; background: #fff; opacity: 0; transform: rotate(0); transition: opacity .3s, transform .4s, background .2s; }
+.wheel.locked .pointer::before { opacity: 1; background: var(--accent); transform: rotate(45deg); }
+.wheel.locked .pointer::after { opacity: 1; background: var(--accent); transform: rotate(-45deg); }
+.wheel.locked .pointer:hover { background: var(--accent); }
+.wheel.locked .pointer:hover::before, .wheel.locked .pointer:hover::after { background: var(--paper); }
+
+/* keyboard hints as key caps, bottom-left of the gear. They appear gradually: browse once the visitor interacts, enter on a readable case, close + scroll while reading */
+.keys { position: absolute; z-index: 3; left: 44px; bottom: 26px; pointer-events: none; }
+.keys p { display: grid; grid-template-rows: 0fr; margin: 0; opacity: 0; pointer-events: none; transition: grid-template-rows .45s cubic-bezier(.2, .8, .2, 1), opacity .45s; }
+.keys p > span { display: flex; align-items: center; gap: 5px; min-height: 0; overflow: hidden; padding: 4px 0; box-sizing: border-box; }
+.keys p > span > * { flex: none; }
+.keys .kbd { appearance: none; -webkit-appearance: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 7px; box-sizing: border-box; font: 600 11px/1 var(--sans); letter-spacing: 0; color: var(--ink); background: var(--chip); border: 1px solid var(--chip-line); border-bottom-width: 2px; border-radius: 6px; transition: color .2s, border-color .2s, background .2s, transform .1s; }
+.keys em { margin-left: 5px; font: 500 12px/1 var(--sans); font-style: normal; letter-spacing: -.005em; color: var(--mute); transition: color .2s; }
+.side.k-nav .k-nav, .side.k-enter .k-enter, .side.k-close .k-close, .side.k-next .k-next, .side.k-scroll .k-scroll { grid-template-rows: 1fr; opacity: 1; pointer-events: auto; }
+.keys .one > span { cursor: pointer; }
+.keys .kbd:hover, .keys .one > span:hover .kbd { color: var(--accent); border-color: var(--accent); background: rgb(var(--accent-rgb) / .08); }
+.keys .one > span:hover em { color: var(--accent); }
+.keys .kbd:active { transform: translateY(1px); }
+
+/* theme toggle: top-left corner of the gear column */
+.theme { position: absolute; z-index: 7; top: 22px; left: 44px; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--mute); cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
+.theme:hover { color: var(--ink); border-color: var(--line-strong); }
+.theme svg { width: 15px; height: 15px; display: block; }
+.edge { display: none; }   /* mobile touch handle for the arc */
+
+/* B19: between phone and wide desktop the wheel column shrinks so the page keeps room */
+@media (min-width: 821px) and (max-width: 1100px) {
+  .shell { --side: clamp(300px, 34vw, 360px); }
+  .hub, .keys, .theme { left: 28px; }
+  .wheel li.child a { padding-left: 22px; }
+}
+
+@media (max-width: 820px) {
+  :root { --arc: 12px; }
+  /* iOS ignores overflow:hidden on body and lets the whole document pan (toolbars, rubber band): pin the document to the visible area, only the page layers scroll */
+  html { overflow: hidden; overscroll-behavior: none; }
+  body { position: fixed; inset: 0; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; }
+  .shell { height: 100%; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+  .theme { top: 12px; left: auto; right: 16px; }
+  .keys { display: none; }
+  /* content owns the whole screen; the gear column becomes a fixed layer on top of it */
+  .side { position: fixed; inset: 0; pointer-events: none; z-index: 6; }
+  .side::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 68px; background: linear-gradient(to bottom, var(--paper) 58%, transparent); z-index: 1; }   /* the page scrolls under the header */
+  .panel .in { padding-top: 76px; padding-bottom: calc(96px + env(safe-area-inset-bottom)); padding-left: calc(clamp(20px, 5cqi, 64px) + var(--arc)); }
+  .hub { top: 12px !important; left: 16px !important; transform: none; flex-direction: row; gap: 10px; text-align: left; z-index: 3; pointer-events: auto; }
+  .hub img { width: 36px; height: 36px; margin: 0; }
+  .hub b { font-size: 17px; }
+  .hub .role { font-size: 12px; }
+  .hub > span { align-items: flex-start; gap: 1px; }
+  .hub .status { margin-top: 2px; }
+  .theme { z-index: 3; pointer-events: auto; }
+
+  /* the arc is always there: a slim rim on the right edge (ticks turn, the dot marks the page). Touch it and the labels open next to it, over a light scrim */
+  .wheel { z-index: 2; top: 0; pointer-events: none; touch-action: none; }
+  .wheel::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s; background: var(--paper); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); -webkit-mask-image: linear-gradient(to left, #000, rgb(0 0 0 / .78) 40%, rgb(0 0 0 / .3)); mask-image: linear-gradient(to left, #000, rgb(0 0 0 / .78) 40%, rgb(0 0 0 / .3)); }
+  .m-open .wheel { pointer-events: auto; }
+  .m-open .wheel::before { opacity: 1; }
+  .wheel ul { inset: 0; opacity: 0; visibility: hidden; transition: opacity .25s, visibility 0s .25s; }
+  .m-open .wheel ul { opacity: 1; visibility: visible; transition: opacity .25s; }
+  .wheel a { font-size: 28px; text-shadow: 0 0 16px var(--paper), 0 0 6px var(--paper); }
+  .wheel li.child a { font-size: 18px; padding-left: 0; padding-right: 20px; }
+  .wheel li.exit { display: none; }
+  .pointer { z-index: 2; }
+  /* B1/B2: the touch handle is only as wide as the visible arc, and the page keeps a gutter wider than it, so scrolling the page never grabs the wheel */
+  .edge { display: block; position: absolute; right: 0; width: 16px; pointer-events: auto; touch-action: none; -webkit-tap-highlight-color: transparent; }
+  .m-open .edge, .wheel.locked .edge { pointer-events: none; }
+  /* sheet open: the dot becomes the close button, same as the locked gear while reading */
+  .m-open .pointer { width: 24px; height: 24px; background: var(--paper); box-shadow: 0 0 0 1.5px var(--accent), 0 0 0 8px rgb(var(--accent-rgb) / .1); pointer-events: auto; cursor: pointer; }
+  .m-open .pointer::before, .m-open .pointer::after { opacity: 1; background: var(--accent); }
+  .m-open .pointer::before { transform: rotate(45deg); }
+  .m-open .pointer::after { transform: rotate(-45deg); }
+  .rim circle { stroke: var(--line-strong); }
+}
+
+/* No JS: the page is an ordinary document. The wheel becomes a plain list of links and every real panel is stacked in the page. */
+html:not(.js) body { overflow: auto; position: static; height: auto; }
+html:not(.js) .shell { display: block; height: auto; }
+html:not(.js) .side { position: static; pointer-events: auto; padding: 24px clamp(20px, 5vw, 64px) 0; }
+html:not(.js) .side::before, html:not(.js) .rim, html:not(.js) .pointer, html:not(.js) .edge, html:not(.js) .keys, html:not(.js) .theme { display: none; }
+html:not(.js) .wheel { position: static; cursor: auto; touch-action: auto; }
+html:not(.js) .wheel ul { position: static; display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 18px 0 0; -webkit-mask-image: none; mask-image: none; }
+html:not(.js) .wheel li { position: static; }
+html:not(.js) .wheel li.child { display: none; }
+html:not(.js) .wheel a { font-size: 17px; letter-spacing: -.02em; }
+html:not(.js) .wheel a sup { display: none; }
+html:not(.js) .hub { position: static; transform: none; flex-direction: row; gap: 12px; align-items: center; }
+html:not(.js) .hub img { width: 40px; height: 40px; margin: 0; }
+html:not(.js) .stage { overflow: visible; }
+html:not(.js) .panel .in { padding-right: clamp(20px, 5cqi, 64px); padding-bottom: 48px; }
+html:not(.js) .panel + .panel { border-top: 1px solid var(--line); }
+
+/* With JS the first paint already shows the right page: only the page's first real panel is visible until the wheel takes over */
+html.js .stage > .panel ~ .panel, html.js .stage > .read-body { display: none; }
+html:not(.js) .side { display: flex; flex-direction: column; }
+html:not(.js) .hub { order: -1; }
+html:not(.js) .panel .in { padding-left: clamp(20px, 5vw, 64px); }

@@ -1,0 +1,29 @@
+---
+import Shell from '../layouts/Shell.astro';
+import { getModel } from '../lib/model';
+
+const model = await getModel();
+---
+<Shell
+  model={model}
+  page="index"
+  startId="index"
+  wheel={false}
+  seo={{
+    title: 'Wagner Rosa | Page Not Found',
+    description: 'The page you are looking for does not exist. Return to the homepage of Wagner Rosa.',
+    path: '/404.html',
+    noindex: true,
+    canonical: false,
+  }}
+>
+  <section class="panel">
+    <div class="in">
+      <h1 class="title sm stack">404.<br /><em>This isn’t where you meant to be.</em></h1>
+      <div class="p-body single prose">
+        <p>Outside of building digital systems, I ride motorcycles.</p>
+        <p class="links"><a href="/">Back to homepage →</a></p>
+      </div>
+    </div>
+  </section>
+</Shell>

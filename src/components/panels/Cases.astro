@@ -1,0 +1,15 @@
+---
+import CaseRows from './CaseRows.astro';
+import Reach from './Reach.astro';
+import type { Model } from '../../lib/model';
+interface Props { model: Model; level?: 1 | 2 }
+const { model, level = 1 } = Astro.props;
+const H = `h${level}` as 'h1' | 'h2';
+---
+<section class="panel" data-id="cases">
+  <div class="in">
+    <H class="title">Case studies</H>
+    <p class="lede lead-in">Design systems and product architecture, built and tested in real production environments. Decisions, trade-offs, outcomes.</p>
+    <div class="p-body single"><CaseRows cases={model.hubCases} /><Reach location="case-studies" /></div>
+  </div>
+</section>

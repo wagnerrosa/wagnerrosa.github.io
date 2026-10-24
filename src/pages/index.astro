@@ -1,0 +1,19 @@
+---
+import Shell from '../layouts/Shell.astro';
+import { getModel } from '../lib/model';
+import { homeGraph, carburanteApp } from '../lib/jsonld';
+
+const model = await getModel();
+---
+<Shell
+  model={model}
+  page="index"
+  startId="index"
+  seo={{
+    title: 'Wagner Rosa — UX Lead & Product Designer',
+    description: 'Wagner Rosa is a UX Lead at Nelogica and a product designer working on complex financial products, design systems, AI and prototyping in code.',
+    ogDescription: 'UX Lead at Nelogica and product designer. Complex financial products, design systems, AI and prototyping in code.',
+    path: '/',
+  }}
+  jsonld={[homeGraph(), carburanteApp()]}
+/>

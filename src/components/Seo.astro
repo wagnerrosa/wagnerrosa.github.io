@@ -1,0 +1,26 @@
+---
+import { abs, site } from '../data/site';
+
+import type { SeoProps as Props } from '../lib/seo';
+const { title, description, path, ogTitle = title, ogDescription = description, ogType = 'website', canonical: withCanonical = true, noindex = false, nofollow = false, alternates = [] } = Astro.props;
+const canonical = abs(path);
+const image = `${abs(site.ogImage)}?v=${site.ogImageVersion}`;
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+{(noindex || nofollow) && <meta name="robots" content={[noindex && 'noindex', nofollow && 'nofollow'].filter(Boolean).join(', ')} />}
+{withCanonical && <link rel="canonical" href={canonical} />}
+{alternates.map(a => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+<link rel="icon" href="/favicon.ico" sizes="48x48" />
+<link rel="icon" href="/assets/favicon-96.png" type="image/png" sizes="96x96" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta property="og:title" content={ogTitle} />
+<meta property="og:description" content={ogDescription} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={site.ogImageAlt} />
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonical} />
+<meta property="og:site_name" content={site.name} />
+<meta name="twitter:card" content="summary_large_image" />

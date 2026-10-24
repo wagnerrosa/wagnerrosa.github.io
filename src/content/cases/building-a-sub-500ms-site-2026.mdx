@@ -1,0 +1,185 @@
+---
+title: "Building a Sub-500ms Personal Site in 2026: Why I Chose Static HTML Over Modern Frameworks"
+short: "Sub-500ms site"
+client: "wagnerrosa.com"
+icon: "wagnerrosa-avatar.webp"
+year: 2026
+category: "Technical essay"
+metaTitle: "Building a Sub-500ms Personal Site in 2026 | Wagner Rosa"
+description: "Why I chose static HTML over modern frameworks to build a sub-500ms personal site in 2026: constraint-led architecture, Tailwind CLI, minimal JS, and long-term maintainability."
+ogDescription: "Why I chose static HTML over modern frameworks: constraint-led architecture, Tailwind CLI, minimal JS, and long-term maintainability."
+llms: "Why a static HTML and Tailwind CLI stack, with minimal JS."
+blurb: "Why static HTML still wins for performance, constraints, and long-term maintainability."
+readMinutes: 8
+datePublished: "2026-02-15"
+dateModified: "2026-09-30"
+lang: "en"
+order: 6
+---
+
+import { Badges, CodeBlock } from '../../components/mdx';
+
+In 2026, when most portfolio sites ship with 3MB of JavaScript and take 4 seconds to load, I built mine with plain HTML, Tailwind CSS, and \~2KB of vanilla JavaScript. It loads in under 500 milliseconds and scores 100/100 on Lighthouse.
+
+This wasn't a technical challenge. It was a deliberate return to fundamentals and an admission that I missed something.
+
+## The Nostalgia Problem
+
+I learned to code in 2014, in an elective class at the Institute of Arts and Design in Lisbon. We wrote HTML by hand. We debugged CSS in Firefox's developer tools. We uploaded files via FTP and watched our sites go live, one `index.html` at a time.
+
+There was something immediate about it. You wrote `<h1>Hello</h1>`, refreshed the browser, and it appeared. No build step. No bundler config. No `node_modules` folder consuming half your disk space.
+
+Somewhere between 2014 and 2026, that disappeared.
+
+I spent years working with React, Next.js, design systems at scale. I built component libraries, implemented token architectures, and deployed sites with Vercel pipelines. The work was sophisticated. The products were powerful. But building my own site, something that should be simple, felt heavy.
+
+When I sat down to create `wagnerrosa.com`, I realized I wasn't excited about setting up another React project. I wanted to write HTML again. I wanted to feel the code, not configure the toolchain.
+
+So I didn't use a framework. And it turned out to be the right decision.
+
+## Why Static HTML Still Wins in 2026
+
+The case for frameworks is compelling: component reusability, state management, dynamic rendering. But personal sites don't need any of that.
+
+Here's what I needed:
+
+- Four pages
+- Dark mode
+- A blog structure for occasional articles
+- Fast load times
+- Easy to maintain
+
+Here's what I didn't need:
+
+- Client-side routing
+- Hydration
+- Bundle splitting
+- State libraries
+- Virtual DOM
+
+The entire site is a handful of HTML files, one compiled CSS file (Tailwind), and a tiny amount of JavaScript for dark mode and micro-interactions. No build complexity beyond the Tailwind CLI.
+
+### The Performance Result
+
+| Metric | This site (static HTML) | Avg. Next.js portfolio |
+| --- | --- | --- |
+| First Paint | \~300ms | \~1200ms |
+| Largest Contentful Paint | \~450ms | \~2500ms |
+| Total Load | \< 500ms | \~4000ms |
+| Layout Shifts | 0 | — |
+| JavaScript | \~2KB | 200–500KB |
+
+I'm not arguing that frameworks are bad. I'm arguing that they're often unnecessary. And unnecessary complexity is the enemy of maintainability.
+
+## The Architecture: Constraint as Design
+
+The site follows a strict set of constraints:
+
+### Layout
+
+- Single centered column (`max-w-xl`)
+- No sidebars, no multi-column grids
+- Vertical rhythm via consistent spacing
+- Mobile-first, scales naturally to desktop
+
+### Typography
+
+- Body text: \~22px / \~32px line height
+- Neutral palette
+- Restrained headings
+- Hierarchy used sparingly
+
+### Interactions
+
+- Minimal CSS-only animations
+- Hover states: subtle feedback
+- Focus states: custom outline (accessibility)
+- Scroll progress bar on long articles
+- Back-to-top button (appears after 300px scroll)
+
+Total CSS for interactions is tiny. No animation libraries. No heavy dependencies. Just CSS transitions and `requestAnimationFrame` for the scroll indicator.
+
+### Dark Mode
+
+Dark mode is initialized before the CSS loads to prevent flash:
+
+<CodeBlock label="JavaScript" code={"(function(){\n  var d=document.documentElement;\n  var t=localStorage.getItem('theme');\n  if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){\n    d.classList.add('dark');\n  }\n})();"} />
+
+Minimal JavaScript. Works reliably. Respects system preferences. Persists across sessions.
+
+## What You Lose (And Why It Doesn't Matter)
+
+Choosing static HTML means giving up some conveniences.
+
+**No component reuse:** If I update the header, I edit multiple files instead of one component.
+
+Reality: the header is a small, readable block of HTML. Editing it is fast and predictable. Not worth a build system.
+
+**No hot module replacement:** I refresh the browser manually.
+
+Reality: Tailwind watch mode rebuilds quickly. A refresh is not a bottleneck.
+
+**No server-side rendering:** Everything is pre-rendered as static HTML.
+
+Reality: that's exactly the point. Static hosting serves it instantly. No server overhead.
+
+The "conveniences" of modern frameworks come with hidden costs: build time, configuration complexity, dependency management, deployment pipelines. For a small site, those costs can exceed the benefits.
+
+## The Human Element
+
+There's something satisfying about opening `index.html` and seeing the entire page structure. No imports. No components. Just HTML.
+
+When I look at the file tree, I see a small set of files I can explain completely. There are no abstractions I don't understand. No magic.
+
+This is the site I wanted to build in 2014 but didn't have the skills for. Now, in 2026, I have the skills to build complex systems and I'm choosing to build simple ones.
+
+## When You Should (and Shouldn't) Do This
+
+| Static HTML is the right choice when | Static HTML is the wrong choice when |
+| --- | --- |
+| You have fewer than \~10 pages | You need dynamic data fetching |
+| Content changes infrequently | You have user authentication |
+| You prioritize performance and simplicity | You have hundreds of pages |
+| You enjoy writing HTML | You need real-time features |
+
+For `wagnerrosa.com`, it's perfect. For a SaaS product, it would be absurd.
+
+## The Bigger Lesson
+
+The web industry spent a decade optimizing for developer experience. We built tools that make complex applications manageable. That's valuable.
+
+But we also normalized complexity where it isn't needed. We reach for frameworks by default, not by necessity.
+
+In 2026, choosing simplicity is a deliberate act. It requires confidence-confidence that you don't need the safety net of a framework, confidence that plain HTML is good enough, confidence that fast is better than fancy.
+
+I built this site because I wanted something fast, maintainable, and mine. No starter template. No "powered by" footer. Just HTML, CSS, and a little JavaScript.
+
+It loads in half a second. It will work exactly the same in 10 years. And I enjoyed building it.
+
+That's enough.
+
+## Technical Specifications
+
+For those curious about implementation details:
+
+**Stack:** HTML5, Tailwind CSS (CLI build), vanilla JavaScript, GitHub Pages.
+
+**Performance:** Lighthouse 100/100 targets, fast paint times, and stable layout.
+
+**Source:** Available on [GitHub](https://github.com/wagnerrosa/wagnerrosa.github.io).
+
+<Badges items={["HTML5","Tailwind CSS","Vanilla JS","GitHub Pages"]} />
+
+**About this article:** Personal reflection on architectural decisions. Technical claims were checked via local audits (DevTools and Lighthouse).
+
+**Research methodology:** This article synthesizes findings from AI-assisted research. Sources were audited, patterns cross-referenced, and insights organized by [Wagner Rosa](/about.html).
+
+## References
+
+1. Core Web Vitals and performance guidance (e.g., [web.dev](https://web.dev/vitals/)).
+2. Lighthouse auditing methodology and scoring model (e.g., [Chrome for Developers](https://developer.chrome.com/docs/lighthouse/)).
+3. Tailwind CSS documentation on utility-driven styling and build workflow (e.g., [Tailwind docs](https://tailwindcss.com/docs/installation)).
+4. Static hosting constraints and best practices (e.g., [GitHub Pages docs](https://docs.github.com/en/pages)).
+5. Research and guidance on motion sensitivity and interaction comfort (e.g., [MDN: prefers-reduced-motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion)).
+6. Industry discussions on framework tradeoffs, DX vs complexity, and long-term maintainability.
+7. Case studies and practitioner writeups on static-first personal sites and minimal toolchains.

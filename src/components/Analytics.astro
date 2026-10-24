@@ -1,0 +1,41 @@
+---
+import { site } from '../data/site';
+---
+{/* Google Analytics + Microsoft Clarity. Both stay off on localhost and in dev mode:
+    localStorage.dev_mode = 'true' (permanent), ?preview=dev (this session) */}
+<script is:inline define:vars={{ ga: site.ga, clarity: site.clarity }}>
+  (function () {
+    var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname === '';
+    var devMode = false, devSession = false, preview = false;
+    try {
+      devMode = localStorage.getItem('dev_mode') === 'true';
+      preview = new URLSearchParams(location.search).get('preview') === 'dev';
+      if (preview && !sessionStorage.getItem('dev_preview')) sessionStorage.setItem('dev_preview', 'true');
+      devSession = sessionStorage.getItem('dev_preview') === 'true';
+    } catch (e) {}
+    var off = isLocal || devMode || preview || devSession;
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    if (off) { window['ga-disable-' + ga] = true; console.log('🚫 Analytics disabled (dev mode active)'); return; }
+
+    var s = document.createElement('script');
+    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga;
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', ga);   // GA4 enhanced measurement counts history changes (pushState) as page views
+
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', clarity);
+
+    // one delegated listener covers every [data-track] link, including panels the wheel adds later
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest && e.target.closest('[data-track]');
+      if (!el || typeof gtag !== 'function') return;
+      gtag('event', 'site_interaction', { event_category: el.dataset.category, event_label: el.dataset.track, event_location: el.dataset.location });
+    });
+  })();
+</script>

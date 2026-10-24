@@ -1,0 +1,86 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/figtree';
+import '@fontsource-variable/source-serif-4';
+import '@fontsource-variable/source-serif-4/wght-italic.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/wheel.css';
+import '../styles/article.css';
+import { Image } from 'astro:assets';
+import Seo from '../components/Seo.astro';
+import JsonLd from '../components/JsonLd.astro';
+import ThemeScript from '../components/ThemeScript.astro';
+import Analytics from '../components/Analytics.astro';
+import Panels from '../components/panels/Panels.astro';
+import { asset } from '../lib/assets';
+import { site } from '../data/site';
+import type { SeoProps } from '../lib/seo';
+import type { Model, PageId } from '../lib/model';
+
+interface Props {
+  model: Model;
+  page: PageId | 'article';
+  startId: string;                          // wheel stop this URL opens on
+  seo: SeoProps;
+  jsonld?: object[];
+  lockId?: string;                          // article pages: the row the wheel locks to while reading
+  readUrl?: string;                         // article pages: this page's own URL
+  wheel?: boolean;                          // false: plain document without the wheel (404)
+}
+const { model, page, startId, seo, jsonld = [], lockId, readUrl, wheel = true } = Astro.props;
+const start = model.items.find(i => i.id === startId)!;
+---
+<!doctype html>
+<html lang={Astro.props.seo.locale ?? 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <Seo {...seo} />
+    <JsonLd data={jsonld} />
+    <ThemeScript js={wheel} />
+    <Analytics />
+  </head>
+  <body>
+    <a class="skip" href="#stage">Skip to content</a>
+    <div class="shell">
+      <aside class="side" id="side">
+        <nav class="wheel" id="wheel" aria-label="Sections" data-start={startId} data-lock={lockId} data-read={readUrl}>
+          <svg class="rim" id="rim" aria-hidden="true"></svg>
+          <div class="pointer" id="pointer" aria-hidden="true"></div>
+          <ul id="list">
+            {model.items.map(it => (
+              <li class:list={{ child: it.level === 1 }}>
+                <a href={it.external ?? it.url} draggable="false" tabindex="-1"
+                   data-id={it.id} data-kind={it.kind} data-url={it.url} data-title={it.title}
+                   data-read={it.read} data-ext={it.external} data-locked={it.locked ? '' : undefined}
+                   data-track={`wheel_${it.id}`} data-category="navigation" data-location="wheel"
+                   aria-current={it.id === startId && !readUrl ? 'page' : undefined}>
+                  <span>{it.label}</span>{it.kind === 'cases' && <sup>{it.tag}</sup>}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div class="edge" id="edge" aria-hidden="true"></div>
+        </nav>
+        <div class="keys">
+          <p class="k-enter one"><span data-k="enter"><button class="kbd" type="button" tabindex="-1" aria-label="Read the case study">→</button><em>read the case study</em></span></p>
+          <p class="k-close one"><span data-k="close"><button class="kbd" type="button" tabindex="-1" aria-label="Close">Esc</button><button class="kbd" type="button" tabindex="-1" aria-label="Close">←</button><em>close</em></span></p>
+          <p class="k-next one"><span data-k="next"><button class="kbd" type="button" tabindex="-1" aria-label="Next case study">Space</button><em>next case study</em></span></p>
+          <p class="k-nav"><span><button class="kbd" type="button" tabindex="-1" data-k="up" aria-label="Browse up">↑</button><button class="kbd" type="button" tabindex="-1" data-k="down" aria-label="Browse down">↓</button><em>browse</em></span></p>
+          <p class="k-scroll"><span><button class="kbd" type="button" tabindex="-1" data-k="scroll-up" aria-label="Scroll up">↑</button><button class="kbd" type="button" tabindex="-1" data-k="scroll-down" aria-label="Scroll down">↓</button><em>scroll</em></span></p>
+        </div>
+        <button class="theme" id="theme" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+        <a class="hub" id="hub" href="/" aria-label="Wagner Rosa, home" draggable="false">
+          <Image src={asset('photos/portrait.jpg')} alt="" width={168} height={168} format="webp" quality={80} loading="eager" />
+          <span><b>{site.name}</b><span class="role">{site.title}</span><span class="status mono"><i></i>{site.badge}</span></span>
+        </a>
+      </aside>
+      <main class="stage" id="stage" tabindex="-1" data-start-url={start.url}>
+        {wheel && <Panels model={model} page={page} />}
+        <slot />
+      </main>
+    </div>
+    {wheel && <script>import '../scripts/wheel';</script>}
+  </body>
+</html>

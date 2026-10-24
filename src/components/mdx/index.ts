@@ -1,0 +1,12 @@
+export { default as Badges } from './Badges.astro';
+export { default as Checks } from './Checks.astro';
+export { default as CodeBlock } from './CodeBlock.astro';
+export { default as DefList } from './DefList.astro';
+export { default as Facts } from './Facts.astro';
+export { default as Figure } from './Figure.astro';
+export { default as Lead } from './Lead.astro';
+export { default as LinkList } from './LinkList.astro';
+export { default as PullQuote } from './PullQuote.astro';
+export { default as Steps } from './Steps.astro';
+export { default as Video } from './Video.astro';
+export { default as Note } from './Note.astro';

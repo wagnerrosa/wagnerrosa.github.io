@@ -1,0 +1,132 @@
+---
+title: "Planton Academy: Designing a Corporate Learning Platform, End to End"
+short: "Planton Academy"
+client: "Planton"
+icon: "planton-ico.webp"
+year: 2026
+category: "Case study"
+description: "How I designed and built a B2B learning platform for ESG training: three user roles, a certification-driven learning flow, an AI tutor, and a React front-end shipped on a shared design system."
+ogDescription: "Product case study: from business model to shipped React code. Three user roles, quiz-gated certification, an AI tutor with human handoff, and a design system that kept it all coherent."
+llms: "B2B ESG learning platform with three user roles, quiz-gated certification, an AI tutor and a React front-end."
+blurb: "From business model to shipped React code: three user roles, quiz-gated certification, an AI tutor with human handoff, and a design system keeping it coherent."
+readMinutes: 5
+datePublished: "2026-07-15"
+dateModified: "2026-10-02"
+lang: "en"
+order: 3
+---
+
+import { Badges, Checks, DefList, Facts, Figure, Lead, LinkList, Note, PullQuote, Steps, Video } from '../../components/mdx';
+
+<Lead>
+
+I led the end-to-end design of this product: the UX, the design system, and the React front-end running in production. The interface in the video below is my code, shipped alongside the engineering team, not a prototype thrown over the wall. Planton Academy is where that way of working came together.
+
+</Lead>
+
+<Video src="/assets/planton-academy/academy-hero.mp4" label="Planton Academy interface in motion: learner home, learning tracks, and certification flow">The real product in motion. Every screen here is working React code, not a mockup</Video>
+
+<Facts label="Project facts" items={[{"label":"Role","value":"Senior UX / Product Designer"},{"label":"Duration","value":"2026"},{"label":"Team","value":"Solo designer, alongside a small engineering team"},{"label":"Responsibilities","badges":["Product Design","UX","UI","Design System","React Front-end","Motion","AI-assisted Workflow"],"wide":true}]} />
+
+<Checks title="What this project demonstrates" items={["Product strategy from a business model","UX for complex, multi-role systems","Information architecture","Scalable design systems","Close collaboration with engineering","React front-end in production","AI-assisted product development","Shipping products, not just prototypes"]} />
+
+Academy is the corporate learning platform of Planton, a Brazilian climate tech company, and it trains company workforces on ESG: emissions inventories, GHG Protocol, carbon markets, sustainability reporting. I joined to turn a commercial model into a working product, and stayed close to it from the first flow to the shipped code.
+
+<PullQuote>
+
+3 user roles on one dataset · 12-state B2B onboarding · quiz-gated certification · AI tutor with human handoff · shipped as working React code
+
+</PullQuote>
+
+<LinkList>
+
+- [Explore the live platform ↗](https://design.planton.eco.br/design-system/screens/academy/home)
+- [Landing page I designed for the launch ↗](https://planton.eco.br/academy)
+- [The design system behind it ↗](https://design.planton.eco.br/)
+
+</LinkList>
+
+## The Product
+
+Academy is B2B, and it serves real enterprise clients. Faber-Castell, listed publicly by Planton, uses it to train its value chain. There is no self-signup: a company buys access, and anyone with a corporate email on an authorized domain gets in. I treated that single business rule as the seed of the whole design.
+
+Learner, manager, and admin work from the same data, each with a different job. The learner follows tracks, passes quizzes, earns verifiable certificates. The company's manager monitors engagement and proves training value internally. Planton's admin operates every client, the content catalog, and access vouchers. What the manager sees is a slice of what the admin sees in aggregate: one dataset, three products.
+
+<Figure src="planton-academy/academy-admin-overview.webp" alt="Planton Academy admin area: analytics dashboard, content catalog, and navigation shown across three floating screens on a laptop">The admin side of the platform: cross-company analytics, content operations, and track management</Figure>
+
+## My Role
+
+I translated the commercial model into flows (onboarding, certification funnel, plan lifecycle, the three-role architecture) and designed every screen on Planton UI, the token-based design system I built for the brand and extended where the product demanded it. Then I implemented the platform in React, Next.js, and TypeScript, so the screens in the video above are the working interface, not mockups. I also designed the motion language, the AI tutor experience, and shipped the public landing page that sells the product.
+
+<Steps title="Process" label="Design process, from discovery to launch" items={["Discovery","Information Architecture","UX Design","Design System","React Implementation","Launch"]} />
+
+---
+
+## Four Decisions That Shaped the Product
+
+### 1. Onboarding starts with the business model
+
+Since the corporate domain is the access key, the flow verifies the domain before ever asking for a password, so eligibility is resolved at the cheapest possible step. Each commercial scenario became its own screen: an active company celebrates and auto-advances; an inactive one gets a voucher path with a commercial escape; an unknown domain converts the visitor into a sales lead. Twelve states, and none of them is a dead end.
+
+### 2. Certification is the spine, not the reward
+
+Instead of hiding the certificate behind the course, I made it part of the curriculum: quiz and certificate appear as numbered items in the track's own content list, visible from the first lesson. Every locked step says exactly what unlocks it, and failing the quiz always routes back to the content. The certificate itself carries a public verification URL and a LinkedIn share action. It is a credential the learner distributes, which markets the platform back to their network.
+
+<Figure src="planton-academy/academy-certificate.webp" alt="Planton Academy certificate: numbered credential with public verification URL, completed track name, and duration">The certificate is a live HTML component, not an image: numbered, verifiable by URL, ready for LinkedIn</Figure>
+
+### 3. An AI tutor that knows its limits
+
+The tutor answers in structured blocks that always end by pointing to the next piece of content in the catalog. It serves the learning funnel, not open conversation. When the bot reaches its limits, one tap hands the conversation to a human on WhatsApp, carrying a summary of the chat so the learner never repeats themselves. Designing the exit was as important as designing the answers.
+
+<Figure src="planton-academy/academy-ai-tutor.webp" alt="Planton Academy AI tutor on mobile: welcome state with quick-start prompts and a WhatsApp handoff option">The tutor's empty state: quick prompts to start, and a human escape hatch before the first message</Figure>
+
+### 4. Managers renew contracts, so managers see outcomes
+
+In B2B education the learner uses the product, but the manager renews it. The manager's dashboard is built for internal accountability: contract validity as a timeline, engagement hours, certificates earned, and per-collaborator drill-down. Same data as the admin view, reshaped around a different job to be done.
+
+---
+
+## Designed in Code
+
+Every flow above exists as typed React code. The onboarding is a TypeScript state machine; so are the quiz and the voucher lifecycle. Admin menus only offer actions valid for an item's current state, so the interface enforces the business rules instead of documenting them.
+
+Working in the shared codebase changed how design decisions travel. Components born inside a screen get promoted into the design system's registry, each documented with live examples and its real source file path, so a developer can go from documentation to implementation in one click. Reviewing pull requests with the engineers, I could catch a spacing or state issue in the diff instead of in a comment thread.
+
+AI agents had a specific job at each stage of the process. In exploration, I could stand up three or four working variants of a flow in an afternoon and compare them in the browser, instead of debating static mockups. In implementation, agents scaffolded components against the design system's tokens while I focused on interaction details and edge cases. In documentation, each component promoted into the system got its usage docs drafted from the real source code. And in validation, a decision made in the morning could be tested against real data states the same day.
+
+[How the design system itself was built → read the companion case study](/case-studies/planton-ui-design-system.html)
+
+## Outcomes
+
+<DefList>
+  <div>
+    <dt>One coherent experience across the platform</dt>
+    <dd>Learner, manager, and admin areas share tokens, primitives, and patterns, with a full dark mode included and no per-screen theming code.</dd>
+  </div>
+  <div>
+    <dt>A design system that outlived the project</dt>
+    <dd>Planton UI now serves other Planton products, with versioned releases and living documentation.</dd>
+  </div>
+  <div>
+    <dt>Less friction between design and engineering</dt>
+    <dd>Because the design ships as code, there is no handoff gap and no drift between prototype and product: the spec, the documentation, and the shipped interface are the same artifact.</dd>
+  </div>
+</DefList>
+
+The honest caveat: the platform runs on structured mock data, and accessibility is covered where the system's primitives cover it, with a prioritized backlog for the custom parts. Instrumenting real usage and closing that backlog would be my first move after launch.
+
+---
+
+## Why this project mattered
+
+This project pulled together almost every skill I've built over my career: UX, product, design systems, motion, front-end, and AI. For most of that career those lived in separate stages, owned by separate people. Here I got to hold them in one pair of hands.
+
+What made it matter to me was less the platform and more the distance it closed. The gap between a design decision and the code running in production is where most product quality leaks away. Working end to end let me shrink that gap deliberately, and that is the way of working I want to keep doing.
+
+<Badges items={["Next.js 16","React 19","TypeScript 5","Tailwind CSS 4","Framer Motion","Figma","AI-assisted workflow"]} />
+
+<Note>
+
+**Note:** This case study documents the Planton Academy platform: product design, UX flows, design system application, and React implementation. The platform screens linked above are a working front-end prototype running on structured mock data.
+
+</Note>

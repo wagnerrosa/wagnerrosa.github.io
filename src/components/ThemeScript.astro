@@ -1,0 +1,15 @@
+---
+interface Props { js?: boolean }
+const { js = true } = Astro.props;
+// Runs before first paint so there is no flash. Same storage key ("theme") as the previous site.
+---
+<script is:inline define:vars={{ js }}>
+  (function () {
+    var d = document.documentElement;
+    if (js) d.classList.add('js');
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || t === 'light') d.dataset.theme = t;
+    } catch (e) {}
+  })();
+</script>
