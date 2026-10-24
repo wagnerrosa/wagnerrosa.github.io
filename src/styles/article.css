@@ -89,7 +89,7 @@
 .read-body .gate-note { margin-top: 28px; font: 400 14px/1.4 var(--sans); color: var(--mute); }
 
 @media (max-width: 820px) {
-  .read-body { padding: 84px 46px calc(120px + env(safe-area-inset-bottom)) calc(20px + var(--arc)); margin-left: 0; }   /* right padding clears the close button sitting on the rim */
+  .read-body { padding: 104px 46px calc(120px + env(safe-area-inset-bottom)) calc(20px + var(--arc)); margin-left: 0; }   /* right padding clears the close button sitting on the rim */
 }
 html:not(.js) .read-body { margin: 0 auto; padding-bottom: 80px; }
 
