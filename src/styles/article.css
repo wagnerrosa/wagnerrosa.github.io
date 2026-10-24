@@ -99,3 +99,4 @@ html:not(.js) .read-body { margin: 0 auto; padding-bottom: 80px; }
 .cv-body p.meta { white-space: normal; }
 .read-body .note { margin-top: 3em; padding-top: 22px; border-top: 1px solid var(--line); font: 400 14px/1.6 var(--sans); letter-spacing: -.005em; color: var(--mute); }
 .read-body .note p { margin: 0; }
+.read-body table { display: block; max-width: 100%; overflow-x: auto; }   /* wide tables scroll sideways instead of widening the page */

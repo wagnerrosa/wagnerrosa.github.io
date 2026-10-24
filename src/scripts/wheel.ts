@@ -371,8 +371,7 @@ function setSheet(on: boolean) {
   if (on === sheet) return;
   sheet = on;
   document.body.classList.toggle('m-open', on);
-  if (on) items[nearest(clamp(pos))].a.focus({ preventScroll: true });
-  else if (nav.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
+  if (!on && nav.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
 }
 edge.addEventListener('click', e => { e.stopPropagation(); if (!(drag && drag.moved)) setSheet(true); });   // tap the arc: open
 onMq(() => { setSheet(false); layout(); kick(); });
