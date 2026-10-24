@@ -1,137 +1,93 @@
 # AGENTS.md
 
-This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
+This file provides guidance to Codex (codex.ai/code) when working with code in this repository.
 
 ## Commands
 
 ```bash
-npm install          # one-time setup
-npm run all          # dev: Tailwind watch + live-server (http://127.0.0.1:8080/)
-npm run build        # production: minified output.css
-npm run dev          # Tailwind watch only
-npm run serve        # live-server only
-npx tailwindcss -i ./input.css -o ./output.css --minify  # manual CSS build
+npm install              # one-time setup
+npm run dev              # astro dev server (http://localhost:4321/)
+npm run build            # production build into dist/
+npm run preview          # serve dist/ locally
+npm run build:protected  # re-encrypt the password-protected case study (local only, needs private/ and .env.local)
+npm run seo:snapshot     # snapshot head/JSON-LD/links/text of dist/ → positioning/baseline/current.json
+npm run seo:diff         # compare that snapshot with the legacy site (git tag legacy-final)
 ```
 
-`output.css` is committed. Always rebuild it after changing HTML classes or `input.css`.
+Deploy: pushing to `main` runs `.github/workflows/deploy.yml` (Pages source: **GitHub Actions**). Nothing generated is committed except the encrypted blob `public/case-studies/planton-genius.html`.
 
 ## Architecture
 
-Static site with no framework, no bundler, no runtime hydration. HTML5 + Tailwind CSS CLI + vanilla JS only.
+Astro, static output, no UI framework in the browser. The only script is the wheel engine (`src/scripts/wheel.ts`). Tailwind is gone; styling is plain CSS with tokens.
 
-**Key files:**
-- `index.html` — homepage, primary layout reference
-- `about.html` — personal background (uses `article-body` for serif reading)
-- `case-studies/index.html` — article hub (must be updated when adding new articles)
-- `input.css` — Tailwind entry point with article-body, pull-quote, code-block, badge components
-- `output.css` — compiled output (committed)
-- `tailwind.config.js` — dark mode (`class`), content scan paths, custom fonts (Inter, Source Serif 4)
-- `assets/micro-interactions.css` — 1.2KB animation library (scroll progress, back-to-top, hover states)
-
-## Layout Rules (strictly enforced)
-
-Every page must use this container — `max-w-2xl` is consistent across all pages:
-```html
-<body class="bg-neutral-100 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-300 font-sans antialiased">
-  <div class="max-w-2xl mx-auto px-6 sm:px-8 lg:px-12 pt-24 pb-20">
+```
+astro.config.mjs        site, build.format 'preserve' (keeps /about.html, /case-studies/<slug>.html), mdx, external-link rehype plugin
+src/content.config.ts   zod schemas: cases (articles), privateCases, work (home panels), cv. A missing SEO field breaks the build.
+src/content/cases/*.mdx one file per article: frontmatter + MDX body
+src/content/work/*.md   Nelogica, Carburante, Planton, FIERGS (home panels)
+src/data/site.ts        identity, contact, hero/about copy, Person JSON-LD node. Single source.
+src/lib/model.ts        builds the wheel stops from the collections (order, URLs, titles)
+src/lib/jsonld.ts       JSON-LD builders; src/lib/seo.ts the Seo props
+src/layouts/Shell.astro the only layout: head, wheel, stage
+src/components/         Seo, JsonLd, Analytics, ThemeScript, Article, panels/*, mdx/*
+src/scripts/wheel.ts    the dial: rotation, layers, routes + history, reading mode, keyboard, touch
+src/styles/             tokens.css, base.css, wheel.css, article.css
+src/pages/              index, about, cv, 404, case-studies/index, case-studies/[slug], sitemap.xml.ts, llms.txt.ts
+public/                 CNAME, robots.txt, favicons, og image, CV (.md + PDF), videos, encrypted case blob
+private/                git-ignored: planton-genius.mdx (source of the protected case)
+scripts/                seo-snapshot.mjs, build-protected.sh, gate-template.html, og-template.html
 ```
 
-Never introduce: sidebars, multi-column layouts, cards, grids, hero sections, or decorative sections. Single centered column only, mobile-first.
+### URLs and the wheel
 
-### Homepage exception
+Every wheel stop is a real URL and every URL is a complete page that works without JS:
 
-`index.html` is the only page allowed to break the single-column rule, and only in one place:
-- The work section (`aria-label="Work and experience"`, no eyebrow heading) widens to `max-w-4xl` and shows `.work-card` items in a grid (`md:grid-cols-2`, 1 column on mobile), most recent first. "All case studies →" sits below the grid. Header, hero and footer stay in `max-w-2xl`.
-- The body uses stacked wrappers (header div, `<main>` with hero + work sections, `<footer>`), each with `mx-auto px-6 sm:px-8 lg:px-12`, instead of one container. Home uses `pt-16 sm:pt-24`.
-- Work cards: `bg-white/60` (dark `bg-neutral-900/60`), `rounded-2xl`, no border, no shadow, no pills. Structure: `.app-icon` + name (`h3`, Inter 15px) → serif description (`text-xl md:text-[1.375rem]`) → meta line `Role · Period` (platform only when it adds information, e.g. `iOS`) with an `aria-hidden` arrow. One stretched link per card (`after:absolute after:inset-0`), focus ring on the card via `has-[:focus-visible]:ring-2`.
+| Stop | URL | Real HTML on |
+|---|---|---|
+| Home, Nelogica, Carburante, Planton, FIERGS, Contact | `/`, `/#nelogica`, … `/#contact` | `/` |
+| Case studies, each case summary | `/case-studies/`, `/case-studies/#<slug>` | the hub |
+| About | `/about.html` | `/about.html` |
+| An article | `/case-studies/<slug>.html` | the article page |
+| CV | `/cv.html` | rendered from `public/assets/cv/Wagner-Rosa-CV-ATS-2026.md` at build time |
 
-The case studies hub (`case-studies/index.html`) reuses the same `.work-card` in a **single column** inside the regular `max-w-2xl` container (`space-y-4 md:space-y-5`): client `.app-icon` + client name → serif title as the stretched link (same animated underline as every other link) → serif description (`text-base`, neutral-600; inline links get `relative z-10` to sit above the stretched link) → meta `Year · Category · X min read` with `→` (or `↗` for external). Personal essays use `wagnerrosa-picture.jpg` as the icon with the label `wagnerrosa.com`. The hub's intro keeps `article-body`; the card list sits outside it so the serif 18px rule doesn't override card typography.
+`Panels.astro` renders every panel on every page: the ones that belong to the URL as real HTML, the rest inside inert `<template>`s (no duplicated content for crawlers, instant rotation for visitors). Articles are fetched on demand and read in place; closing them returns the wheel to the case's row. Rules (audit decision B1): turning the wheel navigates; scrolling a page never does — only a deliberate overscroll at its end.
 
-Do not copy cards or grids to any other page.
+## Adding an article
 
-## Header Pattern (required on every page)
+1. Create `src/content/cases/<slug>.mdx` with the frontmatter from `src/content.config.ts` (title, short, client, icon, year, category, description, blurb, dates, order…). Content goes in MDX; components come from `src/components/mdx` (`Lead`, `PullQuote`, `Figure`, `Video`, `Facts`, `Checks`, `Steps`, `LinkList`, `DefList`, `CodeBlock`, `Badges`, `Note`).
+2. Put images in `src/assets/<folder>/` and reference them as `<Figure src="folder/file.webp" alt="…">caption</Figure>` (optimised by `astro:assets`). Videos live in `public/assets/…`.
+3. That's it: the wheel row, hub entry, sitemap, llms.txt, JSON-LD and reading time come from the frontmatter. `wheel: false` / `hub: false` keep an article off the wheel/hub; `noindex: true` adds the robots tag.
+4. `npm run build`, then `npm run seo:snapshot && npm run seo:diff`.
 
-```html
-<header class="flex items-center mb-8">
-  <img class="w-10 h-10 rounded-full mr-4" src="../assets/wagnerrosa-picture.jpg" alt="Wagner Rosa">
-  <h2 class="text-base font-medium text-neutral-600 dark:text-neutral-300">
-    <a href="/">Wagner Rosa</a>
-  </h2>
-  <button id="theme-toggle" aria-label="Toggle dark mode" class="ml-auto text-sm text-neutral-500 dark:text-neutral-400 px-2 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50">◐</button>
-</header>
-```
+## SEO and LLM parity
 
-Header h2 is always `font-medium` without `font-serif` (it's UI, not editorial).
+Head, Open Graph, canonical, hreflang (Planton Academy EN/PT), robots, JSON-LD (Person + WebSite + Carburante on `/`, ProfilePage on about/CV, Article on articles, CollectionPage + ItemList on the hub), `sitemap.xml` (real `lastmod`), `llms.txt` and `robots.txt` are all generated from the same data. Rules:
 
-## Footer Pattern (home, about, case studies hub)
+- No schema without a visible counterpart on the page.
+- Full name ("Wagner da Rosa de Souza") only in the About meta description and the Person `alternateName`.
+- No pages per keyword, no Instagram `sameAs`, no Lattes/ORCID/Wikidata (see `positioning/`).
+- `site.cv.dateModified` in `src/data/site.ts` must be bumped with every edit of the CV `.md`.
+- After a layout or head change run `npm run seo:snapshot && npm run seo:diff` and read the diff.
 
-`index.html`, `about.html` and `case-studies/index.html` share one footer. Keep the three in sync:
-- Serif `h2` invitation ("Open to remote Product Design opportunities."), then the email link with a "Copy" button (`#copy-email`, hidden until the clipboard script confirms support) and an `aria-live` status span.
-- `<nav>` grid (`grid-cols-2 sm:grid-cols-3`) with three groups: **Site** (Home, Case studies, Background), **Profiles** (LinkedIn, Behance, GitHub ↗), **CV** (PDF ↓, ATS-friendly CV → — `cv.html`). The current page is a neutral `<span aria-current="page">` without an arrow.
-- Hairline + `© 2026 Wagner Rosa · Porto Alegre, Brazil · GMT-3`.
-- `data-location` matches the page (`index`, `about`, `case-studies`). On home the footer carries its own `max-w-2xl` wrapper; on the other two it sits inside the page container with `mt-16 sm:mt-24`.
-- Article pages keep their own "Back to case studies → / Go to homepage →" navigation.
+## Design rules
 
-## Typography
+- Two columns on desktop (wheel left, page right); on ≤ 820px the wheel is an arc on the right edge that opens as a sheet. Keep a gutter on the page wider than the arc's touch handle.
+- Tokens in `src/styles/tokens.css`. Fonts (self-hosted via Fontsource): Figtree (display), Inter (UI), Source Serif 4 (reading).
+- Link arrows: `→` internal, `↗` external, `↓` download, and `↑`/`↓` for links that turn the wheel backward/forward.
+- Panels are container-query driven (`cqi`), not viewport driven.
+- Keep `prefers-reduced-motion` working; text never below 11px.
+- Do not add frameworks, icon packs, or scroll effects beyond the wheel.
 
-### Font Pairing
-- **Source Serif 4** (400, 600) — article/about body text (the reading font)
-- **Inter** (400, 500, 600) — UI, headings h2-h4, navigation, meta
+## Dark mode
 
-Google Fonts: `Source+Serif+4:ital,wght@0,400;0,600;1,400` + `Inter:wght@400;500;600`
+`<html data-theme="dark|light">`, set before first paint by `ThemeScript.astro` from `localStorage.theme`, otherwise the system preference. The toggle is in the wheel column.
 
-### Scales
-- **All pages** `<main>`: `class="article-body space-y-7"` — serif 18px body everywhere; homepage label line uses explicit `font-sans text-base font-normal`
-- **Article/about** `<main>`: same `article-body space-y-7`
-- `h1` (title): `text-3xl` (30px) serif semibold `leading-snug`
-- `h2` (sections): `text-2xl` (24px) sans semibold `leading-snug` + `mt-14`
-- `h3` (subsections): `text-xl` (20px) sans medium `leading-snug` + `mt-9`
-- Body (articles): 18px serif, `leading-[1.667]` — inherited from `article-body` class
-- Dark mode article text: `neutral-400` (reduced contrast for reading comfort)
+## Analytics
 
-## Content Elements (defined in input.css)
+`Analytics.astro`: Google Analytics + Microsoft Clarity, off on localhost, with `localStorage.dev_mode = 'true'`, or after `?preview=dev`. Links carry `data-track`, `data-category`, `data-location`; one delegated listener sends them. GA4 must have *Enhanced measurement → Page changes based on browser history events* on, because the wheel navigates with `pushState`.
 
-- **Pull quotes**: `<blockquote class="pull-quote"><p>Quote text</p></blockquote>`
-- **Figures**: `<figure class="my-10"><img ...><figcaption class="mt-3 text-sm text-neutral-500 dark:text-neutral-400 text-center font-sans">Caption</figcaption></figure>`
-- **Code blocks**: `<div class="code-block"><div class="flex ..."><span>Language</span></div><pre><code>...</code></pre></div>`
-- **Inline code**: `<code>term</code>` (auto-styled with background pill)
-- **Badges**: `<span class="badge">Tech Name</span>`
-- **Definition lists**: `<dl class="space-y-5 my-6"><div class="pl-4 border-l-2 ..."><dt>Term</dt><dd>Def</dd></div></dl>`
-- **Section dividers**: `<hr class="border-neutral-200 dark:border-neutral-800 my-14">`
-- **Tables**: auto-styled inside `.article-body` (no outer border, subtle row dividers)
-- **App icons** (homepage only): `<span class="app-icon"><img src="..." alt="" width="40" height="40"></span>` — Apple-style squircle, shadow and sheen (36px, 40px from `md`). Add `app-icon--tile` for marks without their own background (white tile). Source icons live in `assets/*-ico.*` (webp 120px for raster).
-- **Lists**: auto-styled inside `.article-body` (softer markers via CSS)
-- **Link arrows (site-wide)**: `→` internal navigation (including "Back to …" links), `↗` external, `↓` download (CV PDFs). The arrow is a plain character at the end of the link text, same color as the link. `↑` is reserved for the back-to-top button.
+## Password-protected case study
 
-## Dark Mode
+`private/planton-genius.mdx` (git-ignored) → `npm run build:protected` builds it with `INCLUDE_PRIVATE=1`, encrypts the page with staticrypt using `scripts/gate-template.html`, and writes `public/case-studies/planton-genius.html` (committed). Password: `.env.local` → `STATICRYPT_PASSWORD`; salt in `.staticrypt.json` (both git-ignored — back them up). The public stub `src/content/cases/planton-genius.mdx` carries only the frontmatter for the wheel and hub. **The blob freezes the page shell:** re-run `build:protected` whenever the layout, styles or scripts change, and keep images of private articles in `public/`. Details: `scripts/README.md`.
 
-Class-based, localStorage-persisted. Every page needs both scripts:
-
-**In `<head>`** (prevents flash):
-```html
-<script>(function(){var d=document.documentElement;var t=localStorage.getItem('theme');if(t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark');}})()</script>
-```
-
-**Before `</body>`**:
-```html
-<script>(function(){var r=document.documentElement;var b=document.getElementById('theme-toggle');if(b){b.addEventListener('click',function(){var d=r.classList.toggle('dark');localStorage.setItem('theme',d?'dark':'light');});}})()</script>
-```
-
-## Adding New Articles
-
-1. Create `case-studies/new-article.html` — mirror head/header/dark-mode from existing articles
-2. Use `<main class="article-body space-y-5">` for serif reading experience
-3. Add reading time: `<p class="text-sm text-neutral-500 dark:text-neutral-400 font-sans">2026 · Category · X min read</p>`
-4. Link `../assets/micro-interactions.css` (relative path from subdirectory)
-5. Add scroll progress bar (first child of `<body>`) and back-to-top button (in `<footer>`)
-6. Add required micro-interaction scripts before `</body>`
-7. **Update `case-studies/index.html`** with new entry (newest first): copy an existing `.work-card`, set the client icon/name, title, description, `aria-describedby` id and meta line
-8. Run `npm run build` to rebuild CSS
-
-Article footer navigation links use `data-track`, `data-category`, `data-location` attributes for analytics.
-
-## Performance Constraints
-
-Never add: frontend frameworks, external UI libraries, icon packs, additional CSS frameworks, heavy animations, or scroll effects beyond `micro-interactions.css`. Images: `.webp` preferred, `rounded-md` only, lazy loading, wrapped in `<figure>` with `<figcaption>`.
-
-Analytics (Google Analytics + Microsoft Clarity) auto-disable on localhost and when `localStorage.dev_mode === 'true'`.
+Do not add the protected page to `robots.txt`: the gate sends `noindex, nofollow`, and a `Disallow:` would stop crawlers from seeing it.

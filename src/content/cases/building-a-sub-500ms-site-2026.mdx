@@ -12,16 +12,22 @@ llms: "Why a static HTML and Tailwind CLI stack, with minimal JS."
 blurb: "Why static HTML still wins for performance, constraints, and long-term maintainability."
 readMinutes: 8
 datePublished: "2026-02-15"
-dateModified: "2026-09-30"
+dateModified: "2026-10-24"
 lang: "en"
 order: 6
 ---
 
-import { Badges, CodeBlock } from '../../components/mdx';
+import { Badges, CodeBlock, Note } from '../../components/mdx';
 
 In 2026, when most portfolio sites ship with 3MB of JavaScript and take 4 seconds to load, I built mine with plain HTML, Tailwind CSS, and \~2KB of vanilla JavaScript. It loads in under 500 milliseconds and scores 100/100 on Lighthouse.
 
 This wasn't a technical challenge. It was a deliberate return to fundamentals and an admission that I missed something.
+
+<Note>
+
+**Update, October 2026:** the site now uses Astro as its build step. The output is still plain static HTML, with no framework running in the browser, and the only script of any size is the one that turns the navigation wheel. Tailwind is gone, replaced by a small set of CSS tokens. The constraints below are the ones I kept.
+
+</Note>
 
 ## The Nostalgia Problem
 

@@ -64,16 +64,16 @@ const start = model.items.find(i => i.id === startId)!;
           <div class="edge" id="edge" aria-hidden="true"></div>
         </nav>
         <div class="keys">
-          <p class="k-enter one"><span data-k="enter"><button class="kbd" type="button" tabindex="-1" aria-label="Read the case study">→</button><em>read the case study</em></span></p>
-          <p class="k-close one"><span data-k="close"><button class="kbd" type="button" tabindex="-1" aria-label="Close">Esc</button><button class="kbd" type="button" tabindex="-1" aria-label="Close">←</button><em>close</em></span></p>
-          <p class="k-next one"><span data-k="next"><button class="kbd" type="button" tabindex="-1" aria-label="Next case study">Space</button><em>next case study</em></span></p>
-          <p class="k-nav"><span><button class="kbd" type="button" tabindex="-1" data-k="up" aria-label="Browse up">↑</button><button class="kbd" type="button" tabindex="-1" data-k="down" aria-label="Browse down">↓</button><em>browse</em></span></p>
-          <p class="k-scroll"><span><button class="kbd" type="button" tabindex="-1" data-k="scroll-up" aria-label="Scroll up">↑</button><button class="kbd" type="button" tabindex="-1" data-k="scroll-down" aria-label="Scroll down">↓</button><em>scroll</em></span></p>
+          <p class="k-enter one"><span data-k="enter"><button class="kbd" type="button" tabindex="-1" aria-label="→ read the case study">→</button><em>read the case study</em></span></p>
+          <p class="k-close one"><span data-k="close"><button class="kbd" type="button" tabindex="-1" aria-label="Esc, close">Esc</button><button class="kbd" type="button" tabindex="-1" aria-label="← close">←</button><em>close</em></span></p>
+          <p class="k-next one"><span data-k="next"><button class="kbd" type="button" tabindex="-1" aria-label="Space, next case study">Space</button><em>next case study</em></span></p>
+          <p class="k-nav"><span><button class="kbd" type="button" tabindex="-1" data-k="up" aria-label="↑ browse up">↑</button><button class="kbd" type="button" tabindex="-1" data-k="down" aria-label="↓ browse down">↓</button><em>browse</em></span></p>
+          <p class="k-scroll"><span><button class="kbd" type="button" tabindex="-1" data-k="scroll-up" aria-label="↑ scroll up">↑</button><button class="kbd" type="button" tabindex="-1" data-k="scroll-down" aria-label="↓ scroll down">↓</button><em>scroll</em></span></p>
         </div>
         <button class="theme" id="theme" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
-        <a class="hub" id="hub" href="/" aria-label="Wagner Rosa, home" draggable="false">
+        <a class="hub" id="hub" href="/" draggable="false">
           <Image src={asset('photos/portrait.jpg')} alt="" width={168} height={168} format="webp" quality={80} loading="eager" />
-          <span><b>{site.name}</b><span class="role">{site.title}</span><span class="status mono"><i></i>{site.badge}</span></span>
+          <span><b><span class="sr">Home: </span>{site.name}</b><span class="role">{site.title}</span><span class="status mono"><i></i>{site.badge}</span></span>
         </a>
       </aside>
       <main class="stage" id="stage" tabindex="-1" data-start-url={start.url}>

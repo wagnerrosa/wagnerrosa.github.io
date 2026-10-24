@@ -1,77 +1,49 @@
-# Protected case studies
+# Scripts
 
-Some case studies are password-protected with [staticrypt](https://github.com/robinmoisson/staticrypt).
-The site stays on GitHub Pages — no backend, no server.
+| File | What it does |
+|---|---|
+| `seo-snapshot.mjs` | Snapshots the head, JSON-LD, links and visible text of every HTML page in a directory, and diffs two snapshots. Used to prove SEO parity with the legacy site. |
+| `build-protected.sh` | Builds and encrypts the protected case study (see below). |
+| `gate-template.html` | The password page (staticrypt template), in the site's tokens. Standalone: it is encrypted into the blob, so it cannot use the site bundle. |
+| `og-template.html` | Source of `public/assets/og/og-default.png`. |
 
-## How it works
-
-```
-case-studies-src/planton-genius.html   →  encrypted  →  case-studies/planton-genius.html
-        (never committed)                                  (published, public)
-```
-
-The published file contains only an AES-256 blob plus the decryption JS. The password
-in plain text is never written to it, so "view source" and devtools reveal nothing.
-
-## Writing
-
-Edit the source in `case-studies-src/`, **not** `case-studies/`.
-Anything written directly into `case-studies/planton-genius.html` is overwritten on the next build.
-
-Source files use the same head/header/footer pattern as any other case study — see
-`CLAUDE.md` for the layout rules.
-
-## Building
+## SEO snapshot
 
 ```bash
-npm run build           # Tailwind + encrypt protected pages
-npm run build:protected # encrypt only
+npm run build
+node scripts/seo-snapshot.mjs dist positioning/baseline/current.json
+node scripts/seo-snapshot.mjs --diff positioning/baseline/legacy-final-2026-10-24.json positioning/baseline/current.json
 ```
 
-The password is read from `.env.local` (git-ignored):
+The baseline was taken from the git tag `legacy-final` (the last Tailwind/hand-written site). Expected differences after the migration: the viewport tag, the hub's new `CollectionPage` JSON-LD, `og:url`/`twitter:card` on the two noindex essays, and the removal of the old protected page from `dist` (it is copied from `public/`).
+
+## Protected case study
 
 ```
-STATICRYPT_PASSWORD="your-password-here"
+private/planton-genius.mdx                  (git-ignored, only on the author's machine)
+   │  INCLUDE_PRIVATE=1 astro build --outDir .protected-build
+   ▼
+.protected-build/case-studies/planton-genius.html   (the page in the full site shell)
+   │  staticrypt --template scripts/gate-template.html
+   ▼
+public/case-studies/planton-genius.html     (AES-256 blob + decryption JS; committed and published)
 ```
 
-The salt lives in `.staticrypt.json` (git-ignored). Keep it: changing the salt
-invalidates every "Remember me" session already saved in visitors' browsers.
+The password never reaches the repository or CI: the CI build just copies the committed blob.
 
-**Password hint:** staticrypt has no `--template-hint` option, so the hint is hardcoded
-in `case-studies-src/_password-template.html` (search for `staticrypt-hint`).
-Change it there whenever the password changes.
+```bash
+npm run build:protected
+```
 
-## Adding another protected case study
+- Password: `.env.local` → `STATICRYPT_PASSWORD="…"`. Salt: `.staticrypt.json` (keep it: changing it invalidates every "remember me" already saved in visitors' browsers).
+- The password hint is hardcoded in `scripts/gate-template.html` (`staticrypt-hint`); change it there with the password.
+- The reading layer on the site fetches this file, reads the salt and ciphertext as text, and decrypts in the browser with the same key derivation staticrypt uses. If you upgrade staticrypt, check that its key derivation (1k SHA-1, 14k SHA-256, 585k SHA-256) is unchanged, or the in-page unlock in `src/scripts/wheel.ts` breaks while the standalone gate keeps working.
+- **The blob freezes the shell.** Stylesheet and script file names are hashed; after any layout, style or script change, run `npm run build:protected` again and commit the new blob. Images used by a private article must live in `public/` (the private build's `_astro/` files are not published).
 
-1. Create `case-studies-src/<name>.html`
-2. Add a matching `npx staticrypt` block in `build-protected.sh` (copy the existing one,
-   change the filename and `--template-title`)
-3. Add the entry to `case-studies/index.html`, marked `Password required`
-4. `npm run build`
+### Another protected case
 
-Don't add protected pages to `robots.txt`. The gate template sends `noindex, nofollow`;
-a `Disallow:` line would hide that tag from crawlers.
+Add `private/<slug>.mdx` and a public stub `src/content/cases/<slug>.mdx` with `protected: true` (frontmatter only). Generalise `build-protected.sh` (it handles one file today). Don't list it in `robots.txt`.
 
-## ⚠️ Backup
+### ⚠️ Backup
 
-`case-studies-src/` and `.env.local` are git-ignored, so **they exist only on this machine
-and are not backed up by git**. Keep a copy somewhere safe (password manager for the
-password, cloud storage or a private repo for the sources). If this laptop dies, the
-encrypted page on GitHub cannot be edited — only decrypted, and only with the password.
-
-## Limits of this approach
-
-Stops casual access, link-sharing and search engine indexing.
-
-It is **not** server-side auth:
-
-- The encrypted file is public. It can be downloaded and brute-forced **offline** — no
-  rate limiting, no logs. Password strength is the only thing standing in the way.
-- Anyone given the password can pass it on.
-- **Publishing is not reversible.** A pushed version stays in the Git history and in
-  caches; rotating the password later does not un-publish it. Review content before the
-  first push.
-
-For anything under NDA or a contractual confidentiality obligation, use auth that runs
-before any bytes are served — Cloudflare Pages + Access, or Netlify password protection.
-Both keep this repo, build and domain; only the host changes.
+`private/`, `.env.local` and `.staticrypt.json` are git-ignored, so they exist only on this machine. Keep a copy (password manager for the password; private storage or a private repo for the sources). If the laptop dies, the encrypted page on GitHub can only be decrypted, not edited.
