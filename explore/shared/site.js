@@ -94,7 +94,6 @@ window.SITE = (function () {
 
   const panels = {
     home: () => `
-      <p class="mono eyebrow">[ Home ]</p>
       <h1 class="title big">I design products.<br><em>I prototype in code.</em><br>I help teams ship.</h1>
       <div class="p-body">
         <dl class="facts">
@@ -108,7 +107,6 @@ window.SITE = (function () {
         </div>
       </div>`,
     work: (i) => `
-      <p class="mono eyebrow">[ Home / Work ]</p>
       <h1 class="title"><span class="app-icon${/nelo/.test(i.icon) ? ' app-icon--tile' : ''}"><img src="${IC}${i.icon}" alt="" width="56" height="56"></span>${i.title || i.label}</h1>
       <p class="lede lead-in">${i.desc}</p>
       <div class="p-body">
@@ -124,7 +122,6 @@ window.SITE = (function () {
         </div>
       </div>`,
     case: (i) => `
-      <p class="mono eyebrow">[ Case studies / ${i.c.year} ]</p>
       <h1 class="title sm stack"><span class="app-icon${/nelo/.test(i.c.icon) ? ' app-icon--tile' : ''}"><img src="${IC}${i.c.icon}" alt="" width="56" height="56"></span>${i.c.title}</h1>
       <p class="lede lead-in wide">${i.c.desc}</p>
       <p class="links">${link(i.c.href, i.c.ext ? 'Open project' : 'Read case study', i.c.ext)} ${link('#cases', 'All case studies', false, i.id)}</p>
@@ -136,12 +133,10 @@ window.SITE = (function () {
         </dl>
       </div>`,
     cases: () => `
-      <p class="mono eyebrow">[ Case studies ]</p>
       <h1 class="title">Case studies</h1>
       <p class="lede lead-in">Design systems and product architecture, built and tested in real production environments. Decisions, trade-offs, outcomes.</p>
       <div class="p-body single">${caseList(cases)}</div>`,
     about: () => `
-      <p class="mono eyebrow">[ About ]</p>
       <h1 class="title sm">About Wagner Rosa</h1>
       <div class="p-body single prose">
         <h2 class="mono">Background</h2>
@@ -157,7 +152,6 @@ window.SITE = (function () {
         </figure>
       </div>`,
     contact: () => `
-      <p class="mono eyebrow">[ Contact ]</p>
       <h1 class="title big">Open to remote<br><em>Product Design</em><br>opportunities.</h1>
       <div class="p-body">
         <dl class="facts">

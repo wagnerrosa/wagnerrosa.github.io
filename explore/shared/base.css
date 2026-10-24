@@ -95,7 +95,6 @@ ul, ol { list-style: none; }
 /* ---------- panel (container-query driven so the viewport prototype truly reflows) ---------- */
 .panel { container-type: inline-size; min-height: 100%; }
 .panel .in { padding: clamp(20px, 5cqi, 64px); padding-bottom: 96px; max-width: 1400px; }
-.eyebrow { color: var(--mute); margin-bottom: clamp(14px, 3cqi, 28px); }
 .title { font-family: var(--display); font-weight: 450; line-height: .98; letter-spacing: -.04em; font-optical-sizing: auto; font-size: clamp(36px, 8.6cqi, 108px); display: flex; align-items: center; gap: .22em; flex-wrap: wrap; }
 .title.sm { font-size: clamp(28px, 4.8cqi, 60px); line-height: 1; letter-spacing: -.04em; flex-wrap: nowrap; align-items: flex-start; }
 .title.stack { flex-direction: column; gap: clamp(14px, 2.4cqi, 26px); }
