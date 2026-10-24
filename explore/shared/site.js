@@ -5,7 +5,7 @@ window.SITE = (function () {
   const CASE = '/case-studies/';
 
   const cases = [
-    { id: 'carburante', short: 'Carburante', icon: 'carburante-ico.webp', client: 'Carburante', year: '2026', title: 'Carburante: a native iOS logbook for motorcycles', meta: 'Independent · open beta', desc: 'Personal project, designed and built end to end: SwiftUI and SwiftData, offline-first sync with Supabase, on-device receipt OCR, and real fuel economy measured tank to tank. Open beta on TestFlight, code on GitHub.', href: 'https://carburante.motorcycles/?lang=en', ext: true },
+    { id: 'carburante', short: 'Carburante', icon: 'carburante-ico.webp', client: 'Carburante', year: '2026', title: 'Carburante: a native iOS logbook for motorcycles', meta: 'Independent · App Store', desc: 'Personal project, designed and built end to end: SwiftUI and SwiftData, offline-first sync with Supabase, on-device receipt OCR, and real fuel economy measured tank to tank. Live on the App Store, code on GitHub.', href: 'https://carburante.motorcycles/?lang=en', ext: true },
     { id: 'planton-genius', short: 'Planton Genius', icon: 'planton-ico.webp', client: 'Planton', year: '2026', title: 'Planton Genius: redesigning a B2B emissions SaaS', meta: 'Private · password', desc: 'Redesigning a B2B emissions inventory SaaS: I built the functional prototype in React that the engineering team shipped from. Private case study, shared by password.', href: CASE + 'planton-genius.html' },
     { id: 'planton-academy', short: 'Planton Academy', icon: 'planton-ico.webp', client: 'Planton', year: '2026', title: 'Planton Academy: a corporate learning platform, end to end', meta: '5 min read', desc: 'From business model to shipped React code: three user roles, quiz-gated certification, an AI tutor with human handoff, and a design system keeping it coherent.', href: CASE + 'planton-academy.html' },
     { id: 'planton-ui-design-system', short: 'Planton UI', icon: 'planton-ico.webp', client: 'Planton', year: '2026', title: 'From editorial brand to product system: Planton UI', meta: '12 min read', desc: 'How an implicit brand language became an enforceable design system: tokens, primitives, and real product screens for a B2B sustainability platform.', href: CASE + 'planton-ui-design-system.html' },
@@ -33,13 +33,13 @@ window.SITE = (function () {
       id: 'carburante', n: '', label: 'Carburante', tag: 'iOS', parent: 'index', type: 'work', icon: 'carburante-ico.webp',
       role: 'Independent project', period: '2026 – Present',
       desc: 'A native iOS logbook for motorcycle riders, designed and built end to end.',
-      facts: [['Stack', 'SwiftUI · SwiftData · Supabase'], ['Status', 'Open beta on TestFlight']],
+      facts: [['Stack', 'SwiftUI · SwiftData · Supabase'], ['Status', 'Live on the App Store']],
       bullets: [
         'Fuel logging in three steps, with on-device photo reading of odometer and receipts.',
         'Real fuel economy measured tank to tank, maintenance reminders, offline-first sync and a 25-badge achievement system.',
         'Brand, landing page, motion demos and an AI-assisted asset pipeline. Open source on GitHub.'
       ],
-      rel: ['carburante'], href: 'https://carburante.motorcycles/?lang=en'
+      href: 'https://carburante.motorcycles/?lang=en'
     },
     {
       id: 'planton', n: '', label: 'Planton', tag: 'Sr Product Designer', parent: 'index', type: 'work', icon: 'planton-ico.webp',
@@ -105,6 +105,7 @@ window.SITE = (function () {
           <div><dt class="mono">Now</dt><dd>UX Lead at Nelogica</dd></div>
           <div><dt class="mono">Based</dt><dd>Porto Alegre · GMT-3</dd></div>
           <div><dt class="mono">Open to</dt><dd>Remote Product Design roles</dd></div>
+          <div><dt class="mono">Elsewhere</dt><dd class="elsewhere">${link('https://www.linkedin.com/in/wagnerrosa/', 'LinkedIn', true)} ${link('https://github.com/wagnerrosa', 'GitHub', true)}</dd></div>
         </dl>
         <div>
           <p class="lede">UX Lead &amp; Product Designer with 10+ years turning complex products, business logic and AI-powered workflows into clear interfaces and shipped experiences.</p>
@@ -113,7 +114,7 @@ window.SITE = (function () {
       </div>`,
     work: (i) => `
       <p class="mono eyebrow">[ Home / Work ]</p>
-      <h1 class="title"><span class="app-icon"><img src="${IC}${i.icon}" alt="" width="56" height="56"></span>${i.title || i.label}</h1>
+      <h1 class="title"><span class="app-icon${/nelo/.test(i.icon) ? ' app-icon--tile' : ''}"><img src="${IC}${i.icon}" alt="" width="56" height="56"></span>${i.title || i.label}</h1>
       <p class="lede lead-in">${i.desc}</p>
       <div class="p-body">
         <dl class="facts">
@@ -129,7 +130,7 @@ window.SITE = (function () {
       </div>`,
     case: (i) => `
       <p class="mono eyebrow">[ Case studies / ${i.c.year} ]</p>
-      <h1 class="title sm stack"><span class="app-icon"><img src="${IC}${i.c.icon}" alt="" width="56" height="56"></span>${i.c.title}</h1>
+      <h1 class="title sm stack"><span class="app-icon${/nelo/.test(i.c.icon) ? ' app-icon--tile' : ''}"><img src="${IC}${i.c.icon}" alt="" width="56" height="56"></span>${i.c.title}</h1>
       <p class="lede lead-in">${i.c.desc}</p>
       <div class="p-body">
         <dl class="facts">
@@ -188,7 +189,7 @@ window.SITE = (function () {
   }
 
   function currentId() {
-    const h = location.hash.slice(1);
+    const h = location.hash.slice(1).split('/')[0];
     return byId[h] ? h : 'index';
   }
 
