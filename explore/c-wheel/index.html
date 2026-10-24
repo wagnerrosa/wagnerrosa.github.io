@@ -6,14 +6,13 @@
 <title>C · Wheel — Wagner Rosa (prototype)</title>
 <link rel="stylesheet" href="../shared/base.css">
 <style>
-  .shell { --side: minmax(420px, 40vw); }
+  .shell { --side: minmax(400px, min(34vw, 540px)); }
   .side { padding: 0; overflow: hidden; border-right: 0; }
-  .side .status { position: absolute; bottom: 24px; left: 24px; z-index: 3; }
 
   .wheel { position: absolute; inset: 0; cursor: grab; touch-action: none; outline: none; }
   .wheel:active { cursor: grabbing; }
   /* fade the rows out before they reach the footer text */
-  .wheel ul { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 72%, transparent 87%); mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 72%, transparent 87%); }
+  .wheel ul { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 82%, transparent 96%); mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 82%, transparent 96%); }
   .wheel ul { position: absolute; inset: 0; }
   .wheel li { position: absolute; left: 0; top: 0; will-change: transform, opacity; white-space: nowrap; }
   .wheel a {
@@ -22,26 +21,29 @@
     transition: color .25s;
   }
   .wheel a .n { display: none; }
-  .wheel a.on { color: var(--accent); }
-  /* children: a step smaller, prefixed with a dash, indented under their section */
-  .wheel li.child a { font-size: clamp(16px, 1.5vw, 21px); font-weight: 500; letter-spacing: -.02em; padding-left: 32px; }
-  .wheel li.child a::before { content: '–'; margin-right: -4px; color: var(--mute); }
-  .wheel li.child a.on::before { color: var(--accent); }
+  .wheel a { font-weight: 600; }
+  .wheel a.on { color: var(--accent); font-weight: 700; }
+  .wheel a sup { align-self: flex-start; font-size: .36em; font-weight: 500; letter-spacing: .04em; color: var(--mute); margin-left: -2px; transform: translateY(.6em); }
+  .wheel a.on sup { color: var(--accent); }
+  /* children: a step smaller, lighter, indented under their section */
+  .wheel li.child a { font-size: clamp(16px, 1.5vw, 21px); font-weight: 500; letter-spacing: -.02em; padding-left: 32px; color: #3a3a3a; }
+  .wheel li.child a.on { color: var(--accent); font-weight: 700; }
 
   /* the rim: only half of a big circle shows; photo + name sit inside the visible half */
   .rim { position: absolute; inset: 0; pointer-events: none; width: 100%; height: 100%; }
   .rim circle { fill: none; stroke: var(--line); stroke-width: 1; }
-  .pointer { position: absolute; width: 14px; height: 2px; background: var(--accent); transform: translateY(-50%); z-index: 2; pointer-events: none; }
+  .rim line { stroke: var(--line); stroke-width: 1; }
+  .rim line.major { stroke: rgb(0 0 0 / .26); }
+  .pointer { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); transform: translate(-50%, -50%); z-index: 2; pointer-events: none; }
   .hub {
-    position: absolute; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 4px;
-    text-align: center; text-decoration: none; transform: translate(-50%, -50%);
+    position: absolute; z-index: 3; left: 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+    text-align: left; text-decoration: none; transform: translateY(-50%);
   }
-  .hub > span { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .hub img { width: clamp(56px, 5vw, 76px); height: clamp(56px, 5vw, 76px); border-radius: 50%; object-fit: cover; margin-bottom: 4px; }
+  .hub > span { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+  .hub img { width: clamp(56px, 5vw, 72px); height: clamp(56px, 5vw, 72px); border-radius: 50%; object-fit: cover; margin-bottom: 12px; }
   .hub b { font-size: 15px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; white-space: nowrap; }
-  .hub .mono { color: var(--mute); font-size: 9px; max-width: 110px; line-height: 1.35; }
-  .tip { position: absolute; left: 24px; right: 24px; bottom: 76px; color: var(--mute); z-index: 3; }
-
+  .hub .mono { color: var(--mute); font-size: 9px; line-height: 1.35; white-space: nowrap; }
+  .hub .status { margin-top: 8px; font-size: 9px; white-space: nowrap; }
   /* right pane: a vertical stack of panels driven by the same wheel (the bigger gear) */
   :root { --arc: 56px; }
   .stage { overflow: hidden; }
@@ -53,7 +55,6 @@
     :root { --arc: 14px; }
     .shell { grid-template-rows: 44dvh 1fr; }
     .side { border-bottom: 0; padding: 0; }
-    .side .status, .tip { display: none; }
     .wheel { top: 58px; }
     .wheel ul { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%); }
     .wheel a { font-size: 26px; }
@@ -76,10 +77,8 @@
     </div>
     <a class="hub" id="hub" href="#index" aria-label="Wagner Rosa, home">
       <img src="../../assets/wagnerrosa-picture.jpg" alt="" width="76" height="76">
-      <span><b>Wagner Rosa</b><span class="mono">UX Lead &amp; Product Designer</span></span>
+      <span><b>Wagner Rosa</b><span class="mono">UX Lead &amp; Product Designer</span><span class="status mono"><i></i>Open to remote · GMT-3</span></span>
     </a>
-    <p class="tip mono">Scroll · drag · ↑ ↓</p>
-    <div id="bottom"></div>
   </aside>
   <main class="stage" id="stage"></main>
 </div>
@@ -87,13 +86,11 @@
 <script>
 (function () {
   const $ = id => document.getElementById(id);
-  $('bottom').innerHTML = SITE.sideBottom;
-  SITE.clock(document.querySelector('[data-clock]'));
 
   const items = SITE.items, N = items.length;
   const list = $('list'), wheel = $('wheel'), stage = $('stage'), rim = $('rim'), hub = $('hub'), pointer = $('pointer');
   list.innerHTML = items.map(i =>
-    `<li class="${i.level ? 'child' : ''}"><a href="#${i.id}" data-id="${i.id}" tabindex="-1"><span class="mono n">${i.n}</span><span>${i.label}</span></a></li>`).join('');
+    `<li class="${i.level ? 'child' : ''}"><a href="#${i.id}" data-id="${i.id}" tabindex="-1"><span class="mono n">${i.n}</span><span>${i.label}</span>${i.id === 'cases' ? `<sup>${i.tag}</sup>` : ''}</a></li>`).join('');
   const els = [...list.children];
 
   /* slot space (small gear): one slot per item, a new section gets a little extra air */
@@ -113,7 +110,7 @@
   let pos = slots[start];      // animated slot position
   let target = pos;            // where we are heading
   let shown = null, W = 0, H = 0, R = 0, step = 0, gap = 0, cx = 0, cy = 0, baseX = 0, stageH = 0;
-  let lastPos = null;
+  let lastPos = null, ticksG = null;
   let sc = null;               // smooth in-page scroll: { el, t }
 
   /* ---------- right pane ---------- */
@@ -169,19 +166,26 @@
     cy = H / 2;
     R = Math.min(H * 0.62, 420);                       // big circle, centre off-screen: only half the arc shows
     if (!stacked) {
-      baseX = Math.min(W * 0.4, 230);                  // x of the active row
+      baseX = Math.min(W * 0.55, 232);                // x of the active row
       gap = Math.min(66, Math.max(46, H * 0.07));
-      hub.style.left = ((baseX - 18) / 2) + 'px'; hub.style.top = cy + 'px';   // centred in the visible half
+      hub.style.top = cy + 'px';
     } else {
       baseX = W * 0.3;
       gap = Math.min(46, Math.max(34, H * 0.1));
-      hub.style.left = ''; hub.style.top = '';
+      hub.style.top = '';
     }
     cx = baseX - R - 18;
     step = gap / R;
     rim.setAttribute('viewBox', `0 0 ${W} ${H}`);
-    rim.innerHTML = `<circle cx="${cx}" cy="${cy}" r="${R}"/><circle cx="${cx}" cy="${cy}" r="${R + 14}" opacity=".5"/>`;
-    pointer.style.left = (cx + R - 7) + 'px'; pointer.style.top = cy + 'px';
+    let ticks = '';
+    const dt2 = step / 2;                                  // graduation like a dial: two ticks per row, every 4th a bit longer
+    for (let j = Math.ceil(-1.6 / dt2); j <= Math.floor((1.6 + maxSlot * step) / dt2); j++) {   // enough ticks to cover the whole turn of the wheel
+      const a = j * dt2, c = Math.cos(a), sn = Math.sin(a), len = j % 4 === 0 ? 11 : 5;
+      ticks += `<line class="${j % 4 === 0 ? 'major' : ''}" x1="${(cx + (R - 4) * c).toFixed(1)}" y1="${(cy + (R - 4) * sn).toFixed(1)}" x2="${(cx + (R - 4 - len) * c).toFixed(1)}" y2="${(cy + (R - 4 - len) * sn).toFixed(1)}"/>`;
+    }
+    rim.innerHTML = `<circle cx="${cx}" cy="${cy}" r="${R}"/><g id="ticks">${ticks}</g>`;
+    ticksG = rim.querySelector('#ticks');
+    pointer.style.left = (cx + R) + 'px'; pointer.style.top = cy + 'px';
     arcMax = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--arc')) || 56;
     lastPos = null;
   }
@@ -209,14 +213,17 @@
       if (Math.abs(th) > 1.15 || x < 4) { el.style.opacity = 0; el.style.pointerEvents = 'none'; return; }
       const y = cy + R * Math.sin(th);
       const s = 1 - Math.abs(th) * 0.16;
-      el.style.opacity = Math.max(0, 1 - Math.abs(th) * 0.8).toFixed(3);
+      el.style.opacity = (Math.max(0, 1 - Math.abs(th) * 0.8) * Math.min(1, Math.max(0, (x - 24) / 70))).toFixed(3);   // also fade as a row nears the left edge, so nothing is cut mid-word
       el.style.pointerEvents = '';
+      const bl = Math.max(0, Math.abs(th) - 0.3) * 2.6;   // depth: rows leaving the centre soften
+      el.style.filter = bl > 0.05 ? `blur(${bl.toFixed(2)}px)` : '';
       el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translateY(-50%) scale(${s.toFixed(3)})`;
       el.style.transformOrigin = '0 50%';
     });
 
     if (pos !== lastPos) {
       lastPos = pos;
+      if (ticksG) ticksG.setAttribute('transform', `rotate(${(-pos * step * 180 / Math.PI).toFixed(3)} ${cx} ${cy})`);
       syncLayers(slotToIdx(clamp(pos)));
       arcDirty = true;
       const idx = nearest(clamp(pos));
@@ -227,6 +234,7 @@
       }
     }
     if (arcDirty) { arcDirty = false; arcUpdate(); }
+
     requestAnimationFrame(frame);
   }
 

@@ -129,7 +129,7 @@ window.SITE = (function () {
       </div>`,
     case: (i) => `
       <p class="mono eyebrow">[ Case studies / ${i.c.year} ]</p>
-      <h1 class="title sm"><span class="app-icon"><img src="${IC}${i.c.icon}" alt="" width="56" height="56"></span>${i.c.title}</h1>
+      <h1 class="title sm stack"><span class="app-icon"><img src="${IC}${i.c.icon}" alt="" width="56" height="56"></span>${i.c.title}</h1>
       <p class="lede lead-in">${i.c.desc}</p>
       <div class="p-body">
         <dl class="facts">
@@ -212,8 +212,6 @@ window.SITE = (function () {
       <img src="../../assets/wagnerrosa-avatar.webp" alt="" width="40" height="40">
       <span><b>Wagner Rosa</b><span class="mono">UX Lead &amp; Product Designer</span></span>
     </a>`;
-  const sideBottom = `
-    <div class="status mono"><i></i> Open to remote · GMT-3<br>Porto Alegre <span data-clock></span></div>`;
 
-  return { items, byId, panel, navHTML, currentId, setActive, clock, sideTop, sideBottom };
+  return { items, byId, panel, navHTML, currentId, setActive, clock, sideTop };
 })();
