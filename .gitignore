@@ -14,3 +14,4 @@
 /private/*
 !/private/.gitkeep
 /case-studies-src
+.protected-build
