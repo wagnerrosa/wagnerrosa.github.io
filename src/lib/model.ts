@@ -40,7 +40,7 @@ export async function getModel() {
   const hubCases = cases.filter(c => c.data.hub);
 
   const items: WheelItem[] = [
-    { id: 'index', kind: 'home', label: 'Home', tag: 'Hello', level: 0, url: '/', page: 'index', title: 'Wagner Rosa — UX Lead & Product Designer' },
+    { id: 'index', kind: 'home', label: 'Home', tag: 'Hello', level: 0, url: '/', page: 'index', title: 'Wagner Rosa — Product Designer' },
     ...work.map<WheelItem>(w => ({
       id: w.id, kind: 'work', label: w.data.label, tag: w.data.tag, level: 1, url: `/#${w.id}`, page: 'index',
       title: `${w.data.title ?? w.data.label} · Wagner Rosa`,
@@ -52,7 +52,7 @@ export async function getModel() {
       ...(c.data.external ? { external: c.data.external } : { read: caseUrl(c.id) }),
       ...(c.data.protected ? { locked: true } : {}),
     })),
-    { id: 'about', kind: 'about', label: 'About', tag: 'Background', level: 0, url: '/about.html', page: 'about', title: 'About Wagner Rosa | UX Lead & Product Designer' },
+    { id: 'about', kind: 'about', label: 'About', tag: 'Background', level: 0, url: '/about.html', page: 'about', title: 'About Wagner Rosa | Product Designer' },
     { id: 'contact', kind: 'contact', label: 'Contact', tag: 'Say hi', level: 0, url: '/#contact', page: 'index', title: 'Contact · Wagner Rosa' },
   ];
   return { items, work, cases, wheelCases, hubCases };

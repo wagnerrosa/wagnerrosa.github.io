@@ -13,7 +13,7 @@ export const GET: APIRoute = async () => {
 
   const body = `# ${site.name}
 
-> UX Lead and Product Designer based in ${site.place} (${site.timezone}). Currently UX Lead at Nelogica, leading a team of 5 UX Designers on financial and trading platforms. Previously Senior Product Designer at Planton and Art Director at Sistema FIERGS. Works across product design, design systems, AI-powered workflows and design-to-code. Open to remote Product Design opportunities.
+> Product Designer based in ${site.place} (${site.timezone}). Currently UX Lead at Nelogica, leading a team of 5 UX Designers on financial and trading platforms. Previously Senior Product Designer at Planton and Art Director at Sistema FIERGS. Works across product design, design systems, AI-powered workflows and design-to-code. Open to remote Product Design opportunities.
 
 ## About
 

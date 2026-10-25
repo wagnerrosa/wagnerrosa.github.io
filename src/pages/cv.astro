@@ -10,7 +10,7 @@ const model = await getModel();
 // Rendered from the public .md at build time: one source of truth, no hand-copied mirror.
 const entry = (await getEntry('cv', 'wagner-rosa-cv-ats-2026'))!;
 const { Content } = await render(entry);
-const title = 'Wagner Rosa CV | UX Lead & Product Designer';
+const title = 'Wagner Rosa CV | Product Designer';
 ---
 <Shell
   model={model}
@@ -20,8 +20,8 @@ const title = 'Wagner Rosa CV | UX Lead & Product Designer';
   readUrl="/cv.html"
   seo={{
     title,
-    description: 'Curriculum vitae of Wagner Rosa, UX Lead at Nelogica and Product Designer in Porto Alegre, Brazil. Experience, skills, education and selected work.',
-    ogDescription: 'UX Lead at Nelogica and Product Designer. Experience, skills, education and selected work. Open to remote.',
+    description: 'Curriculum vitae of Wagner Rosa, Product Designer in Porto Alegre, Brazil, currently UX Lead at Nelogica. Experience, skills, education and selected work.',
+    ogDescription: 'Product Designer, currently UX Lead at Nelogica. Experience, skills, education and selected work. Open to remote.',
     ogType: 'profile',
     path: '/cv.html',
   }}
@@ -30,7 +30,7 @@ const title = 'Wagner Rosa CV | UX Lead & Product Designer';
   <Article slug="cv" url="/cv.html" title="Wagner Rosa CV" lockId="contact" docTitle={title} noTitle>
     <div class="cv-body">
       <Content />
-      <p class="meta">Download: <a href={site.cv.pdf} data-track="cv_pdf" data-category="download" data-location="cv">PDF ↓</a> · <a href={site.cv.md} data-track="cv_md" data-category="download" data-location="cv">Markdown ↓</a></p>
+      <p class="meta">Download: <a href={site.cv.pdf} target="_blank" rel="noopener" data-track="cv_pdf" data-category="download" data-location="cv">PDF ↓</a> · <a href={site.cv.md} data-track="cv_md" data-category="download" data-location="cv">Markdown ↓</a></p>
     </div>
   </Article>
 </Shell>

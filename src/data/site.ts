@@ -7,7 +7,7 @@ export const abs = (path: string) => new URL(path, SITE_URL).href;
 export const site = {
   name: 'Wagner Rosa',
   fullName: 'Wagner da Rosa de Souza', // only About description + Person alternateName (positioning/decisions.md)
-  title: 'UX Lead & Product Designer',
+  title: 'Product Designer',
   hubRole: 'Product Designer',   // the short line under the name on the wheel (the full title stays in titles and JSON-LD)
   email: 'contato@wagnerrosa.com',
   place: 'Porto Alegre, Brazil',
@@ -18,7 +18,7 @@ export const site = {
   clarity: 'vhbu1gthme',
   ogImage: '/assets/og/og-default.png',
   ogImageVersion: '20261002',
-  ogImageAlt: 'Wagner Rosa — UX Lead & Product Designer. UX, Product Design, Design Systems, Applied AI.',
+  ogImageAlt: 'Wagner Rosa — Product Designer. UX, Product Design, Design Systems, Applied AI.',
   avatar: '/assets/wagnerrosa-picture.jpg',
   cv: {
     pdf: '/assets/cv/Wagner-Rosa-CV-oct2026.pdf',
@@ -36,7 +36,7 @@ export const profiles = [
 
 export const hero = {
   lines: ['I design products.', 'I prototype in code.', 'I help teams ship.'],
-  lede: 'UX Lead & Product Designer with 10+ years turning complex products, business logic and AI-powered workflows into clear interfaces and shipped experiences.',
+  lede: 'Product Designer with 10+ years turning complex products, business logic and AI-powered workflows into clear interfaces and shipped experiences.',
   now: 'UX Lead at Nelogica',
 };
 
@@ -57,8 +57,8 @@ export const person = {
   '@id': `${SITE_URL}/#person`,
   name: site.name,
   alternateName: site.fullName,
-  jobTitle: 'UX Lead',
-  description: 'UX Lead at Nelogica and product designer working on complex financial products, design systems, AI and prototyping in code.',
+  jobTitle: 'Product Designer',
+  description: 'Product Designer, currently UX Lead at Nelogica, working on complex financial products, design systems, AI and prototyping in code.',
   url: `${SITE_URL}/`,
   image: abs(site.avatar),
   email: site.email,
