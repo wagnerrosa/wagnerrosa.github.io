@@ -35,7 +35,7 @@ export const profiles = [
 ] as const;
 
 export const hero = {
-  lines: ['I design products.', 'I prototype in code.', 'I help teams ship.'],
+  lines: ['I design products,', 'prototype in code,', 'and help teams ship.'],
   lede: 'Product Designer with 10+ years turning complex products, business logic and AI-powered workflows into clear interfaces and shipped experiences.',
   now: 'UX Lead at Nelogica',
 };
