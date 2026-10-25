@@ -79,6 +79,17 @@ let replaceNext = false;
 /* ---------- animation loop: runs only while something moves ---------- */
 let raf = 0, arcDirty = true, arcMax = 56, lastRot = Infinity, lockF = 0, lastReadK = -1, interacted = false;
 let soft = pos, lastT = 0, readRot = 0, readRotS = 0;
+/* entrance: on a first Home landing the dial sweeps back from Contact to Home (visual offset only, the pages stay put) while the page text rises in */
+const root = document.documentElement;
+const INTRO_MS = 1500, INTRO_MS_M = 2000;   // small screens: the sheet is open while the dial sweeps (0-1.65s), then closes, so the arc is seen to be a menu
+let introOn = false, introOff = 0, introOff0 = 0, introT0 = 0, introF = 1, lastIntro = 0;
+const endPeek = () => {   // the labels fade out for a moment after the peek: keep them from taking the tap that interrupted it
+  const b = document.body;
+  if (!b.classList.contains('m-peek')) return;
+  b.classList.remove('m-peek'); b.classList.add('m-peek-off');
+  setTimeout(() => b.classList.remove('m-peek-off'), 500);
+};
+const endIntro = () => { introOn = false; introOff = 0; introF = 1; root.classList.remove('intro', 'intro-go'); endPeek(); layers.forEach(L => { L.el.style.transformOrigin = ''; }); dirty(); };
 const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
 const dirty = () => { arcDirty = true; kick(); };
 
@@ -99,6 +110,12 @@ function makeLayer(k: number): Layer {
   el.appendChild(panelEl(items[k].id));
   stage.appendChild(el);
   const L: Layer = { el, ...bindLayer(el, ARC_SEL, '.fig') };
+  if (introOn) {   // entrance: the page swings in around the dial's centre, its lines following one after another
+    const sr = stage.getBoundingClientRect(), nr = nav.getBoundingClientRect();
+    el.style.transformOrigin = `${(cx - (sr.left - nr.left)).toFixed(0)}px ${(cy - (sr.top - nr.top)).toFixed(0)}px`;
+    el.style.setProperty('--swing', `${mirror ? -3 : 3}deg`);
+    L.arcEls.forEach((a, i) => a.style.setProperty('--d', `${Math.min(i, 10) * 55}ms`));
+  }
   el.addEventListener('scroll', dirty, { passive: true });
   layers.set(k, L);
   return L;
@@ -135,7 +152,10 @@ function arcUpdate() {
   if (reduce) return;
   const sr = stage.getBoundingClientRect(), mid = sr.top + sr.height / 2, half = sr.height / 2;
   const apply = (L: Pick<Layer, 'arcEls' | 'figs'>) => {
-    const rects = L.arcEls.map(el => el.getBoundingClientRect());   // read everything first, then write
+    // read everything first, then write. During the entrance the page is rotating and its lines are rising, which would skew getBoundingClientRect: measure the layout instead, so the lines head for their final drift and don't jump when the animation ends
+    const rects = introOn
+      ? L.arcEls.map(el => { let y = 0, n: HTMLElement | null = el; while (n && n !== L.el) { y += n.offsetTop; n = n.offsetParent as HTMLElement | null; } const top = sr.top + y - L.el.scrollTop; return { top, bottom: top + el.offsetHeight, height: el.offsetHeight } as DOMRect; })
+      : L.arcEls.map(el => el.getBoundingClientRect());
     L.arcEls.forEach((el, i) => {
       const r = rects[i];
       if (r.bottom < sr.top - 120 || r.top > sr.bottom + 120) { if (el.style.transform) el.style.transform = ''; return; }   // B22
@@ -438,6 +458,15 @@ function frame(now: number) {
     pos += (soft - pos) * (1 - Math.exp(-dt * 7));
     if (Math.abs(target - pos) < 0.0005 && Math.abs(target - soft) < 0.0005) pos = soft = target; else busy = true;
   }
+  if (introOn) {
+    if (!introT0) introT0 = now;
+    const el = now - introT0, t = Math.min(1, el / INTRO_MS);
+    if (el >= (mirror ? INTRO_MS_M : INTRO_MS)) endIntro();
+    else {
+      introOff = introOff0 * Math.pow(1 - t, 3); introF = Math.min(1, el / 350); busy = true;
+      if (mirror) { if (el < 1650) document.body.classList.add('m-peek'); else endPeek(); }
+    }
+  }
   if (pull?.on && !pull.settled && performance.now() - pull.at > 260) { pull.settled = true; settlePull(); }   // safety net: iOS can drop touchend when the touched page is swapped out
   if (pull?.on && !pull.settled) busy = true;
   if (sc) {                                           // smooth scroll inside the current page
@@ -453,7 +482,7 @@ function frame(now: number) {
   const readK = reading?.el ? reading.readK : lastReadK;   // keep the right row bright while the lock eases out
   if (reading?.el) lastReadK = reading.readK;
   const place = (el: HTMLElement, slot: number, mult: number) => {
-    const th = (slot - pos) * step;
+    const th = (slot - pos - introOff) * step;
     const x = cx + (mirror ? -1 : 1) * (R * Math.cos(th) + 18);   // desktop: label starts right of the rim; mirrored: label ends left of it
     const edgeX = mirror ? W - x : x;
     if (Math.abs(th) > 1.15 || edgeX < 4) { el.style.opacity = '0'; el.style.pointerEvents = 'none'; return; }
@@ -467,7 +496,7 @@ function frame(now: number) {
     el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(${mirror ? '-100%' : '0'}, -50%) scale(${s.toFixed(3)})`;
     el.style.transformOrigin = mirror ? '100% 50%' : '0 50%';
   };
-  els.forEach((el, k) => place(el, slots[k], k === readK ? 1 : k === readK - 1 ? Math.max(0, 1 - lockF * 2) : 1 - lockF * 0.72));   // the row above the open case makes room for the exit row
+  els.forEach((el, k) => place(el, slots[k], (k === readK ? 1 : k === readK - 1 ? Math.max(0, 1 - lockF * 2) : 1 - lockF * 0.72) * introF));   // the row above the open case makes room for the exit row
   const xe = exitLi || exitOut;
   if (xe) place(xe, slots[lastReadK] - 1, Math.max(0, lockF * 2 - 1));   // the exit row and the row it shares a slot with trade places without ever showing together
 
@@ -481,9 +510,9 @@ function frame(now: number) {
   side$.toggle('k-scroll', rd && !reading!.gate);
   readRotS = reduce ? readRot : readRotS + (readRot - readRotS) * (1 - Math.exp(-dt * 9));
   if (Math.abs(readRotS - readRot) < 0.0002) readRotS = readRot; else busy = true;
-  if (readRotS !== lastRot || pos !== lastPos) {       // the dial turns with the wheel, and with reading progress on top
-    lastRot = readRotS;
-    ticksG?.setAttribute('transform', `rotate(${((mirror ? 1 : -1) * (pos * step + readRotS) * 180 / Math.PI).toFixed(3)} ${cx} ${cy})`);
+  if (readRotS !== lastRot || pos !== lastPos || introOff !== lastIntro) {       // the dial turns with the wheel, and with reading progress on top
+    lastRot = readRotS; lastIntro = introOff;
+    ticksG?.setAttribute('transform', `rotate(${((mirror ? 1 : -1) * ((pos + introOff) * step + readRotS) * 180 / Math.PI).toFixed(3)} ${cx} ${cy})`);
   }
   if (pos !== lastPos) {
     lastPos = pos;
@@ -779,7 +808,7 @@ hub.addEventListener('click', e => {
   if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
   e.preventDefault(); if (reading) closeReading(); go(0);
 });
-['wheel', 'keydown', 'pointerdown'].forEach(t => addEventListener(t, () => { interacted = true; kick(); }, { capture: true, passive: true }));
+['wheel', 'keydown', 'pointerdown'].forEach(t => addEventListener(t, () => { if (introOn) endIntro(); interacted = true; kick(); }, { capture: true, passive: true }));
 addEventListener('resize', () => { layout(); kick(); });
 if (window.visualViewport) visualViewport.addEventListener('resize', () => { layout(); kick(); });   // iOS toolbars sliding in and out change the visible height
 addEventListener('scroll', () => { if (scrollX || scrollY) scrollTo(0, 0); }, { passive: true });   // the document itself must never move
@@ -801,4 +830,10 @@ if (here.read) {
 } else {
   if (startStop.id !== (nav.dataset.start || 'index')) setMeta(startStop.title, startStop.url);   // arrived on a #hash stop
 }
+if (root.classList.contains('intro') && !reduce && !here.read) {
+  // the dial sweeps the whole list: from Contact back to the page when it sits in the first half, from Home forward when it sits in the second
+  const s0 = slots[idxOf(startStop.id)];
+  introOn = true; introOff0 = introOff = s0 <= maxSlot / 2 ? maxSlot - s0 : -s0; introF = 0;
+  root.classList.add('intro-go');
+} else root.classList.remove('intro');
 kick();

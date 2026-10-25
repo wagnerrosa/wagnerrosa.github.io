@@ -11,5 +11,17 @@ const { js = true } = Astro.props;
       var t = localStorage.getItem('theme');
       if (t === 'dark' || t === 'light') d.dataset.theme = t;
     } catch (e) {}
+    // Entrance: the first landing per tab session on Home, About, the hub or one of their #stops (not Back/Forward, reload, articles or reduced motion). ?intro replays it.
+    try {
+      var entry = /^\/(index\.html|about\.html|case-studies\/(index\.html)?)?$/.test(location.pathname);
+      if (js && entry && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        var force = /[?&]intro(&|=|$)/.test(location.search);
+        var nt = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        if (force || (!(nt && nt.type === 'back_forward') && !sessionStorage.getItem('intro'))) {
+          d.classList.add('intro');
+          if (!force) sessionStorage.setItem('intro', '1');
+        }
+      }
+    } catch (e) {}
   })();
 </script>
