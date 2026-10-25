@@ -5,7 +5,7 @@ const { level = 1, anchor = false } = Astro.props;
 const H = `h${level}` as 'h1' | 'h2';
 const rows = [
   ...profiles.map(p => ({ label: p.label, href: p.href, mark: '↗', ext: true })),
-  { label: 'CV (PDF)', href: site.cv.pdf, mark: '↓', ext: false },
+  { label: 'CV (PDF)', href: site.cv.pdf, mark: '↓', ext: false, blank: true },
   { label: 'ATS-friendly CV', href: site.cv.html, mark: '→', ext: false },
 ];
 ---
@@ -20,7 +20,7 @@ const rows = [
       <ul class="rows compact">
         {rows.map((r, i) => (
           <li>
-            <a href={r.href} {...(r.ext ? { target: '_blank', rel: 'noopener' } : {})} data-track={`contact_${r.label.toLowerCase().replace(/[^a-z]+/g, '_')}`} data-category={r.ext ? 'outbound' : 'navigation'} data-location="contact">
+            <a href={r.href} {...(r.ext || r.blank ? { target: '_blank', rel: 'noopener' } : {})} data-track={`contact_${r.label.toLowerCase().replace(/[^a-z]+/g, '_')}`} data-category={r.ext ? 'outbound' : 'navigation'} data-location="contact">
               <span class="mono">{String(i + 1).padStart(2, '0')}</span><span class="t">{r.label}</span><span class="mono m">{r.mark}</span>
             </a>
           </li>

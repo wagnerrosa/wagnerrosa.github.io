@@ -5,8 +5,9 @@ import type { Model } from '../../lib/model';
 interface Props { model: Model; level?: 1 | 2; anchor?: boolean }
 const { model, level = 1, anchor = false } = Astro.props;
 const H = `h${level}` as 'h1' | 'h2';
-const see = stopLink(model, 'index', 'nelogica');
+const see = stopLink(model, 'index', 'cases');
 const bg = stopLink(model, 'index', 'about');
+const touch = stopLink(model, 'index', 'contact');
 const elsewhere = profiles.filter(p => p.label !== 'Behance');
 ---
 <section class="panel" data-id="index" id={anchor ? 'home' : undefined}>
@@ -15,13 +16,12 @@ const elsewhere = profiles.filter(p => p.label !== 'Behance');
     <div class="p-body">
       <dl class="facts">
         <div><dt class="mono">Now</dt><dd>{hero.now}</dd></div>
-        <div><dt class="mono">Based</dt><dd>Porto Alegre · GMT-3</dd></div>
         <div><dt class="mono">Education</dt><dd><a href="https://www.iade.europeia.pt/en/" target="_blank" rel="noopener">IADE Lisbon ↗</a> · <a href="https://www.uxdesigninstitute.com/" target="_blank" rel="noopener">UX Design Institute ↗</a></dd></div>
         <div><dt class="mono">Elsewhere</dt><dd class="elsewhere">{elsewhere.map(p => <a href={p.href} target="_blank" rel="noopener" data-track={`profile_${p.label.toLowerCase()}`} data-category="outbound" data-location="home">{p.label} ↗</a>)}</dd></div>
       </dl>
       <div>
         <p class="lede">{hero.lede}</p>
-        <p class="links"><a href={see.href}>See the work {see.arrow}</a> <a href={bg.href}>Background {bg.arrow}</a></p>
+        <p class="links"><a href={see.href}>See the work {see.arrow}</a> <a href={touch.href} data-track="home_get_in_touch" data-category="contact" data-location="home">Get in touch {touch.arrow}</a> <a href={bg.href}>Background {bg.arrow}</a></p>
       </div>
     </div>
   </div>
