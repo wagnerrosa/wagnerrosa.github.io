@@ -1,8 +1,11 @@
 ---
 import Shell from '../layouts/Shell.astro';
+import { Image } from 'astro:assets';
 import { getModel } from '../lib/model';
+import { asset } from '../lib/assets';
 
 const model = await getModel();
+const cases = model.items.filter(i => i.kind === 'case' && !i.locked);
 ---
 <Shell
   model={model}
@@ -17,12 +20,24 @@ const model = await getModel();
     canonical: false,
   }}
 >
-  <section class="panel">
+  <section class="panel nf">
     <div class="in">
-      <h1 class="title sm stack">404.<br /><em>This isn’t where you meant to be.</em></h1>
-      <div class="p-body single prose">
-        <p>Outside of building digital systems, I ride motorcycles.</p>
-        <p class="links"><a href="/">Back to homepage →</a></p>
+      <p class="nf-code">404 · Page not found</p>
+      <h1 class="nf-title">This isn’t where you meant to be.</h1>
+      <div class="nf-row">
+        <div class="nf-text">
+          <p class="nf-lead">Outside of building digital systems, I ride motorcycles.</p>
+          <p class="links"><a href="/">Back to homepage →</a></p>
+          {cases.length > 0 && (
+            <nav class="nf-cases" aria-label="Case studies">
+              <p class="nf-label">Or start with a case study</p>
+              <ul>
+                {cases.map(c => <li><a href={c.url}>{c.label}<span aria-hidden="true">→</span></a></li>)}
+              </ul>
+            </nav>
+          )}
+        </div>
+        <Image class="nf-photo" src={asset('photos/wagmoto.webp')} alt="Wagner Rosa riding a motorcycle" widths={[400, 720, 1080]} sizes="(max-width: 820px) 100vw, 360px" loading="eager" />
       </div>
     </div>
   </section>

@@ -140,6 +140,8 @@ html:not(.js) .wheel a { font-size: 17px; letter-spacing: -.02em; }
 html:not(.js) .wheel a sup { display: none; }
 html:not(.js) .hub { position: static; transform: none; flex-direction: row; gap: 12px; align-items: center; }
 html:not(.js) .hub img { width: 40px; height: 40px; margin: 0; }
+html:not(.js) .hub .sub { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 2px 12px; }
+html:not(.js) .hub .status { margin-top: 0; }
 html:not(.js) .stage { overflow: visible; }
 html:not(.js) .panel .in { padding-right: clamp(20px, 5cqi, 64px); padding-bottom: 48px; }
 html:not(.js) .panel + .panel { border-top: 1px solid var(--line); }
