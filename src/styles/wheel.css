@@ -18,7 +18,7 @@
 .wheel li.child a { font-size: 18px; font-size: clamp(16px, 1.5vw, 21px); font-weight: 500; letter-spacing: -.02em; padding-left: 32px; color: var(--ink-2); }
 .wheel li.child a.on { color: var(--accent); font-weight: 700; }
 .wheel li.exit a { color: var(--accent); font-weight: 600; }
-.wheel li.exit a:hover { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; }
+@media (hover: hover) { .wheel li.exit a:hover { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; } }
 .wheel a sup.prog { align-self: baseline; transform: translateY(-2.5px); margin-left: 10px; font: 600 11px/1 var(--sans); letter-spacing: .04em; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 /* the rim: only half of a big circle shows; photo + name sit inside the visible half */
@@ -51,8 +51,8 @@
 .pointer::before, .pointer::after { content: ''; position: absolute; left: 50%; top: 50%; width: 10px; height: 1.5px; margin: -.75px 0 0 -5px; border-radius: 1px; background: #fff; opacity: 0; transform: rotate(0); transition: opacity .3s, transform .4s, background .2s; }
 .wheel.locked .pointer::before { opacity: 1; background: var(--accent); transform: rotate(45deg); }
 .wheel.locked .pointer::after { opacity: 1; background: var(--accent); transform: rotate(-45deg); }
-.wheel.locked .pointer:hover { background: var(--accent); }
-.wheel.locked .pointer:hover::before, .wheel.locked .pointer:hover::after { background: var(--paper); }
+@media (hover: hover) { .wheel.locked .pointer:hover { background: var(--accent); } }
+@media (hover: hover) { .wheel.locked .pointer:hover::before, .wheel.locked .pointer:hover::after { background: var(--paper); } }
 
 /* keyboard hints as key caps, bottom-left of the gear. They appear gradually: browse once the visitor interacts, enter on a readable case, close + scroll while reading */
 .keys { position: absolute; z-index: 3; left: 44px; bottom: 26px; pointer-events: none; }
@@ -63,13 +63,13 @@
 .keys em { margin-left: 5px; font: 500 12px/1 var(--sans); font-style: normal; letter-spacing: -.005em; color: var(--mute); transition: color .2s; }
 .side.k-nav .k-nav, .side.k-enter .k-enter, .side.k-close .k-close, .side.k-next .k-next, .side.k-scroll .k-scroll { grid-template-rows: 1fr; opacity: 1; visibility: visible; pointer-events: auto; transition-delay: 0s; }
 .keys .one > span { cursor: pointer; }
-.keys .kbd:hover, .keys .one > span:hover .kbd { color: var(--accent); border-color: var(--accent); background: rgb(var(--accent-rgb) / .08); }
-.keys .one > span:hover em { color: var(--accent); }
+@media (hover: hover) { .keys .kbd:hover, .keys .one > span:hover .kbd { color: var(--accent); border-color: var(--accent); background: rgb(var(--accent-rgb) / .08); } }
+@media (hover: hover) { .keys .one > span:hover em { color: var(--accent); } }
 .keys .kbd:active { transform: translateY(1px); }
 
 /* theme toggle: top-left corner of the gear column */
 .theme { position: absolute; z-index: 7; top: 22px; left: 44px; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--mute); cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
-.theme:hover { color: var(--ink); border-color: var(--line-strong); }
+@media (hover: hover) { .theme:hover { color: var(--ink); border-color: var(--line-strong); } }
 .theme svg { width: 15px; height: 15px; display: block; }
 .edge { display: none; }   /* mobile touch handle for the arc */
 
@@ -116,7 +116,9 @@
   .pointer { z-index: 2; }
   /* B1/B2: the touch handle is only as wide as the visible arc, and the page keeps a gutter wider than it, so scrolling the page never grabs the wheel */
   .edge { display: block; position: absolute; right: 0; width: 16px; pointer-events: auto; touch-action: none; -webkit-tap-highlight-color: transparent; }
-  .m-open .edge, .wheel.locked .edge { pointer-events: none; }
+  .m-open .edge { pointer-events: none; }
+  /* reading: the close dot is 24px, too small for a thumb. The handle becomes a 48px round target centred on it (the dot looks the same) */
+  .wheel.locked .edge { right: -2px; width: 48px; top: calc(var(--cy, 50%) - 24px) !important; height: 48px !important; border-radius: 50%; }
   /* sheet open: the dot becomes the close button, same as the locked gear while reading */
   .m-open .pointer { width: 24px; height: 24px; background: var(--paper); box-shadow: 0 0 0 1.5px var(--accent), 0 0 0 8px rgb(var(--accent-rgb) / .1); pointer-events: auto; cursor: pointer; }
   .m-open .pointer::before, .m-open .pointer::after { opacity: 1; background: var(--accent); }

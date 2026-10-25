@@ -80,7 +80,7 @@
 .read-body .gate input[type="password"] { flex: 1; min-width: 0; height: 44px; padding: 0 14px; font: 500 16px/1 var(--sans); letter-spacing: 0; color: var(--ink); background: transparent; border: 1px solid var(--line-strong); border-radius: 10px; outline: none; transition: border-color .2s, box-shadow .2s; }
 .read-body .gate input[type="password"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / .16); }
 .read-body .gate button { height: 44px; padding: 0 20px; font: 600 15px/1 var(--sans); letter-spacing: -.005em; color: var(--paper); background: var(--accent); border: 0; border-radius: 10px; cursor: pointer; transition: opacity .2s; }
-.read-body .gate button:hover { opacity: .88; }
+@media (hover: hover) { .read-body .gate button:hover { opacity: .88; } }
 .read-body .gate.busy { opacity: .55; pointer-events: none; }
 .read-body .gate.shake { animation: shake .4s; }
 @keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }

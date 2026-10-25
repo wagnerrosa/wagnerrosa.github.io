@@ -218,7 +218,7 @@ async function loadDoc(url: string, token: number): Promise<Doc | null> {
 
 /* ---------- reading mode ---------- */
 const READ_TURN = 1.1;   // radians the dial turns over a whole article
-let exitLi: HTMLLIElement | null = null;
+let exitLi: HTMLLIElement | null = null, exitOut: HTMLLIElement | null = null;   // exitOut: the exit row of an article that was just closed, still fading
 const unlockedUrls = () => readOrder.filter(u => !items.find(i => i.read === u)!.a.hasAttribute('data-locked') || !!keyOf(u.replace(/^.*\//, '').replace(/\.html$/, '')));
 const gateHTML = (title: string) => `<article class="read-body gated"><h1>${title}</h1><div class="gate-copy"><p>This case study is private. Enter the password to read it.</p></div><form class="gate" autocomplete="on"><input type="text" name="username" value="" autocomplete="username" hidden aria-hidden="true" tabindex="-1"><input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password"><button type="submit">Unlock</button></form><p class="gate-msg" role="status" aria-live="polite"></p><p class="gate-note">No password? <a href="mailto:contato@wagnerrosa.com">Ask me for access</a>.</p></article>`;
 
@@ -267,6 +267,7 @@ async function openReading(url: string, opts: { push?: boolean; swap?: boolean; 
   setSheet(false);
   pointer.removeAttribute('aria-hidden'); pointer.setAttribute('role', 'button'); pointer.setAttribute('aria-label', 'Close'); pointer.tabIndex = 0;
   if (!exitLi) {
+    exitOut?.remove(); exitOut = null;
     exitLi = document.createElement('li');
     exitLi.className = 'child exit';
     exitLi.innerHTML = '<a href="/case-studies/" data-exit tabindex="-1" draggable="false"><span>All case studies ↑</span></a>';
@@ -338,7 +339,7 @@ function closeReading(opts: { keep?: boolean } = {}) {
   const r = reading; reading = null; readRot = 0; ++loading;
   r.prog?.remove();
   if (!keep) { nav.classList.remove('locked'); pointer.setAttribute('aria-hidden', 'true'); pointer.removeAttribute('role'); pointer.removeAttribute('aria-label'); pointer.removeAttribute('tabindex'); }
-  const xl = exitLi; if (!keep) { exitLi = null; setTimeout(() => xl?.remove(), 700); }
+  const xl = exitLi; if (!keep) { exitLi = null; exitOut = xl; setTimeout(() => { xl?.remove(); if (exitOut === xl) exitOut = null; }, 700); }
   if (!keep) { r.el!.style.transform = 'translateY(100%)'; r.el!.style.pointerEvents = 'none'; }   // when swapping, the old article stays put under the new one sliding in
   setTimeout(() => r.el!.remove(), keep ? 1000 : 850);
   kick();
@@ -375,7 +376,7 @@ function setSheet(on: boolean) {
   document.body.classList.toggle('m-open', on);
   if (!on && nav.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
 }
-edge.addEventListener('click', e => { e.stopPropagation(); if (!(drag && drag.moved)) setSheet(true); });   // tap the arc: open
+edge.addEventListener('click', e => { e.stopPropagation(); if (drag && drag.moved) return; if (reading?.el) exitReading(); else setSheet(true); });   // tap the arc: open it; while reading its handle sits over the close dot, so it closes
 onMq(() => { setSheet(false); layout(); kick(); });
 
 /* ---------- wheel geometry ---------- */
@@ -400,6 +401,7 @@ function layout() {
   }
   const dir = mirror ? -1 : 1;
   edge.style.top = (cy - 130) + 'px'; edge.style.height = '260px';
+  nav.style.setProperty('--cy', cy + 'px');
   step = gap / R;
   rim.setAttribute('viewBox', `0 0 ${W} ${H}`);
   let ticks = '';
@@ -465,8 +467,9 @@ function frame(now: number) {
     el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(${mirror ? '-100%' : '0'}, -50%) scale(${s.toFixed(3)})`;
     el.style.transformOrigin = mirror ? '100% 50%' : '0 50%';
   };
-  els.forEach((el, k) => place(el, slots[k], k === readK ? 1 : k === readK - 1 ? 1 - lockF : 1 - lockF * 0.72));   // the row above the open case makes room for the exit row
-  if (exitLi) place(exitLi, slots[lastReadK] - 1, lockF);
+  els.forEach((el, k) => place(el, slots[k], k === readK ? 1 : k === readK - 1 ? Math.max(0, 1 - lockF * 2) : 1 - lockF * 0.72));   // the row above the open case makes room for the exit row
+  const xe = exitLi || exitOut;
+  if (xe) place(xe, slots[lastReadK] - 1, Math.max(0, lockF * 2 - 1));   // the exit row and the row it shares a slot with trade places without ever showing together
 
   const rd = !!reading?.el;
   if (shown != null) interacted = true;                // leaving Home counts as interacting
