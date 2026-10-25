@@ -41,7 +41,7 @@
 @keyframes pulse { 50% { opacity: .25; } }
 
 /* reading mode: a case study article locks the gear; the dial then shows reading progress */
-.layer { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; background: var(--paper); will-change: transform; touch-action: pan-y; overscroll-behavior-y: contain; }
+.layer { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; background: var(--paper); will-change: transform; touch-action: pan-y pinch-zoom; overscroll-behavior-y: contain; }
 .layer:focus { outline: none; }
 .layer.read { z-index: 4; transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
 [data-arc] { will-change: transform; }
@@ -56,12 +56,12 @@
 
 /* keyboard hints as key caps, bottom-left of the gear. They appear gradually: browse once the visitor interacts, enter on a readable case, close + scroll while reading */
 .keys { position: absolute; z-index: 3; left: 44px; bottom: 26px; pointer-events: none; }
-.keys p { display: grid; grid-template-rows: 0fr; margin: 0; opacity: 0; pointer-events: none; transition: grid-template-rows .45s cubic-bezier(.2, .8, .2, 1), opacity .45s; }
+.keys p { display: grid; grid-template-rows: 0fr; margin: 0; opacity: 0; visibility: hidden; pointer-events: none; transition: grid-template-rows .45s cubic-bezier(.2, .8, .2, 1), opacity .45s, visibility 0s .45s; }
 .keys p > span { display: flex; align-items: center; gap: 5px; min-height: 0; overflow: hidden; padding: 4px 0; box-sizing: border-box; }
 .keys p > span > * { flex: none; }
 .keys .kbd { appearance: none; -webkit-appearance: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 7px; box-sizing: border-box; font: 600 11px/1 var(--sans); letter-spacing: 0; color: var(--ink); background: var(--chip); border: 1px solid var(--chip-line); border-bottom-width: 2px; border-radius: 6px; transition: color .2s, border-color .2s, background .2s, transform .1s; }
 .keys em { margin-left: 5px; font: 500 12px/1 var(--sans); font-style: normal; letter-spacing: -.005em; color: var(--mute); transition: color .2s; }
-.side.k-nav .k-nav, .side.k-enter .k-enter, .side.k-close .k-close, .side.k-next .k-next, .side.k-scroll .k-scroll { grid-template-rows: 1fr; opacity: 1; pointer-events: auto; }
+.side.k-nav .k-nav, .side.k-enter .k-enter, .side.k-close .k-close, .side.k-next .k-next, .side.k-scroll .k-scroll { grid-template-rows: 1fr; opacity: 1; visibility: visible; pointer-events: auto; transition-delay: 0s; }
 .keys .one > span { cursor: pointer; }
 .keys .kbd:hover, .keys .one > span:hover .kbd { color: var(--accent); border-color: var(--accent); background: rgb(var(--accent-rgb) / .08); }
 .keys .one > span:hover em { color: var(--accent); }

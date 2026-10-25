@@ -223,10 +223,12 @@ const unlockedUrls = () => readOrder.filter(u => !items.find(i => i.read === u)!
 const gateHTML = (title: string) => `<article class="read-body gated"><h1>${title}</h1><div class="gate-copy"><p>This case study is private. Enter the password to read it.</p></div><form class="gate" autocomplete="on"><input type="text" name="username" value="" autocomplete="username" hidden aria-hidden="true" tabindex="-1"><input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password"><button type="submit">Unlock</button></form><p class="gate-msg" role="status" aria-live="polite"></p><p class="gate-note">No password? <a href="mailto:contato@wagnerrosa.com">Ask me for access</a>.</p></article>`;
 
 function prepareArticle(el: HTMLElement) {
+  el.querySelectorAll('pre').forEach(p => p.setAttribute('tabindex', '0'));   // scrollable regions must be reachable by keyboard
+  if (reduce) el.querySelectorAll('video').forEach(v => { v.removeAttribute('autoplay'); v.pause(); });   // WCAG 2.2.2: no moving content without the visitor asking for it
   const end = el.querySelector('.read-end');
   if (end && unlockedUrls().length > 1 && !end.querySelector('[data-next]')) {
     const next = document.createElement('a');
-    next.href = '#next'; next.setAttribute('data-next', ''); next.textContent = 'Next case study →';
+    next.href = '#next'; next.setAttribute('data-next', ''); next.textContent = 'Next case study ↓';
     end.querySelector('p.mono')?.after(next);
   }
   const exit = end?.querySelector('[data-exit]');
@@ -455,10 +457,10 @@ function frame(now: number) {
     if (Math.abs(th) > 1.15 || edgeX < 4) { el.style.opacity = '0'; el.style.pointerEvents = 'none'; return; }
     const y = cy + R * Math.sin(th);
     const s = 1 - Math.abs(th) * 0.16;
-    const op = Math.max(0, 1 - Math.abs(th) * 0.8) * Math.min(1, Math.max(0, mirror ? (edgeX - 6) / 30 : (edgeX - 24) / 70)) * mult;   // also fade as a row nears the left edge, so nothing is cut mid-word
+    const op = Math.max(0.6, 1 - Math.abs(th) * 0.8) * Math.min(1, Math.max(0, mirror ? (edgeX - 6) / 30 : (edgeX - 24) / 70)) * mult;   // also fade as a row nears the left edge, so nothing is cut mid-word
     el.style.opacity = op.toFixed(3);
     el.style.pointerEvents = op < 0.05 ? 'none' : '';
-    const bl = Math.max(0, Math.abs(th) - 0.3) * 2.6;   // depth: rows leaving the centre soften
+    const bl = Math.min(0.9, Math.max(0, Math.abs(th) - 0.3) * 2.6);   // depth: rows leaving the centre soften (floor of 0.6 opacity + light blur keeps every clickable label above 4.5:1)
     el.style.filter = bl > 0.05 ? `blur(${bl.toFixed(2)}px)` : '';
     el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(${mirror ? '-100%' : '0'}, -50%) scale(${s.toFixed(3)})`;
     el.style.transformOrigin = mirror ? '100% 50%' : '0 50%';
@@ -600,6 +602,7 @@ const PULL = 120, PULL_AGAIN = 56;   // px of finger travel past the edge: first
 let pull: { el: HTMLElement; node: EventTarget; last: number; ey: number | null; dir: number; on: boolean; at: number; settled?: boolean; dist?: number } | null = null;
 let lastTry = { t: 0, dir: 0 };
 const touchY = (e: TouchEvent) => e.touches[0].clientY;
+let lastTouchMove = 0;   // last time the page itself was scrolling under the finger: the momentum of that gesture is not a pull
 function pullMove(e: TouchEvent) {
   if (!pull) return;
   const y = touchY(e);
@@ -608,7 +611,8 @@ function pullMove(e: TouchEvent) {
   pull.last = y;
   const el = pull.el, max = el.scrollHeight - el.clientHeight;
   const atEdge = dir > 0 ? el.scrollTop >= max - 1 : dir < 0 && el.scrollTop <= 0;
-  if (!atEdge) { rubber(el, 0, 0); pull.ey = null; pull.dir = dir; return; }
+  if (!atEdge) { rubber(el, 0, 0); pull.ey = null; pull.dir = dir; lastTouchMove = e.timeStamp; return; }
+  if (e.timeStamp - lastTouchMove < 450) return;   // a swipe that reaches the end of the page is not a deliberate pull (same guard as the wheel on desktop)
   if (pull.ey == null || pull.dir !== dir) { pull.ey = y; pull.dir = dir; }
   const dist = (pull.ey - y) * dir, again = lastTry.dir === dir && e.timeStamp - lastTry.t < 2000;
   pull.dist = dist;
@@ -642,7 +646,13 @@ stage.addEventListener('touchstart', e => {
 /* ---------- navigation ---------- */
 function navigateTo(u: URL, push = true) {
   const w = where(u);
-  if (w.read) { if (reading?.url === w.read) return; openReading(w.read, { push, swap: !!reading?.el }); return; }
+  if (w.read) {
+    if (reading?.url === w.read) return;
+    const old = reading, swap = !!old?.el;
+    if (swap) { closeReading({ keep: true }); reading = old; }   // same hand-off as switchReading: one layer left, so Esc closes it
+    openReading(w.read, { push, swap });
+    return;
+  }
   if (reading) closeReading();
   if (w.stop) {
     const popped = items.indexOf(w.stop);
@@ -740,8 +750,8 @@ addEventListener('keydown', e => {
   }
   if (onStage) return;
   const inList = !!T?.closest('#list');
-  if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); go(nearest(target) + 1); if (inList) focusActiveSoon(); }
-  if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); go(nearest(target) - 1); if (inList) focusActiveSoon(); }
+  if (e.key === 'ArrowDown' || (e.key === 'j' && inList)) { e.preventDefault(); go(nearest(target) + 1); if (inList) focusActiveSoon(); }
+  if (e.key === 'ArrowUp' || (e.key === 'k' && inList)) { e.preventDefault(); go(nearest(target) - 1); if (inList) focusActiveSoon(); }
 });
 /* the focus follows the wheel once it has come to rest, so the next Tab / Enter acts on the stop in the middle */
 function focusActiveSoon() { setTimeout(() => { const k = nearest(clamp(target)); if (document.activeElement?.closest('#list') && !reading) items[k].a.focus({ preventScroll: true }); }, 380); }
@@ -775,8 +785,9 @@ $('theme').addEventListener('click', () => {
   const cur = root.dataset.theme || (dark ? 'dark' : 'light'), next = cur === 'dark' ? 'light' : 'dark';
   root.dataset.theme = next;
   try { localStorage.setItem('theme', next); } catch {}
-  $('theme').blur();
+  $('theme').setAttribute('aria-pressed', String(next === 'dark'));
 });
+$('theme').setAttribute('aria-pressed', String((document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark'));
 
 /* ---------- go ---------- */
 layout();

@@ -10,7 +10,7 @@
 .read-body h2 + *, .read-body h3 + *, .read-body h4 + * { margin-top: .8em; }
 .read-body strong { font-weight: 600; }
 .read-body em { font-style: italic; }
-.read-body a { color: var(--link); text-decoration: underline; text-underline-offset: .18em; text-decoration-thickness: 1px; }
+.read-body a { overflow-wrap: anywhere; color: var(--link); text-decoration: underline; text-underline-offset: .18em; text-decoration-thickness: 1px; }
 .read-body ul, .read-body ol { padding-left: 1.3em; }
 .read-body ul { list-style: disc; }
 .read-body ol { list-style: decimal; }
