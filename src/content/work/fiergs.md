@@ -5,7 +5,7 @@ tag: Web Art Director
 role: Web Art Director
 period: 2018 – 2026
 icon: fiergs-ico.svg
-desc: Seven years designing digital experiences across the industry federation system of Rio Grande do Sul.
+desc: Seven years designing digital experiences across the industry federation system of Rio Grande do Sul.
 facts:
   - { label: Path, value: Art Director → Digital → Web Art Director }
   - { label: Brands, value: SESI · SENAI · IEL · CIERGS · FIERGS }
