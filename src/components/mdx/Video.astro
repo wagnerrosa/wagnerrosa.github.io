@@ -1,9 +1,9 @@
 ---
-interface Props { src: string; label: string; poster?: string }
-const { src, label, poster } = Astro.props;
+interface Props { src: string; label: string; poster?: string; width?: number; height?: number }   // width / height reserve the frame before the metadata arrives
+const { src, label, poster, width = 1886, height = 1080 } = Astro.props;
 ---
 <figure>
-  <video autoplay muted loop playsinline controls preload="metadata" aria-label={label} poster={poster}>
+  <video autoplay muted loop playsinline controls preload="metadata" aria-label={label} poster={poster} width={width} height={height}>
     <source src={src} type="video/mp4" />
   </video>
   <figcaption><slot /></figcaption>
