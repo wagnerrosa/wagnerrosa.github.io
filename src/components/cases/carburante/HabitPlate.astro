@@ -1,0 +1,23 @@
+---
+// Habit: the real Achievements screen with pins, and the 3D medals set beside it on the same plate.
+// A div, not a figure, so the wheel's photo motion leaves the pins on the screen.
+import { Image } from 'astro:assets';
+import { asset } from '../../../lib/assets';
+interface Pin { title: string; text: string; x: number; y: number }
+interface Medal { src: string; label: string }
+interface Props { pins: Pin[]; shot: { src: string; alt: string }; medals: Medal[]; caption: string }
+const { pins, shot, medals, caption } = Astro.props;
+---
+<div class="plate soft habit">
+  <div class="hb-shot">
+    <Image src={asset(shot.src)} alt={shot.alt} widths={[320, 480, 640, 900]} sizes="(max-width: 820px) 60vw, 280px" loading="lazy" decoding="async" fetchpriority="low" />
+    {pins.map((p, i) => <span class="pin" style={`--x:${p.x}%;--y:${p.y}%`} aria-hidden="true">{i + 1}</span>)}
+  </div>
+  <ul class="hb-medals" aria-label="Six of the 25 achievements">
+    {medals.map(m => <li><Image src={asset(m.src)} alt="" width={112} height={112} widths={[112, 224]} sizes="112px" loading="lazy" decoding="async" fetchpriority="low" /><span>{m.label}</span></li>)}
+  </ul>
+</div>
+<ol class="notes pins" style={`--n:${pins.length}`}>
+  {pins.map((p, i) => <li><span class="nt-pin" aria-hidden="true">{i + 1}</span><b>{p.title}</b> {p.text}</li>)}
+</ol>
+<p class="plate-cap">{caption}</p>

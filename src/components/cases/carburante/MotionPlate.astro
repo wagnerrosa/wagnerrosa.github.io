@@ -1,0 +1,20 @@
+---
+// The product in motion: three real clips on one plate, captions underneath. Poster until visible; wheel.ts plays them while on screen, never under reduced motion.
+interface Item { src: string; poster: string; label: string; caption: string }
+interface Props { items: Item[]; tone?: 'soft' | 'ink' }
+const { items, tone = 'ink' } = Astro.props;
+---
+<div class:list={['plate', tone, 'motion']}>
+  {items.map(it => (
+    <div class="phone">
+      <div class="ph-clip" style={`background-image:url(${it.poster})`}>
+        <video data-clip muted loop playsinline controls preload="none" poster={it.poster} aria-label={it.label}>
+          <source src={it.src} type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  ))}
+</div>
+<ol class="notes" style={`--n:${items.length}`}>
+  {items.map(it => <li>{it.caption}</li>)}
+</ol>

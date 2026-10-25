@@ -1,0 +1,5 @@
+---
+interface Props { items: string[]; label: string }
+const { items, label } = Astro.props;
+---
+<ol class="questions wide" aria-label={label}>{items.map(q => <li>{q}</li>)}</ol>

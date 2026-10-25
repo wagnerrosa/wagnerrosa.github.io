@@ -242,6 +242,12 @@ let exitLi: HTMLLIElement | null = null, exitOut: HTMLLIElement | null = null;  
 const unlockedUrls = () => readOrder.filter(u => !items.find(i => i.read === u)!.a.hasAttribute('data-locked') || !!keyOf(u.replace(/^.*\//, '').replace(/\.html$/, '')));
 const gateHTML = (title: string) => `<article class="read-body gated"><h1>${title}</h1><div class="gate-copy"><p>This case study is private. Enter the password to read it.</p></div><form class="gate" autocomplete="on"><input type="text" name="username" value="" autocomplete="username" hidden aria-hidden="true" tabindex="-1"><input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password"><button type="submit">Unlock</button></form><p class="gate-msg" role="status" aria-live="polite"></p><p class="gate-note">No password? <a href="mailto:contato@wagnerrosa.com">Ask me for access</a>.</p></article>`;
 
+/* clips (video[data-clip]): a poster until the visitor scrolls to them, then they play while on screen. Never under reduced motion: the controls are then the only way to start one (WCAG 2.2.2) */
+const clipIO = !reduce && 'IntersectionObserver' in window
+  ? new IntersectionObserver(es => es.forEach(e => { const v = e.target as HTMLVideoElement; if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }), { threshold: 0.4 })
+  : null;
+const clipsOf = (el: HTMLElement) => el.querySelectorAll<HTMLVideoElement>('video[data-clip]');
+
 function prepareArticle(el: HTMLElement) {
   el.querySelectorAll('pre').forEach(p => p.setAttribute('tabindex', '0'));   // scrollable regions must be reachable by keyboard
   if (reduce) el.querySelectorAll('video').forEach(v => { v.removeAttribute('autoplay'); v.pause(); });   // WCAG 2.2.2: no moving content without the visitor asking for it
@@ -260,6 +266,7 @@ function bindBody(r: Reading) {   // (re)collect what the arc / photo effects mo
   const article = r.el!.firstElementChild as HTMLElement;
   const b = bindLayer(article, ':scope > *', 'figure');
   (r as any).arcEls = b.arcEls; (r as any).figs = b.figs;
+  if (clipIO) clipsOf(article).forEach(v => clipIO.observe(v));
 }
 
 async function openReading(url: string, opts: { push?: boolean; swap?: boolean; initial?: boolean } = {}) {
@@ -358,6 +365,7 @@ function closeReading(opts: { keep?: boolean } = {}) {
   const { keep = false } = opts;
   const r = reading; reading = null; readRot = 0; ++loading;
   r.prog?.remove();
+  clipsOf(r.el!).forEach(v => { clipIO?.unobserve(v); v.pause(); });
   if (!keep) { nav.classList.remove('locked'); pointer.setAttribute('aria-hidden', 'true'); pointer.removeAttribute('role'); pointer.removeAttribute('aria-label'); pointer.removeAttribute('tabindex'); }
   const xl = exitLi; if (!keep) { exitLi = null; exitOut = xl; setTimeout(() => { xl?.remove(); if (exitOut === xl) exitOut = null; }, 700); }
   if (!keep) { r.el!.style.transform = 'translateY(100%)'; r.el!.style.pointerEvents = 'none'; }   // when swapping, the old article stays put under the new one sliding in

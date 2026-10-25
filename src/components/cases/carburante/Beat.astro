@@ -1,0 +1,11 @@
+---
+// One beat of the case. No box: the page is the surface and whitespace separates beats. One left axis: eyebrow, statement,
+// then the copy in two columns, then the evidence (plates) across the full width. The whole beat drifts with the wheel as one piece.
+interface Props { n: string; label: string; title: string[] }
+const { n, label, title } = Astro.props;
+---
+<section class="beat wide">
+  <p class="bt-label"><span class="bt-n">{n}</span><span>{label}</span></p>
+  <h2 class="bt-title">{title.map((t, i) => <>{i > 0 && <br />}{t}</>)}</h2>
+  <slot />
+</section>

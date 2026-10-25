@@ -24,7 +24,8 @@ const caseSchema = z.object({
     lang: z.enum(['en', 'pt-BR']).default('en'),
     translationOf: z.string().optional(),    // slug of the English original (hreflang pair)
     protected: z.boolean().default(false),
-    external: z.string().url().optional(),   // case that lives on another site (Carburante)
+    external: z.string().url().optional(),   // case that lives on another site (none today: Carburante has its own case now)
+    presentation: z.enum(['reading', 'editorial']).default('reading'),   // editorial: wider stage for media compositions, text keeps the 700px measure (docs: positioning/notes/case-model-2026-10-25.md)
     noindex: z.boolean().default(false),
     wheel: z.boolean().default(true),        // gets a row on the wheel
     hub: z.boolean().default(true),          // listed in the case studies hub

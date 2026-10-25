@@ -55,7 +55,7 @@ const meta = [d.year, d.category, `${readMinutes(entry)} min read`].join(' · ')
   }}
   jsonld={d.noindex ? [] : [article({ path: url, headline: d.headline ?? d.title, description: d.description, lang: d.lang, datePublished: d.datePublished, dateModified: d.dateModified })]}
 >
-  <Article slug={entry.id} url={url} title={d.title} lockId={lockId} docTitle={docTitle} meta={meta} alt={alt}>
+  <Article slug={entry.id} url={url} title={d.title} lockId={lockId} docTitle={docTitle} meta={meta} alt={alt} wide={d.presentation === 'editorial'}>
     <Content />
   </Article>
 </Shell>

@@ -1,0 +1,20 @@
+---
+// Opening: the rider on the road, with the app in motion layered over the photo's lower edge.
+// The poster sits behind the video as a background, so nothing black shows while the clip loads; clip-path keeps the corners round in Safari.
+import { Image } from 'astro:assets';
+import { asset } from '../../../lib/assets';
+interface Props { alt: string; clip: string; poster: string; clipLabel: string }
+const { alt, clip, poster, clipLabel } = Astro.props;
+---
+<figure class="open wide">
+  <div class="op-photo">
+    <Image src={asset('carburante/rider-road.webp')} alt={alt} widths={[640, 960, 1280, 1920]} sizes="(max-width: 820px) 100vw, 1000px" loading="eager" fetchpriority="high" decoding="async" />
+  </div>
+  <div class="op-phone phone">
+    <div class="ph-clip" style={`background-image:url(${poster})`}>
+      <video data-clip muted loop playsinline controls preload="none" poster={poster} aria-label={clipLabel}>
+        <source src={clip} type="video/mp4" />
+      </video>
+    </div>
+  </div>
+</figure>

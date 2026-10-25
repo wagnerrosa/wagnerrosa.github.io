@@ -11,10 +11,11 @@ interface Props {
   protected?: boolean;
   cv?: boolean;
   noTitle?: boolean;       // the markdown body brings its own h1 (CV)
+  wide?: boolean;          // editorial layout: wider stage for media, text keeps its measure
 }
-const { slug, url, title, lockId, docTitle, meta, alt, noTitle = false } = Astro.props;
+const { slug, url, title, lockId, docTitle, meta, alt, noTitle = false, wide = false } = Astro.props;
 ---
-<article class="read-body" data-article data-slug={slug} data-url={url} data-lock={lockId} data-title={docTitle}>
+<article class:list={['read-body', { 'read-wide': wide }]} data-article data-slug={slug} data-url={url} data-lock={lockId} data-title={docTitle}>
   {!noTitle && <h1>{title}</h1>}
   {meta && <p class="meta">{meta}{alt && <> · <a href={alt.href} hreflang={alt.lang} data-track={`translation_${slug}`} data-category="navigation" data-location="article">{alt.label}</a></>}</p>}
   <slot />

@@ -1,0 +1,19 @@
+---
+// Real screens composed on a plate, with their notes underneath (never on the plate).
+// `grow`: each screen larger than the last (an iteration). `steps`: a numbered sequence. `pair`: two overlapped.
+import { Image } from 'astro:assets';
+import { asset } from '../../../lib/assets';
+interface Item { src: string; alt: string; label: string; note?: string }
+interface Props { items: Item[]; variant?: 'grow' | 'steps' | 'pair'; tone?: 'soft' | 'ink' }
+const { items, variant = 'pair', tone = 'soft' } = Astro.props;
+---
+<figure class:list={['plate', tone, 'stack', variant === 'steps' ? 'seq' : variant]}>
+  <div class="sk-row">
+    {items.map(it => (
+      <div class="sk"><Image src={asset(it.src)} alt={it.alt} widths={[320, 480, 640]} sizes="(max-width: 820px) 40vw, 260px" loading="lazy" decoding="async" fetchpriority="low" /></div>
+    ))}
+  </div>
+</figure>
+<ol class="notes" style={`--n:${items.length}`}>
+  {items.map((it, i) => <li>{variant === 'steps' && <span class="nt-step" aria-hidden="true">{i + 1}</span>}<b>{it.label}</b> {it.note}</li>)}
+</ol>

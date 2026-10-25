@@ -1,0 +1,7 @@
+---
+// The case's argument, set as type: two lines across the whole stage.
+interface Props { lines: string[] }
+const { lines } = Astro.props;
+---
+<p class="thesis">{lines.map(l => <span>{l}</span>)}</p>
+<p class="thesis-cap"><slot /></p>

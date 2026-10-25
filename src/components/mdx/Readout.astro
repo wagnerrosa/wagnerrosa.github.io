@@ -1,0 +1,10 @@
+---
+// Seven-segment number: the unlit segments ("88.8") sit behind the lit digits, like the pump display the app has to read.
+interface Props { value: string; label: string; unit?: string; size?: 'xl' | 'lg'; ghost?: string }
+const { value, label, unit, size = 'xl', ghost } = Astro.props;
+const off = ghost ?? value.replace(/\d/g, '8');
+---
+<span class:list={['readout', size]} role="img" aria-label={label}>
+  <span class="ro-digits" aria-hidden="true"><i>{off}</i><b>{value}</b></span>
+  {unit && <span class="ro-unit" aria-hidden="true">{unit}</span>}
+</span>

@@ -1,0 +1,9 @@
+---
+// The close: three short columns. No rules between them; the columns carry the structure. Links follow as the site's LinkList.
+interface Col { title: string; text: string }
+interface Props { cols: Col[] }
+const { cols } = Astro.props;
+---
+<ol class="oc-cols">
+  {cols.map(c => <li><h3>{c.title}</h3><p>{c.text}</p></li>)}
+</ol>

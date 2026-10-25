@@ -11,8 +11,11 @@ facts:
 bullets:
   - Designed and built a native iOS app for motorcycle riders, making fuel tracking and maintenance management simple and intuitive.
   - Developed the product end to end, from brand identity and landing page to AI-assisted visual assets. Open source on GitHub.
-visit: Visit Carburante
+related:
+  - carburante
+visit: Product site
 links:
+  - { label: App Store, href: 'https://apps.apple.com/br/app/carburante/id6785659437' }
   - { label: Source on GitHub, href: 'https://github.com/wagnerrosa/carburante' }
 href: https://carburante.motorcycles/?lang=en
 order: 2

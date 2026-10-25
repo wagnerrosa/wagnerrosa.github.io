@@ -1,0 +1,30 @@
+---
+// Honesty: the same stretch of logbook, side by side. Left, the naive division; right, the gap rule. Same instrument, two outcomes.
+// Illustrative arithmetic from the project's gap doc (1,066 km ÷ 4 L), not a measurement.
+import Readout from '../../mdx/Readout.astro';
+interface Props { caption: string }
+const { caption } = Astro.props;
+---
+<div class="plate ink gap">
+  <div class="gp-col bad">
+    <p class="gp-tag">Naive division</p>
+    <ol class="track" style="--cols:3" aria-label="A full tank, three fill-ups that were never logged, then a full tank">
+      <li class="full"><span>Full</span></li>
+      <li class="miss"><span>3 never logged</span></li>
+      <li class="full"><span>Full</span></li>
+    </ol>
+    <Readout value="266" unit="km/l" label="266 kilometres per litre, an impossible figure" size="lg" />
+    <p class="gp-note">1,066 km ÷ 4 L. Plausible on a chart, impossible on a road, and it poisons the average.</p>
+  </div>
+  <div class="gp-col">
+    <p class="gp-tag">With the gap rule</p>
+    <ol class="track" style="--cols:3" aria-label="The same stretch with the gap rule: the second full tank becomes a new starting point">
+      <li class="full"><span>Full</span></li>
+      <li class="miss"><span>Stretch dropped</span></li>
+      <li class="full anchor"><span>New anchor</span></li>
+    </ol>
+    <Readout value="--.-" ghost="88.8" unit="km/l" label="No consumption figure for this stretch" size="lg" />
+    <p class="gp-note">No figure for this stretch. Kilometres, spend and odometer keep counting; consumption restarts from the new anchor.</p>
+  </div>
+</div>
+<p class="plate-cap">{caption}</p>
