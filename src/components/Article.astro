@@ -21,8 +21,10 @@ const { slug, url, title, lockId, docTitle, meta, alt, noTitle = false, wide = f
   <slot />
   <nav class="read-end" aria-label="After the article">
     <p class="mono">End of {slug === 'cv' ? 'CV' : 'case study'}</p>
-    {slug !== 'cv' && <a href="/#contact" data-track={`article_${slug}_contact`} data-category="contact" data-location="article">Get in touch ↓</a>}
-    <a href="/case-studies/" data-exit data-track={`article_${slug}_back`} data-category="navigation" data-location="article">All case studies →</a>
-    <a href="/" data-home data-track={`article_${slug}_home`} data-category="navigation" data-location="article">Home →</a>
+    <span class="re-up">
+      <a href="/" data-home data-track={`article_${slug}_home`} data-category="navigation" data-location="article">Home →</a>
+      <a href="/case-studies/" data-exit data-track={`article_${slug}_back`} data-category="navigation" data-location="article">All case studies →</a>
+    </span>
+    {slug !== 'cv' && <span class="re-down"><a href="/#contact" data-track={`article_${slug}_contact`} data-category="contact" data-location="article">Get in touch ↓</a></span>}
   </nav>
 </article>

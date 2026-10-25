@@ -255,7 +255,9 @@ function prepareArticle(el: HTMLElement) {
   if (end && unlockedUrls().length > 1 && !end.querySelector('[data-next]')) {
     const next = document.createElement('a');
     next.href = '#next'; next.setAttribute('data-next', ''); next.textContent = 'Next case study ↓';
-    end.querySelector('p.mono')?.after(next);
+    let down = end.querySelector('.re-down');   // links that turn the wheel forward sit on their own line, under the ones that turn it back
+    if (!down) { down = document.createElement('span'); down.className = 're-down'; end.append(down); }
+    down.prepend(next);
   }
   const exit = end?.querySelector('[data-exit]');
   if (exit) exit.textContent = 'All case studies ↑';
