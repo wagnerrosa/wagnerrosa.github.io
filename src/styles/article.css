@@ -27,7 +27,7 @@
 .read-body hr { border: 0; border-top: 1px solid var(--line); margin: 2.4em 0; }
 .read-body figure { margin-top: 2.2em; margin-bottom: 2.2em; }
 .read-body figure img, .read-body figure video { display: block; width: 100%; height: auto; border-radius: 6px; }
-.read-body figure img { will-change: transform, opacity; }
+.moving .read-body figure img { will-change: transform, opacity; }
 .read-body figcaption { margin-top: 10px; font: 400 13px/1.45 var(--sans); color: var(--mute); letter-spacing: -.005em; }
 .read-body table { width: 100%; border-collapse: collapse; font: 400 15px/1.4 var(--sans); }
 .read-body th, .read-body td { text-align: left; padding: 10px 12px 10px 0; vertical-align: top; }

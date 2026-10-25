@@ -40,8 +40,10 @@ function where(u: URL): { read?: string; stop?: Stop } {
   return { stop: stopByUrl.get(p + u.hash) ?? stopByUrl.get(p) };
 }
 const canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+const announce = document.getElementById('announce');
 function setMeta(title: string, url: string) {
   document.title = title;
+  if (announce) announce.textContent = title;   // a pushState swap does not announce itself: say where the wheel landed
   const u = new URL(url, location.origin);
   if (canonicalLink) canonicalLink.href = u.origin + normPath(u.pathname);
 }
@@ -75,6 +77,8 @@ let sc: { el: HTMLElement; t: number } | null = null;   // smooth in-page scroll
 let urlIdx = idxOf(startStop.id);          // the stop the address bar currently describes
 let landOn: number | null = null;          // closing an article by history.back() should still land on the row of the case just read
 let replaceNext = false;
+let lastCommit = -1e9;                      // when the address bar last followed the wheel; far in the past after anything else touched the history
+const BURST_MS = 2000, REST = 0.004;     // REST: how close to the target the wheel counts as stopped (about a third of a pixel on the rim)
 
 /* ---------- animation loop: runs only while something moves ---------- */
 let raf = 0, arcDirty = true, arcMax = 56, lastRot = Infinity, lockF = 0, lastReadK = -1, interacted = false;
@@ -311,6 +315,7 @@ async function openReading(url: string, opts: { push?: boolean; swap?: boolean; 
   if (initial) history.replaceState(st, '', location.href);
   else if (swap || !push) history.replaceState(st, '', url);
   else history.pushState(st, '', url);
+  lastCommit = -1e9;
   setMeta(doc.title, url);
   urlIdx = readK;
 
@@ -457,6 +462,13 @@ function setActive(idx: number) {
 }
 
 /* ---------- frame ---------- */
+/* layers for the drifting lines and figures exist only while something moves (CSS keys off .moving) */
+let movingT = 0, movingOn = false;
+function moving() {
+  if (!movingOn) { stage.classList.add('moving'); movingOn = true; }
+  clearTimeout(movingT);
+  movingT = window.setTimeout(() => { stage.classList.remove('moving'); movingOn = false; }, 300);
+}
 const side$ = side.classList;
 function frame(now: number) {
   raf = 0;
@@ -466,7 +478,7 @@ function frame(now: number) {
   else {
     soft += (target - soft) * (1 - Math.exp(-dt * 14));
     pos += (soft - pos) * (1 - Math.exp(-dt * 7));
-    if (Math.abs(target - pos) < 0.0005 && Math.abs(target - soft) < 0.0005) pos = soft = target; else busy = true;
+    if (Math.abs(target - pos) < REST && Math.abs(target - soft) < REST) pos = soft = target; else busy = true;
   }
   if (introOn) {
     if (!introT0) introT0 = now;
@@ -531,6 +543,7 @@ function frame(now: number) {
     const idx = nearest(clamp(pos));
     if (idx !== shown) { shown = idx; setActive(reading?.el ? reading.readK : idx); }
   }
+  if (arcDirty || busy) moving();
   if (arcDirty) { arcDirty = false; arcUpdate(); }
 
   // the address bar follows the wheel once it has come to rest (no history spam while it spins)
@@ -540,8 +553,10 @@ function frame(now: number) {
 
 /* the wheel came to rest on a stop the address bar doesn't describe yet */
 function commitStop(k: number, replace = false) {
-  const it = items[k];
-  if (replace) history.replaceState({}, '', it.url); else history.pushState({}, '', it.url);
+  const it = items[k], now = performance.now();
+  const burst = now - lastCommit < BURST_MS;   // stops that follow each other are one browsing gesture: one history entry, Back returns to where it began
+  if (replace || burst) history.replaceState({}, '', it.url); else history.pushState({}, '', it.url);
+  lastCommit = replace ? -1e9 : now;
   setMeta(it.title, it.url);
   urlIdx = k;
 }
@@ -752,11 +767,23 @@ document.addEventListener('click', e => {
   if (sheet) setSheet(false);
   navigateTo(u);
 });
-addEventListener('popstate', () => navigateTo(new URL(location.href), false));
+addEventListener('popstate', () => { lastCommit = -1e9; navigateTo(new URL(location.href), false); });
 
 /* ---------- keyboard ---------- */
 stage.addEventListener('scroll', () => { if (stage.scrollTop || stage.scrollLeft) stage.scrollTop = stage.scrollLeft = 0; });   // only the layers scroll; a focused field must never drag the stage itself
 const activeLayer = () => reading?.el ?? layers.get(nearest(clamp(pos)))?.el ?? null;
+/* About is a long page: ↑ ↓ read it first and only turn the wheel once it has run out (N4); a held key never overshoots into the next stop */
+let lastKeyScroll = 0;
+function scrollFirst(dir: 1 | -1, repeat: boolean) {
+  if (items[nearest(clamp(pos))].kind !== 'about' || Math.abs(pos - target) > 0.04) return false;
+  const L = activeLayer(); if (!L) return false;
+  const room = dir > 0 ? L.scrollHeight - L.clientHeight - L.scrollTop : L.scrollTop;
+  const now = performance.now();
+  if (room < 4) return repeat || now - lastKeyScroll < 450;   // at the end: a held key or a press right behind the last scroll stops here
+  lastKeyScroll = now;
+  L.scrollTo({ top: L.scrollTop + dir * L.clientHeight * 0.6, behavior: reduce ? 'auto' : 'smooth' });
+  return true;
+}
 addEventListener('keydown', e => {
   const T = e.target instanceof Element ? e.target : null;   // key caps dispatch on the window itself
   if (T?.closest('input, textarea')) {   // typing a password
@@ -770,6 +797,8 @@ addEventListener('keydown', e => {
   const onStage = !!T?.closest('.stage');
   if (sheet && e.key === 'Escape') { e.preventDefault(); setSheet(false); return; }
   if (reading) {
+    const code = T?.closest('pre') as HTMLElement | null;
+    if (e.key === 'ArrowLeft' && code && code.scrollLeft > 0) return;   // ← scrolls a wide code block back before it closes the article
     if (e.key === 'Escape' || e.key === 'ArrowLeft') { e.preventDefault(); exitReading(); }
     else if (e.key === ' ' && !onControl) { e.preventDefault(); switchReading(e.shiftKey ? -1 : 1); }
     else if (reading.el && document.activeElement !== reading.el && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) reading.el.focus({ preventScroll: true });   // keep the keyboard on the article, even after a click on the wheel
@@ -792,6 +821,7 @@ addEventListener('keydown', e => {
   }
   if (onStage) return;
   const inList = !!T?.closest('#list');
+  if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && !inList && scrollFirst(e.key === 'ArrowDown' ? 1 : -1, e.repeat)) { e.preventDefault(); return; }
   if (e.key === 'ArrowDown' || (e.key === 'j' && inList)) { e.preventDefault(); go(nearest(target) + 1); if (inList) focusActiveSoon(); }
   if (e.key === 'ArrowUp' || (e.key === 'k' && inList)) { e.preventDefault(); go(nearest(target) - 1); if (inList) focusActiveSoon(); }
 });
