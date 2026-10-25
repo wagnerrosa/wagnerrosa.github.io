@@ -5,6 +5,7 @@ client: "Planton"
 icon: "planton-ico.webp"
 year: 2026
 category: "Case study"
+presentation: editorial
 description: "How I extracted an implicit brand language into a structured design system: tokens, primitives, and product screens for a B2B sustainability learning platform."
 ogDescription: "Case study on building a design system that preserves editorial restraint while enabling a product team to ship real features."
 llms: "Extracting an editorial brand language into a design system with tokens, primitives and product screens."
@@ -16,7 +17,9 @@ lang: "en"
 order: 4
 ---
 
-import { Badges, CodeBlock, DefList, Figure, LinkList, Note, PullQuote } from '../../components/mdx';
+import { Badges, Beat, CodeBlock, DefList, Figure, Lead, LinkList, Note, Part, PullQuote } from '../../components/mdx';
+
+<Lead>
 
 Planton's visual language is built on restraint: 1px borders instead of shadows, accent green reserved strictly for action signals, and a serif typeface that only appears in the brand's emotional register (testimonials and taglines). The interface reads like a financial newspaper redesigned by someone who grew up in a rainforest. Three colors. No shadows. Sharp corners everywhere.
 
@@ -25,6 +28,8 @@ None of this was encoded anywhere. The brand existed as one designer's implicit 
 When the product needed to expand into Planton Academy, a B2B learning platform for ESG and sustainability, the risk became concrete: every new feature would either dilute these constraints into generic SaaS patterns, or require the original designer to manually enforce them. Neither scales.
 
 I extracted the logic behind these choices and encoded them as system primitives: tokens, components, rules, and documentation that enforce the brand's editorial identity at the component level.
+
+</Lead>
 
 <PullQuote>
 
@@ -38,11 +43,11 @@ I extracted the logic behind these choices and encoded them as system primitives
 
 </LinkList>
 
-## 1. The Problem
+<Beat n="01" label="Planton UI" title={["The Problem"]}>
 
 The challenge was not creating more components. It was defining which parts of the brand were structural enough to become enforceable system rules, and which were surface-level preferences that could flex.
 
-Planton's visual identity relied on specific constraints:
+<Part title="Planton's visual identity relied on specific constraints">
 
 <DefList>
   <div>
@@ -73,21 +78,29 @@ Planton's visual identity relied on specific constraints:
   </div>
 </DefList>
 
+</Part>
+
 Without clear systemization, these principles would fragment the moment a second designer or developer touched the product. Every new screen would become a negotiation between brand intent and implementation speed. Speed would always win.
 
-## 2. The Audit: Extracting the Design Language
+</Beat>
+
+<Beat n="02" label="Planton UI" title={["The Audit: Extracting the Design Language"]}>
 
 Before building anything, I reverse-engineered the live brand into a structured framework. The result was a document called DESIGN\_LANGUAGE.md, a 350-line source of truth organized in three layers:
 
-### Layer 1: Surface UI (what you see)
+<Part title="Layer 1: Surface UI (what you see)">
 
 Direct observations from the existing product: the minimal palette, the border-based separation, the three-step responsive padding scale (24px → 48px → 96px), the absence of radius. Raw facts, no interpretation.
 
-### Layer 2: Design Patterns (recurring structures)
+</Part>
+
+<Part title="Layer 2: Design Patterns (recurring structures)">
 
 The patterns that repeat across pages: the Grid Frame (a max-w-\[1400px\] container with border-l and border-r creating an editorial column structure), the Eyebrow + Headline + Body three-tier text stack, the Sweep CTA (accent-bordered button that fills left-to-right on hover), and the Hover Indicator Bar (a 3px vertical accent strip that reveals on card hover).
 
-### Layer 3: Design Principles (why it works)
+</Part>
+
+<Part title="Layer 3: Design Principles (why it works)">
 
 The philosophy behind the choices: "Editorial layout, not app layout." "Color restraint as institutional signal." "Typography is the personality layer." These principles became the decision framework for every component built afterward. When in doubt, refer to Layer 3.
 
@@ -99,13 +112,15 @@ The target tone, captured in one line from the document:
 
 </PullQuote>
 
+</Part>
+
 This audit was the most important step of the project. It made every subsequent decision traceable to a documented principle, not to personal preference.
 
----
+</Beat>
 
-## 3. The System: Tokens and Primitives
+<Beat n="03" label="Planton UI" title={["The System: Tokens and Primitives"]}>
 
-### Token architecture
+<Part title="Token architecture">
 
 The token layer operates at four levels:
 
@@ -130,9 +145,15 @@ The token layer operates at four levels:
 
 This layered approach means a new feature inherits brand-correct colors, spacing, and motion by default, reducing visual drift without requiring manual review.
 
-[See the full token and variable structure in Figma ↗](https://www.figma.com/design/79v9qJ0fdOW2RuqxiofkGL/Planton-UI---Academy?node-id=0-1&t=kw28gGcZGaxa8Vvc-1)
+<LinkList>
 
-### The primitive/commodity split
+- [See the full token and variable structure in Figma ↗](https://www.figma.com/design/79v9qJ0fdOW2RuqxiofkGL/Planton-UI---Academy?node-id=0-1&t=kw28gGcZGaxa8Vvc-1)
+
+</LinkList>
+
+</Part>
+
+<Part title="The primitive/commodity split">
 
 Not all components carry brand identity equally. The system separates them explicitly:
 
@@ -172,21 +193,29 @@ These five components encode the typographic hierarchy and interaction language 
 
 This split was a deliberate trade-off: invest design effort only where it creates differentiation. Let infrastructure handle the rest. The result is a system where brand identity is concentrated in 5 components, and the other 38 just work: accessible, tested, and visually consistent through the token layer.
 
-## 4. Architecture and Governance
+</Part>
 
-### Layer structure
+</Beat>
+
+<Beat n="04" label="Planton UI" title={["Architecture and Governance"]}>
+
+<Part title="Layer structure">
 
 <CodeBlock label="Project structure" code={"src/\n├── components/\n│   ├── primitives/    → Brand-carrying (Button, Heading, Body, Eyebrow, Label)\n│   ├── ui/            → Composed (Card, Surface, TopNotificationBar, CourseGrid)\n│   ├── shadcn/        → Commodity (38 components via shadcn/Radix)\n│   └── navigation/    → Navigation shell (Navbar, Sidebar, Footer)\n├── screens/           → Real product screens (Academy auth, home, trail, content)\n├── styles/theme.css   → All tokens (brand, surface, semantic, dark mode)\n└── lib/components-registry.ts → Typed component index"} />
 
-### The component registry
+</Part>
+
+<Part title="The component registry">
 
 The system documents itself. components-registry.ts is a typed index that maps every component to its category, description, and source file path. This registry drives the design system's navigation UI. Components are browsable as a structured catalog, not a flat list.
 
-<Figure src="planton-ui/image-sidebar.png" alt="Planton UI design system sidebar: foundations, system components, and screens navigation">Design system sidebar: foundations, system components, and screens navigation</Figure>
-
 Each component page displays live interactive examples, the source file path for developer handoff, and variant and prop documentation. A new developer joining the project can find, understand, and use any component without leaving the browser.
 
-### Adoption tools
+<Figure src="planton-ui/image-sidebar.png" alt="Planton UI design system sidebar: foundations, system components, and screens navigation">Design system sidebar: foundations, system components, and screens navigation</Figure>
+
+</Part>
+
+<Part title="Adoption tools">
 
 A system that isn't used is documentation, not infrastructure. These features were designed to reduce friction between knowing the system exists and actually using it:
 
@@ -207,11 +236,15 @@ A system that isn't used is documentation, not infrastructure. These features we
 
 <Figure src="planton-ui/image-images.jpg" alt="Planton UI brand imagery: curated Brazilian biome photos with download options">Brand imagery: curated Brazilian biome photos with download options</Figure>
 
-## 5. Application: Academy Product Screens
+</Part>
+
+</Beat>
+
+<Beat n="05" label="Planton UI" title={["Application: Academy Product Screens"]}>
 
 The system was not designed in abstraction. I applied it to real Academy product flows (authentication, content discovery, learning progression) to test whether the tokens, primitives, and patterns could survive the pressure of real product requirements, edge cases, and business logic.
 
-### 5.1 Authentication Flow: 12 states, 3 business scenarios
+<Part title="5.1 Authentication Flow: 12 states, 3 business scenarios">
 
 The auth flow is a B2B onboarding system that handles domain validation, voucher-based access, and progressive profile completion across 12 states.
 
@@ -219,7 +252,9 @@ Each branch maps to a distinct business scenario: company has an active subscrip
 
 The background cycles through Brazilian biome photography with crossfade transitions, connecting the auth experience to the brand's environmental identity.
 
-### 5.2 Home Screen: streaming-style content discovery
+</Part>
+
+<Part title="5.2 Home Screen: streaming-style content discovery">
 
 The Academy home uses a content model with 4 types: video, podcast, article, and guide. Each type renders through the same ContentCard component (4:5 aspect ratio) but with distinct visual treatments. Different image filters, overlays, and hover behaviors per type. Videos show a GIF preview on hover; non-video types receive a brand-tinted overlay to maintain visual cohesion across mixed content rows.
 
@@ -227,7 +262,9 @@ The hero section uses HLS video streaming with native Safari fallback, automatic
 
 On desktop, the home layout splits into a 2/3 + 1/3 grid: "Continue watching" carousel on the left, in-progress learning trails with progress bars on the right, separated by a vertical border (not a shadow), consistent with the editorial grid language.
 
-### 5.3 Trail Screen: learning progression with quiz and certification
+</Part>
+
+<Part title="5.3 Trail Screen: learning progression with quiz and certification">
 
 The trail screen implements a complete learning management flow: sequential content consumption with status tracking, a quiz system with 3 attempts and 80% minimum score, and a certificate that unlocks after quiz completion.
 
@@ -235,57 +272,88 @@ The quiz has 4 distinct states: in progress (question-by-question with radio gro
 
 The sidebar lists all trail contents with numbered items, status icons (not started / viewed / completed), and content type indicators. On mobile, the sidebar collapses and the content list appears below the player.
 
-### 5.4 Content type adaptation
+</Part>
+
+<Part title="5.4 Content type adaptation">
 
 Each content type gets a dedicated player view: video (HLS embed), podcast (audio player), article (centered prose), and guide (PDF metadata with download). The system resolves content type at the component level. The consuming screen selects the right view component, and the layout adapts automatically. Adding a fifth content type would require one new view component, not changes across multiple screens.
 
----
+</Part>
 
-## 6. Responsive Strategy
+</Beat>
+
+<Beat n="06" label="Planton UI" title={["Responsive Strategy"]}>
 
 The system uses a mobile-first approach with one key architectural decision: the sidebar transforms from a persistent push layout (desktop) to an overlay panel (mobile), keeping navigation accessible without sacrificing content area.
 
 Key responsive patterns: all heading sizes use fluid scaling with no fixed breakpoints for text. Content cards use responsive widths within horizontal carousels. Navigation shifts from hamburger trigger on mobile to breadcrumb trail on desktop. The trail screen sidebar becomes an inline content list below the player on mobile.
 
-## 7. Trade-offs and Tensions
+</Beat>
 
-### Editorial purity vs. streaming conventions
+<Beat n="07" label="Planton UI" title={["Trade-offs and Tensions"]}>
+
+<Part title="Editorial purity vs. streaming conventions">
 
 The design language specifies: no shadows, no scale transforms, no rounded corners on content surfaces. The ContentCard in Academy Home uses scale, shadow, and rounded corners on hover.
 
 This was a deliberate exception. Content discovery in a streaming context relies on hover affordances that signal "this is selectable." The editorial grid approach (indicator bar, border darkening) didn't translate to thumbnail-based browsing. The trade-off: streaming sections follow platform conventions; editorial sections follow brand rules. The system accommodates both through different component contracts rather than forcing one philosophy everywhere.
 
-### Roca as voice layer, and its absence in the product
+</Part>
+
+<Part title="Roca as voice layer, and its absence in the product">
 
 The design language defines Roca (serif) as the brand's emotional register. It only appears in testimonials and the footer tagline. The decision to keep Roca out of the Academy product was intentional: the learning platform needs to read as functional and credible, not editorial. But this means the Academy lacks the emotional warmth that Roca provides on the institutional site. The cost is real, and it's a design debt I'd revisit as the product matures.
 
-### shadcn as accelerator vs. differentiation risk
+</Part>
+
+<Part title="shadcn as accelerator vs. differentiation risk">
 
 38 of the system's components are shadcn/Radix with token-level theming. They work. They're accessible, well-tested, and consistent. But they also look like shadcn. The primitive layer (Button, Heading, typography) creates enough differentiation at the surface, but deeper components (Dialog, Sheet, Select) are functionally identical to any shadcn project. If differentiation at the overlay level becomes important, these would need custom treatment. For now, the pragmatic choice is to invest design effort only where it creates visible brand value.
 
-### Specification vs. implementation gap
+</Part>
+
+<Part title="Specification vs. implementation gap">
 
 DESIGN\_LANGUAGE.md defines behaviors that the current implementation doesn't fully enforce. Some visual consistency still depends on page-level className overrides rather than component contracts. For example, surfaces sometimes rely on the consuming page to set text color correctly, rather than the Surface component enforcing it. My next step would be to harden these rules into the component API, making it impossible to use a component incorrectly rather than relying on documentation to prevent misuse.
 
----
+</Part>
 
-## 8. What the System Produces
+</Beat>
+
+<Beat n="08" label="Planton UI" title={["What the System Produces"]}>
 
 In practice, this system enables a product team to build and scale a complex learning platform without losing visual coherence or brand integrity. A developer can ship a new feature using only the token layer and existing primitives, and the result will look like Planton, not like generic shadcn.
 
-**Tokens:** 7 brand colors, 4 surfaces, 2 border modes, 4 semantic states (success/warning/error/info), motion easings and durations. Full dark mode in oklch().
+<DefList>
+  <div>
+    <dt>Tokens</dt>
+    <dd>7 brand colors, 4 surfaces, 2 border modes, 4 semantic states (success/warning/error/info), motion easings and durations. Full dark mode in oklch().</dd>
+  </div>
+  <div>
+    <dt>Primitives</dt>
+    <dd>5 custom components encoding typography and interaction identity.</dd>
+  </div>
+  <div>
+    <dt>Commodity UI</dt>
+    <dd>38 shadcn/Radix components themed via token layer.</dd>
+  </div>
+  <div>
+    <dt>Navigation</dt>
+    <dd>Navbar with breadcrumbs + user menu, collapsible sidebar (push/overlay), footer.</dd>
+  </div>
+  <div>
+    <dt>Screens</dt>
+    <dd>Auth flow (12 states), Home (hero + content rows), Trail (sidebar + player + quiz + certificate), Content player (4 types).</dd>
+  </div>
+  <div>
+    <dt>Documentation</dt>
+    <dd>54 pages, component registry with file paths, logo downloads, color copy-to-clipboard, biome image assets.</dd>
+  </div>
+</DefList>
 
-**Primitives:** 5 custom components encoding typography and interaction identity.
+</Beat>
 
-**Commodity UI:** 38 shadcn/Radix components themed via token layer.
-
-**Navigation:** Navbar with breadcrumbs + user menu, collapsible sidebar (push/overlay), footer.
-
-**Screens:** Auth flow (12 states), Home (hero + content rows), Trail (sidebar + player + quiz + certificate), Content player (4 types).
-
-**Documentation:** 54 pages, component registry with file paths, logo downloads, color copy-to-clipboard, biome image assets.
-
-## Positioning Summary
+<Beat n="09" label="Planton UI" title={["Positioning Summary"]}>
 
 This is not "another design system." This is a system built to preserve a specific brand logic (editorial restraint, typographic hierarchy, color discipline) while enabling a product team to ship real features without diluting that logic.
 
@@ -294,6 +362,8 @@ The differentiator is the audit-first approach: extract principles before buildi
 The strongest design systems are opinionated. This one is opinionated about restraint. And that restraint is what makes it scale.
 
 <Badges items={["Next.js 16","React 19","Tailwind CSS 4","shadcn/ui","TypeScript 5","Vercel"]} />
+
+</Beat>
 
 <Note>
 

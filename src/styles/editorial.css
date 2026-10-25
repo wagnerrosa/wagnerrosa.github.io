@@ -1,7 +1,7 @@
 /* Editorial layout for case studies (frontmatter `presentation: editorial`; not `layout`, which MDX reads as a layout import).
    Same reading layer as article.css, with a wider stage: prose keeps the 700px measure, anything marked .wide spans the stage.
    Sizes come from the article's width (container `case`), not the viewport, because the stage shrinks and grows with the wheel column.
-   Carburante is the only editorial case today; its beats and plates are below. Notes: positioning/notes/carburante-direcao-2026-10-25.md */
+   Every case is editorial now: Carburante has its own plates (below); the older ones use Beat and Part only. Notes: positioning/notes/carburante-direcao-2026-10-25.md */
 
 /* Seven-segment digits, the same face the product's landing uses for the pump display (SIL OFL, licence in the same folder). Only downloaded when a readout is on the page. */
 @font-face {
@@ -70,6 +70,47 @@
 .read-wide .bt-title { max-width: 16em; margin-bottom: clamp(28px, 4.4cqi, 48px); font: 500 clamp(36px, 6cqi, 72px) / 1 var(--display); letter-spacing: -.045em; color: var(--ink); text-wrap: balance; }
 .read-wide .beat > .plate, .read-wide .beat > .ledger { margin-top: clamp(40px, 6.4cqi, 72px); }
 .read-wide .beat > .bt-title + .plate, .read-wide .beat > .bt-title + .ledger { margin-top: 0; }
+/* older cases, rewritten as beats. A Beat holds copy (two columns) and Parts; a Part is a sub-step: narrow heading left, everything it says on the right, figures across the stage */
+.read-wide .beat hr { display: none; }
+/* a paragraph with no paragraph beside it would leave half a row empty: it takes the stage, at a reading measure */
+.read-wide .beat > p:not([class]):not(p:not([class]) + p):not(:has(+ p:not([class]))):not(:has(+ .steps)) { grid-column: 1 / -1; max-width: 36em; }
+/* a third paragraph (and the ones after it) starts a new row: a line of air under the pair above */
+.read-wide .beat > p:not([class]) + p:not([class]) + p:not([class]) { margin-top: 1.3em; }
+/* a paragraph and its steps sit side by side */
+.read-wide .beat > p:not([class]) + .steps { grid-column: 2; margin-top: 0; }
+.read-wide .beat > h3 { margin-top: clamp(48px, 7cqi, 80px); margin-bottom: clamp(16px, 2cqi, 24px); max-width: 24em; }
+.read-wide .beat > :is(figure, .link-list, .steps, .deflist, .badges, .checks, .code-block, .table-wrap, ul, ol, pre, blockquote) { margin-top: clamp(28px, 4cqi, 44px); }
+.read-wide .beat > .bt-title + :is(figure, .link-list, .steps, .deflist, .badges, .checks, .code-block, .table-wrap, ul, ol, pre, blockquote) { margin-top: 0; }
+.read-wide .beat > :is(figure, .link-list, .badges, .deflist, .steps, .checks, .code-block, .table-wrap, ul, ol, pre, blockquote, .part) + p:not([class]),
+.read-wide .beat > :is(figure, .link-list, .badges, .deflist, .steps, .checks, .code-block, .table-wrap, ul, ol, pre, blockquote, .part) + p:not([class]) + p:not([class]) { margin-top: clamp(28px, 4cqi, 44px); }
+/* definitions across the stage: one, two or three side by side, four or more in two columns */
+.read-wide .beat > .deflist { grid-template-columns: minmax(0, 1fr); gap: 28px clamp(24px, 5cqi, 64px); }
+.read-wide .beat > .deflist:has(> :nth-child(2)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.read-wide .beat > .deflist:has(> :nth-child(3)) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.read-wide .beat > .deflist:has(> :nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.read-wide .beat > .part { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); column-gap: clamp(24px, 5cqi, 64px); align-items: start; margin-top: clamp(56px, 8cqi, 96px); }
+.read-wide .beat > .part:first-child, .read-wide .beat > .bt-title + .part { margin-top: 0; }
+.read-wide .part > h3 { grid-column: 1; grid-row: 1; margin: 0; max-width: 14em; font-size: clamp(20px, 2.3cqi, 28px); line-height: 1.12; text-wrap: balance; }
+/* a Part with one block of copy: heading left, the copy right. The body dissolves into the Part's grid. */
+.read-wide .part > .pt-body { display: contents; }
+.read-wide .pt-body > * { grid-column: 2; grid-row: 1; margin: 0; min-width: 0; }
+/* a Part with more than that: heading on top, then the same model as a Beat (copy in two columns, lists and figures across the stage), so nothing is left alone in the right column */
+.read-wide .part:has(> .pt-body > :nth-child(2)) { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 0; }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > h3 { grid-column: 1 / -1; max-width: 24em; margin-bottom: clamp(16px, 2cqi, 24px); }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > * { grid-column: auto; grid-row: auto; }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > :is(figure, .code-block, .table-wrap, .pull-quote, blockquote, .deflist, .link-list, .steps, .badges, .checks, ul, ol) { grid-column: 1 / -1; margin-top: clamp(28px, 4cqi, 44px); }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > :first-child { margin-top: 0; }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > p:not([class]):not(p:not([class]) + p):not(:has(+ p:not([class]))) { grid-column: 1 / -1; max-width: 36em; }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > p:not([class]) + p:not([class]) + p:not([class]) { margin-top: 1.3em; }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > :is(figure, .code-block, .table-wrap, .pull-quote, blockquote, .deflist, .link-list, .steps, .badges, .checks, ul, ol) + * { margin-top: clamp(28px, 4cqi, 44px); }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > .deflist { grid-template-columns: minmax(0, 1fr); gap: 28px clamp(24px, 5cqi, 64px); }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > .deflist:has(> :nth-child(2)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > .deflist:has(> :nth-child(3)) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > .deflist:has(> :nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* figures keep their proportions: never stretched past their pixels, and a tall one is capped instead of filling the screen */
+.read-wide .beat figure { max-width: min(100%, var(--src-w, 100%)); }
+.read-wide .beat figure img { width: auto; max-width: 100%; height: auto; max-height: min(78vh, 760px); }
 /* copy that follows evidence opens a new row: both paragraphs of the pair move down together, so their tops stay aligned */
 .read-wide .beat > :is(.notes, .plate-cap, .ledger) + p:not([class]),
 .read-wide .beat > :is(.notes, .plate-cap, .ledger) + p:not([class]) + p:not([class]) { margin-top: clamp(48px, 7.2cqi, 88px); }
@@ -195,6 +236,13 @@
   .read-wide .beat > p:not([class]) + p:not([class]),
   .read-wide .beat > :is(.notes, .plate-cap, .ledger) + p:not([class]) + p:not([class]) { margin-top: 1em; }
   .read-wide .gap { grid-template-columns: minmax(0, 1fr); }
+  .read-wide .beat > p:not([class]) + .steps { grid-column: 1 / -1; margin-top: clamp(28px, 4cqi, 44px); }
+  .read-wide .beat > .deflist, .read-wide .beat > .deflist:has(> :nth-child(n)) { grid-template-columns: minmax(0, 1fr); }
+  .read-wide .beat > .part, .read-wide .beat > .part:has(> .pt-body > :nth-child(2)) { grid-template-columns: minmax(0, 1fr); row-gap: 14px; }
+  .read-wide .beat > .part > h3 { grid-column: 1; }
+  .read-wide .part > .pt-body > *, .read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > * { grid-column: 1; grid-row: auto; max-width: none; }
+  .read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > .deflist, .read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > .deflist:has(> :nth-child(n)) { grid-template-columns: minmax(0, 1fr); }
+  .read-wide .part:has(> .pt-body > :nth-child(2)) > .pt-body > * + * { margin-top: 1.2em; }
   .read-wide .st { width: 46%; }
   .read-wide .lg-row { grid-template-columns: minmax(0, 1fr); }
 }

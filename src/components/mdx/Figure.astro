@@ -5,8 +5,10 @@ import { asset } from '../../lib/assets';
 interface Props { src: string; alt: string }
 const { src, alt } = Astro.props;
 const img = asset(src);
+// never offer or draw an image wider than its pixels: a small source stays small instead of being stretched
+const widths = [...[560, 800, 1100, 1400, 2000].filter((w) => w < img.width), img.width];
 ---
-<figure>
-  <Image src={img} alt={alt} widths={[560, 800, 1100, 1400]} sizes="(max-width: 820px) 100vw, 700px" loading="lazy" decoding="async" />
+<figure style={`--src-w: ${img.width}px`}>
+  <Image src={img} alt={alt} widths={widths} sizes="(max-width: 820px) 100vw, 1100px" loading="lazy" decoding="async" />
   <figcaption><slot /></figcaption>
 </figure>

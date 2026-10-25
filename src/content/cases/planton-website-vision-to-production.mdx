@@ -5,6 +5,7 @@ client: "Planton"
 icon: "planton-ico.webp"
 year: 2026
 category: "Case study"
+presentation: editorial
 description: "Designing and implementing a multilingual B2B climate tech website in 18 days. From AI-first exploration to Figma prototyping to production with Next.js 16."
 ogDescription: "Case study on designing and building the Planton website: visual system, section architecture, and AI-assisted development across 221 commits."
 llms: "Multilingual B2B climate tech website delivered in 18 days with Next.js."
@@ -15,11 +16,15 @@ lang: "en"
 order: 5
 ---
 
-import { Badges, DefList, LinkList, Note, PullQuote } from '../../components/mdx';
+import { Badges, Beat, DefList, Lead, LinkList, Note, Part, PullQuote } from '../../components/mdx';
 
 February 2026 · Case Study · 10 min read
 
+<Lead>
+
 Redesigning the Planton website meant designing and implementing a multilingual product site while defining the visual system, component architecture, and interactive storytelling that would carry the brand. On top of that, I could not treat implementation as isolated experimentation. The visual direction needed stakeholder approval before I committed to full production buildout. That constraint shaped everything.
+
+</Lead>
 
 <Badges items={["Next.js 16","React 19","TypeScript","next-intl","Tailwind CSS v4","GSAP","motion/react"]} />
 
@@ -31,15 +36,19 @@ Redesigning the Planton website meant designing and implementing a multilingual 
 
 </LinkList>
 
-## My Role
+<Beat n="01" label="Planton website" title={["My Role"]}>
 
 I led this project end to end as a Senior UX Designer working directly in the implementation layer, responsible for the visual system, interaction design, and front-end architecture of the site. There was no separate design-to-development handoff. I defined the visual direction, prototyped the interaction patterns in Figma, got stakeholder approval on those prototypes, and then translated that direction into production code using AI-assisted development tools without giving up authorship of the system.
 
-## The Challenge
+</Beat>
+
+<Beat n="02" label="Planton website" title={["The Challenge"]}>
 
 What made this project difficult was not the number of pages. It was the number of systems that had to agree with each other. The site needed multilingual routing in Portuguese and English, several product narratives that were related but not interchangeable, a visual tone that felt premium enough for a B2B climate tech company, and one unusually complex interactive module for Planton Genius that behaved more like a product demonstration than a marketing section. On top of that, I could not treat implementation as isolated experimentation. The visual direction needed stakeholder approval before I committed to full production buildout, which meant I had to separate exploration from execution in a more disciplined way than I usually would.
 
-## Phase 1: AI-First Exploration
+</Beat>
+
+<Beat n="03" label="Planton website · Phase 1" title={["AI-First Exploration"]}>
 
 My first instinct was to lean hard into direct generation. I already had enough strategic context to describe the brand, the audience, and the tone I wanted, so I let the AI generate visual output directly and used that as the starting point. It was fast, and at first it felt productive in the way these tools often do. There was volume. There were options. There were plausible screens. But the more I looked at the results, the more obvious the problem became: plausibility is not the same thing as direction.
 
@@ -49,7 +58,9 @@ That first phase was useful precisely because it was unsatisfying. It showed me 
 
 The output had what I can only describe as an AI signature: a visual language that is becoming increasingly recognizable as more sites are generated rather than designed. Technically coherent, broadly modern, and somehow interchangeable with everything else. The issue was not quality in the conventional sense. It was the absence of authorship. I decided to treat what the AI had produced as reference material rather than direction, take the project into Figma, and design the visual system from scratch. The logic was simple: let the AI do what it does well (speed, variation, pattern completion) and let the designer do what only a designer can do, which is impose a point of view.
 
-## Phase 2: Figma First, Then Code
+</Beat>
+
+<Beat n="04" label="Planton website · Phase 2" title={["Figma First, Then Code"]}>
 
 Moving into Figma was not a retreat from implementation. It was how I restored control over the project. Once I stopped asking the AI to invent the visual system for me and started using Figma to define it directly, the work became specific. I could decide how much editorial density the pages should carry, where contrast should appear, how the typography should pace the page, and how the site should feel in motion before any production code locked those decisions in.
 
@@ -59,9 +70,11 @@ There was a practical advantage to this sequence that I had not fully anticipate
 
 The approved Figma files became more than design artifacts. They became a contract. Once the visual direction was accepted, implementation stopped being a debate about aesthetics and became a problem of translation, architecture, and fidelity. In an AI-assisted workflow, it is easy to collapse ideation and production into the same motion. For this project, separating them was what preserved quality. Figma gave me a place to make design decisions before the codebase started inheriting them, and a standard against which AI-generated code could be judged.
 
-## Phase 3: From Design to Production
+</Beat>
 
-### The Section Architecture
+<Beat n="05" label="Planton website · Phase 3" title={["From Design to Production"]}>
+
+<Part title="The Section Architecture">
 
 Once implementation began, the codebase had to reflect the way the design was actually structured. I did not want a system where each page became its own isolated build, and I also did not want a rigid page template that flattened every product narrative into the same shape. The solution was to organize the site around reusable sections rather than page templates: thin route files and a growing set of section components that owned their own layout, translation namespace, and variation logic.
 
@@ -69,7 +82,9 @@ This became one of the most important structural decisions in the project. Plant
 
 That architecture was not present in its final form at the start. It emerged because earlier, broader structures were too generic. As the site became more specific, I rebuilt it around sections because that was the level at which the design actually wanted to operate.
 
-### The Genius Module
+</Part>
+
+<Part title="The Genius Module">
 
 The Planton Genius interactive section was the project inside the project. Its purpose was not just to describe the product, but to make a complex system understandable through interaction. Instead of reading about the product, users experience the logic of the system as they scroll: documents enter, data is processed, and structured insight emerges. In a few seconds, the module communicates what would otherwise require several paragraphs of explanation.
 
@@ -77,7 +92,9 @@ The module was built with GSAP and ScrollTrigger as a multi-scene, scroll-driven
 
 This was one of the clearest moments in the project where maturity meant imposing limits. After enough iteration, the right decision was not to keep it endlessly flexible. The right decision was to freeze it. In the current architecture, the Genius module is explicitly treated as a protected feature module whose internals should not be casually modified. I do not see that as a limitation. I see it as the point where the team acknowledged that some parts of a system become stable by design. If everything stays open to casual regeneration, nothing becomes trustworthy.
 
-### AI-Assisted Development in Practice
+</Part>
+
+<Part title="AI-Assisted Development in Practice">
 
 The implementation phase was AI-assisted from start to finish, but it was not smooth, automatic, or especially glamorous. Over 221 commits, the tools were most useful when they accelerated translation work, helped me scaffold sections, generated first passes on repetitive structural tasks, or let me test implementation approaches quickly against the approved design. Claude Code, GPT, and Antigravity all played roles in that process, but none of them replaced the need to decide what belonged in the system.
 
@@ -87,15 +104,19 @@ The second was the removal of dark mode. Early in the build, it existed because 
 
 The prompt archive from this phase is one of its most useful artifacts. Not as a command history, but as a decision log. It records where the initial approach was too generic, where sections had to be rebuilt, where interaction logic had to be protected, and where implementation reality forced a different choice than the original plan.
 
+</Part>
+
 <PullQuote>
 
 AI-assisted development is not a cleaner version of normal work. It is normal work with the iteration speed turned up, which means judgment has to become more visible, not less.
 
 </PullQuote>
 
-## Results
+</Beat>
 
-### The Impact in Numbers
+<Beat n="06" label="Planton website" title={["Results"]}>
+
+<Part title="The Impact in Numbers">
 
 <DefList>
   <div>
@@ -116,15 +137,21 @@ AI-assisted development is not a cleaner version of normal work. It is normal wo
   </div>
 </DefList>
 
+</Part>
+
 The site is in production as a fully multilingual Portuguese and English experience across 9 pages, with localized routing and localized pathnames for every route. The section architecture covers more than 30 reusable components. The Planton Genius interactive module is live with its full scroll-driven, multi-scene experience. Integrations include HubSpot Forms for lead capture, Google Analytics, and Microsoft Clarity for behavioral tracking. The entire project (design, implementation, and production deployment) was completed across 221 commits in 18 days.
 
 The site launched with a home page, five product pages, and an about page: seven routes in total, fully localized in Portuguese and English. Sections were deliberately reused across pages rather than rebuilt. The same structural components appear throughout the site, but with content, copy, and calls to action adapted to the context of each product. The CTA section is a clear example of this. Rather than a generic contact invitation, it responds to where the user is in the site: inviting someone reading about emissions inventory to start their inventory, and someone on the carbon footprint page to begin their footprint assessment. The same component, different conversations.
 
-## What I Learned
+</Beat>
+
+<Beat n="07" label="Planton website" title={["What I Learned"]}>
 
 What this project reinforced for me is that design judgment becomes sharper, not softer, when you work directly in the implementation layer. AI can shorten the distance between idea and code, but that only increases the need for explicit authorship. The most valuable decisions in this project were not the ones that produced more output, but the ones that imposed better constraints: moving from AI-generated visuals into Figma, removing a technically valid feature that weakened the tone, rebuilding the system around reusable sections, and freezing the one module that had become too important to keep casually mutable.
 
 When design and implementation belong to the same person, weak decisions become visible very quickly. That pressure is not a disadvantage. It is what makes the work honest.
+
+</Beat>
 
 <Note>
 

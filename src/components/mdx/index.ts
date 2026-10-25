@@ -10,3 +10,5 @@ export { default as PullQuote } from './PullQuote.astro';
 export { default as Steps } from './Steps.astro';
 export { default as Video } from './Video.astro';
 export { default as Note } from './Note.astro';
+export { default as Beat } from './Beat.astro';
+export { default as Part } from './Part.astro';

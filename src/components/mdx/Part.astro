@@ -1,0 +1,9 @@
+---
+// A sub-step inside a Beat: the heading on the left, its copy on the right, so a single paragraph still uses the two-column stage.
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<div class="part">
+  <h3>{title}</h3>
+  <div class="pt-body"><slot /></div>
+</div>

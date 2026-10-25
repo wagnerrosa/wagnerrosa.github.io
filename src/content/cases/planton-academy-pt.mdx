@@ -5,6 +5,7 @@ client: "Planton"
 icon: "planton-ico.webp"
 year: 2026
 category: "Estudo de caso"
+presentation: editorial
 description: "Como transformei uma estratégia comercial em uma plataforma B2B de educação em ESG, com três perfis de usuário, certificação por quiz, tutor de IA e front-end em React."
 ogDescription: "Estudo de caso de produto: da estratégia comercial ao código React em produção. Três perfis de usuário, certificação por quiz, tutor de IA com apoio humano e um design system para manter a experiência coerente."
 blurb: "Versão em português do estudo de caso do Planton Academy."
@@ -17,7 +18,7 @@ hub: false
 order: 99
 ---
 
-import { Badges, Checks, DefList, Facts, Figure, Lead, LinkList, Note, PullQuote, Steps, Video } from '../../components/mdx';
+import { Badges, Beat, Checks, DefList, Facts, Figure, Lead, LinkList, Note, Part, PullQuote, Steps, Video } from '../../components/mdx';
 
 2026 · Estudo de caso · 5 min de leitura · [Ler em inglês](/case-studies/planton-academy.html)
 
@@ -33,7 +34,11 @@ Fui responsável por transformar a ideia do Planton Academy em um produto digita
 
 <Checks title="O que este projeto demonstra" items={["Estratégia de produto a partir do modelo de negócio","UX para sistemas complexos e multi-perfil","Arquitetura de informação","Design systems escaláveis","Colaboração próxima com engenharia","Front-end em React em produção","Desenvolvimento de produto assistido por IA","Entregar produtos, não só protótipos"]} />
 
+<Lead>
+
 O Academy é a plataforma de educação corporativa da Planton, uma climate tech brasileira. Ele ajuda empresas a treinar suas equipes em ESG: inventário de emissões, GHG Protocol, mercado de carbono e relatórios de sustentabilidade. Meu desafio era transformar uma estratégia comercial em uma plataforma que realmente funcionasse para alunos, gestores e administradores, do primeiro fluxo ao código em produção.
+
+</Lead>
 
 <PullQuote>
 
@@ -49,7 +54,7 @@ O Academy é a plataforma de educação corporativa da Planton, uma climate tech
 
 </LinkList>
 
-## O Produto
+<Beat n="01" label="Planton Academy" title={["O Produto"]}>
 
 O Academy é B2B e atende clientes enterprise reais. A Faber-Castell, cliente que a Planton divulga publicamente, usa a plataforma para treinar sua cadeia de valor. Não existe cadastro avulso: a empresa contrata o acesso, e qualquer pessoa com e-mail corporativo de um domínio autorizado consegue entrar. Essa regra comercial virou o ponto de partida de toda a experiência.
 
@@ -57,39 +62,49 @@ Aluno, gestor e admin trabalham sobre os mesmos dados, mas cada perfil precisa r
 
 <Figure src="planton-academy/academy-admin-overview.webp" alt="Área administrativa do Planton Academy: dashboard de analytics, catálogo de conteúdo e navegação em três telas flutuantes sobre um laptop">O lado administrativo da plataforma: analytics entre empresas, operação de conteúdo e gestão de trilhas</Figure>
 
-## Meu Papel
+</Beat>
+
+<Beat n="02" label="Planton Academy" title={["Meu Papel"]}>
 
 Comecei transformando as regras do negócio em jornadas claras para cada perfil de usuário: onboarding, certificação, ciclo de vida dos planos e arquitetura de permissões. Desenhei todas as telas sobre o Planton UI, o design system baseado em tokens que construí para a marca, e estendi o sistema onde o produto precisava. Depois implementei a plataforma em React, Next.js e TypeScript, então as telas do vídeo acima são a interface real funcionando. Também desenhei a linguagem de movimento, a experiência do tutor de IA e publiquei a landing page de lançamento.
 
 <Steps title="Processo" label="Processo de design, do discovery ao lançamento" items={["Discovery","Arquitetura de Informação","UX Design","Design System","Implementação em React","Lançamento"]} />
 
----
+</Beat>
 
-## Quatro decisões que moldaram o produto
+<Beat n="03" label="Planton Academy" title={["Quatro decisões que moldaram o produto"]}>
 
-### 1. O onboarding começa pelo modelo de negócio
+<Part title="1. O onboarding começa pelo modelo de negócio">
 
 Como o domínio corporativo é a chave de acesso, o fluxo verifica o domínio antes de pedir qualquer senha, então a elegibilidade é resolvida no passo mais barato possível. Cada cenário comercial virou uma tela própria: empresa ativa celebra e avança sozinha; empresa inativa recebe um caminho de voucher com uma saída comercial; domínio desconhecido converte o visitante em lead de vendas. Doze estados, e nenhum deles é um beco sem saída.
 
-### 2. A certificação virou parte central da experiência
+</Part>
+
+<Part title="2. A certificação virou parte central da experiência">
 
 Em vez de tratar o certificado como algo que aparece só no fim do curso, fiz dele parte da jornada desde o começo. Quiz e certificado aparecem como itens numerados na lista de conteúdo da própria trilha, visíveis desde a primeira aula. Cada etapa bloqueada explica exatamente o que precisa acontecer para liberar o próximo passo, e reprovar no quiz sempre leva de volta ao conteúdo. O certificado tem uma URL pública de verificação e um botão de compartilhamento no LinkedIn. É uma credencial que o aluno pode distribuir, e que também apresenta a plataforma para a rede dele.
 
 <Figure src="planton-academy/academy-certificate.webp" alt="Certificado do Planton Academy: credencial numerada com URL pública de verificação, nome da trilha concluída e duração">O certificado é um componente HTML vivo, não uma imagem: numerado, verificável por URL, pronto para o LinkedIn</Figure>
 
-### 3. Um tutor de IA que conhece os próprios limites
+</Part>
+
+<Part title="3. Um tutor de IA que conhece os próprios limites">
 
 O tutor foi pensado para ajudar o aluno a avançar na trilha, não para substituir uma conversa aberta. As respostas vêm em blocos estruturados e sempre apontam para o próximo conteúdo do catálogo. Quando o bot chega ao seu limite, um toque transfere a conversa para uma pessoa no WhatsApp, levando um resumo do chat para que o aluno não precise se repetir. Desenhar a saída foi tão importante quanto desenhar as respostas.
 
 <Figure src="planton-academy/academy-ai-tutor.webp" alt="Tutor de IA do Planton Academy no mobile: estado de boas-vindas com sugestões rápidas e opção de atendimento humano no WhatsApp">O estado vazio do tutor: sugestões rápidas para começar e uma saída humana antes da primeira mensagem</Figure>
 
-### 4. Gestores renovam contratos, então gestores veem resultados
+</Part>
+
+<Part title="4. Gestores renovam contratos, então gestores veem resultados">
 
 Na educação B2B, o aluno usa o produto, mas é o gestor quem renova. O dashboard do gestor foi construído para prestação de contas interna: vigência do contrato como linha do tempo, horas de engajamento, certificados conquistados e drill-down por colaborador. São os mesmos dados da visão administrativa, reorganizados em torno de outra decisão: provar que o treinamento está gerando valor.
 
----
+</Part>
 
-## Desenhado em código
+</Beat>
+
+<Beat n="04" label="Planton Academy" title={["Desenhado em código"]}>
 
 Todos os fluxos acima existem como código React tipado. O onboarding é uma máquina de estados em TypeScript; o quiz e o ciclo de vida dos vouchers também. Os menus do admin só oferecem ações válidas para o estado atual de cada item, então a interface aplica as regras de negócio em vez de apenas documentá-las.
 
@@ -97,9 +112,15 @@ Trabalhar diretamente no código mudou a forma como as decisões de design chega
 
 Agentes de IA tinham uma função específica em cada etapa do processo. Na exploração, eu conseguia levantar três ou quatro variações funcionais de um fluxo em uma tarde e compará-las no navegador, em vez de debater mockups estáticos. Na implementação, os agentes montavam a base dos componentes sobre os tokens do design system enquanto eu focava nos detalhes de interação e nos casos extremos. Na documentação, cada componente incorporado ao sistema ganhava uma documentação inicial gerada a partir do próprio código. E na validação, uma decisão tomada de manhã podia ser testada contra estados reais de dados no mesmo dia.
 
-[Como o design system foi construído → leia o case complementar](/case-studies/planton-ui-design-system.html)
+<LinkList>
 
-## Resultados
+- [Como o design system foi construído → leia o case complementar](/case-studies/planton-ui-design-system.html)
+
+</LinkList>
+
+</Beat>
+
+<Beat n="05" label="Planton Academy" title={["Resultados"]}>
 
 <DefList>
   <div>
@@ -118,15 +139,17 @@ Agentes de IA tinham uma função específica em cada etapa do processo. Na expl
 
 A ressalva honesta: a plataforma roda sobre dados estruturados de exemplo, e a acessibilidade está coberta onde os primitivos do sistema cobrem, com um backlog priorizado para as partes customizadas. Instrumentar o uso real e fechar esse backlog seria meu primeiro movimento depois do lançamento.
 
----
+</Beat>
 
-## Por que este projeto importou
+<Beat n="06" label="Planton Academy" title={["Por que este projeto importou"]}>
 
 O Planton Academy foi o projeto em que consegui reunir várias competências que desenvolvi ao longo da carreira: UX, produto, design system, motion, front-end e IA. Durante boa parte dessa trajetória, essas frentes apareciam em momentos separados, sob responsabilidade de pessoas diferentes. Pela primeira vez, tive a oportunidade de conduzir todas essas etapas dentro do mesmo projeto.
 
 O que tornou o projeto importante para mim foi poder acompanhar cada decisão até ela aparecer no produto. Quando eu definia um fluxo, também conseguia implementá-lo, testá-lo em estados reais da aplicação e ajustá-lo junto com a engenharia. Isso reduziu a distância entre o que eu desenhava e o que as pessoas encontravam na plataforma. É esse tipo de trabalho que quero continuar fazendo.
 
 <Badges items={["Next.js 16","React 19","TypeScript 5","Tailwind CSS 4","Framer Motion","Figma","Workflow assistido por IA"]} />
+
+</Beat>
 
 <Note>
 
