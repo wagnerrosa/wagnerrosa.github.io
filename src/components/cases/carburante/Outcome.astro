@@ -1,9 +1,11 @@
 ---
-// The close: three short columns. No rules between them; the columns carry the structure. Links follow as the site's LinkList.
-interface Col { title: string; text: string }
-interface Props { cols: Col[] }
-const { cols } = Astro.props;
+// The close as a status ledger: every claim carries its state. The marks reuse the tank diagram's vocabulary:
+// filled = live on the store, ring = in TestFlight, small grey = an early signal, dashed = not reached or not measured.
+// No rules between rows; whitespace carries the structure. Links follow as the site's LinkList.
+interface Row { status: string; tone: 'live' | 'beta' | 'signal' | 'open'; text: string }
+interface Props { rows: Row[] }
+const { rows } = Astro.props;
 ---
-<ol class="oc-cols">
-  {cols.map(c => <li><h3>{c.title}</h3><p>{c.text}</p></li>)}
-</ol>
+<dl class="ledger">
+  {rows.map(r => <div class:list={['lg-row', `lg-${r.tone}`]}><dt><span class="lg-mark" aria-hidden="true" />{r.status}</dt><dd>{r.text}</dd></div>)}
+</dl>

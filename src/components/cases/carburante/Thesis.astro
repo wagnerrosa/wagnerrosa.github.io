@@ -3,5 +3,5 @@
 interface Props { lines: string[] }
 const { lines } = Astro.props;
 ---
-<p class="thesis">{lines.map(l => <span>{l}</span>)}</p>
+<p class="thesis wide">{lines.map(l => <span>{l}</span>)}</p>
 <p class="thesis-cap"><slot /></p>

@@ -1,11 +1,11 @@
 ---
 // Real screens composed on a plate, with their notes underneath (never on the plate).
-// `grow`: each screen larger than the last (an iteration). `steps`: a numbered sequence. `pair`: two overlapped.
+// `grow`: each screen larger than the last (an iteration). `steps`: a numbered sequence.
 import { Image } from 'astro:assets';
 import { asset } from '../../../lib/assets';
 interface Item { src: string; alt: string; label: string; note?: string }
-interface Props { items: Item[]; variant?: 'grow' | 'steps' | 'pair'; tone?: 'soft' | 'ink' }
-const { items, variant = 'pair', tone = 'soft' } = Astro.props;
+interface Props { items: Item[]; variant?: 'grow' | 'steps'; tone?: 'soft' | 'ink' }
+const { items, variant = 'grow', tone = 'soft' } = Astro.props;
 ---
 <figure class:list={['plate', tone, 'stack', variant === 'steps' ? 'seq' : variant]}>
   <div class="sk-row">

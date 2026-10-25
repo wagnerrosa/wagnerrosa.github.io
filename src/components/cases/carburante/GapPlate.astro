@@ -1,6 +1,6 @@
 ---
 // Honesty: the same stretch of logbook, side by side. Left, the naive division; right, the gap rule. Same instrument, two outcomes.
-// Illustrative arithmetic from the project's gap doc (1,066 km ÷ 4 L), not a measurement.
+// The worked example from the project's gap spec (1,066 km ÷ 4 L), not a measurement.
 import Readout from '../../mdx/Readout.astro';
 interface Props { caption: string }
 const { caption } = Astro.props;
@@ -14,7 +14,7 @@ const { caption } = Astro.props;
       <li class="full"><span>Full</span></li>
     </ol>
     <Readout value="266" unit="km/l" label="266 kilometres per litre, an impossible figure" size="lg" />
-    <p class="gp-note">1,066 km ÷ 4 L. Plausible on a chart, impossible on a road, and it poisons the average.</p>
+    <p class="gp-note">1,066 km ÷ 4 L. The kilometres are true, the litres are not, and the result lands in the average.</p>
   </div>
   <div class="gp-col">
     <p class="gp-tag">With the gap rule</p>

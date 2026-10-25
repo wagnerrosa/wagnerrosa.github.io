@@ -1,6 +1,6 @@
 ---
 // Seven-segment number: the unlit segments ("88.8") sit behind the lit digits, like the pump display the app has to read.
-interface Props { value: string; label: string; unit?: string; size?: 'xl' | 'lg'; ghost?: string }
+interface Props { value: string; label: string; unit?: string; size?: 'xl' | 'lg' | 'md'; ghost?: string }
 const { value, label, unit, size = 'xl', ghost } = Astro.props;
 const off = ghost ?? value.replace(/\d/g, '8');
 ---

@@ -1,30 +1,39 @@
 ---
-// Trust: two real screens with pins, and beside them the documented misread, both readings at once (no control to operate).
+// Trust, as a sequence: what was on the display, what Vision returned (both readings at once, no control to operate),
+// then two real screens with pins on the checks that catch it. Input, extracted value, review.
 // A div, not a figure: the wheel's photo motion moves figure images, and the pins must stay on their screens.
 import { Image } from 'astro:assets';
 import { asset } from '../../../lib/assets';
 import Readout from '../../mdx/Readout.astro';
+interface Reading { what: string; truth: string; truthLabel: string; read: string; readLabel: string; unit: string; trueSays: string; readSays: string }
 interface Pin { title: string; text: string }
-interface Props { pins: Pin[]; shotA: { src: string; alt: string; x: number; y: number }; shotB: { src: string; alt: string; pins: { x: number; y: number }[] }; caption: string }
-const { pins, shotA, shotB, caption } = Astro.props;
-const sizes = '(max-width: 820px) 46vw, 230px';
+interface Shot { src: string; alt: string; pins: { x: number; y: number }[] }
+interface Props { readings: Reading[]; pins: Pin[]; shotA: Shot; shotB: Shot; caption: string }
+const { readings, pins, shotA, shotB, caption } = Astro.props;
+const sizes = '(max-width: 820px) 46vw, 340px';
 ---
 <div class="plate soft ocr">
+  <div class="readings">
+    {readings.map(r => (
+      <div class="rd-case">
+        <p class="rd-tag">{r.what}</p>
+        <dl>
+          <div class="rd-row"><dt>{r.truthLabel}</dt><dd><Readout value={r.truth} unit={r.unit} label={r.trueSays} size="md" /></dd></div>
+          <div class="rd-row bad"><dt>{r.readLabel}</dt><dd><Readout value={r.read} unit={r.unit} label={r.readSays} size="md" /></dd></div>
+        </dl>
+      </div>
+    ))}
+  </div>
   <div class="ocr-stack">
     <div class="st st-a">
       <Image src={asset(shotA.src)} alt={shotA.alt} widths={[320, 480, 640]} sizes={sizes} loading="lazy" decoding="async" fetchpriority="low" />
-      <span class="pin" style={`--x:${shotA.x}%;--y:${shotA.y}%`} aria-hidden="true">1</span>
+      {shotA.pins.map((p, i) => <span class="pin" style={`--x:${p.x}%;--y:${p.y}%`} aria-hidden="true">{i + 1}</span>)}
     </div>
     <div class="st st-b">
       <Image src={asset(shotB.src)} alt={shotB.alt} widths={[320, 480, 640]} sizes={sizes} loading="lazy" decoding="async" fetchpriority="low" />
-      {shotB.pins.map((p, i) => <span class="pin" style={`--x:${p.x}%;--y:${p.y}%`} aria-hidden="true">{i + 2}</span>)}
+      {shotB.pins.map((p, i) => <span class="pin" style={`--x:${p.x}%;--y:${p.y}%`} aria-hidden="true">{shotA.pins.length + i + 1}</span>)}
     </div>
   </div>
-  <dl class="readings">
-    <div><dt>On the dashboard</dt><dd><Readout value="27119" unit="km" label="27,119 kilometres" size="lg" /></dd></div>
-    <div class="bad"><dt>What Vision returned in one test</dt><dd><Readout value="71190" unit="km" label="71,190 kilometres" size="lg" /></dd></div>
-    <div class="rd-note"><dd>A jump of about 44,000 km. The field shows the distance from the last reading, so the error is visible before anything is saved.</dd></div>
-  </dl>
 </div>
 <ol class="notes pins" style={`--n:${pins.length}`}>
   {pins.map((p, i) => <li><span class="nt-pin" aria-hidden="true">{i + 1}</span><b>{p.title}</b> {p.text}</li>)}

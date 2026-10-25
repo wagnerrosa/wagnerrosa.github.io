@@ -28,6 +28,7 @@
 /* seven-segment readout: unlit segments behind the lit digits */
 .read-wide .readout { display: inline-flex; align-items: baseline; gap: .14em; --ro: clamp(72px, 17cqi, 176px); }
 .read-wide .readout.lg { --ro: clamp(46px, 10cqi, 112px); }
+.read-wide .readout.md { --ro: clamp(34px, 5.8cqi, 64px); }
 .read-wide .ro-digits { display: inline-grid; font: italic 700 var(--ro) / 1 'DSEG7', ui-monospace, Menlo, monospace; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .read-wide .ro-digits > * { grid-area: 1 / 1; justify-self: end; font-style: italic; }
 .read-wide .ro-digits i { color: rgb(255 255 255 / .07); }
@@ -67,8 +68,17 @@
 .read-wide .bt-label { display: flex; gap: .9em; margin-bottom: clamp(14px, 2cqi, 20px); font: 500 12px / 1.3 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
 .read-wide .bt-n { color: var(--ink); font-variant-numeric: tabular-nums; }
 .read-wide .bt-title { max-width: 16em; margin-bottom: clamp(28px, 4.4cqi, 48px); font: 500 clamp(36px, 6cqi, 72px) / 1 var(--display); letter-spacing: -.045em; color: var(--ink); text-wrap: balance; }
-.read-wide .beat > .plate, .read-wide .beat > .oc-cols { margin-top: clamp(40px, 6.4cqi, 72px); }
-.read-wide .beat > .bt-title + .plate, .read-wide .beat > .bt-title + .oc-cols { margin-top: 0; }
+.read-wide .beat > .plate, .read-wide .beat > .ledger { margin-top: clamp(40px, 6.4cqi, 72px); }
+.read-wide .beat > .bt-title + .plate, .read-wide .beat > .bt-title + .ledger { margin-top: 0; }
+/* copy that follows evidence opens a new row: both paragraphs of the pair move down together, so their tops stay aligned */
+.read-wide .beat > :is(.notes, .plate-cap, .ledger) + p:not([class]),
+.read-wide .beat > :is(.notes, .plate-cap, .ledger) + p:not([class]) + p:not([class]) { margin-top: clamp(48px, 7.2cqi, 88px); }
+
+/* the three decisions: the number as a seven-segment digit beside the statement, lit as it scrolls in (the readout rule below) */
+.read-wide .bt-head { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: end; column-gap: clamp(16px, 3.4cqi, 40px); margin-bottom: clamp(28px, 4.4cqi, 48px); }
+.read-wide .bt-head .bt-title { margin: 0; }
+.read-wide .bt-seg { --ro: clamp(104px, 19cqi, 216px); display: block; margin-bottom: -.04em; }
+.read-wide .bt-seg .ro-digits i { color: color-mix(in srgb, var(--ink) 7%, transparent); }
 
 /* opening: the photograph, the app layered over its lower edge */
 .read-wide .open { position: relative; margin-bottom: clamp(64px, 11cqi, 112px); }
@@ -86,6 +96,11 @@
 .read-wide .facts-block dl { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px clamp(16px, 3cqi, 32px); }
 .read-wide .note { max-width: 46em; margin-top: clamp(80px, 12cqi, 128px); padding-top: 0; border: 0; font: 400 13px / 1.5 var(--sans); color: var(--mute); }
 .read-wide .read-end { margin-top: clamp(40px, 6cqi, 64px); padding-top: 0; border-top: 0; }
+
+/* the brief: plain prose at the reading measure, a quieter register between the opening and the thesis */
+.read-wide > .brief { margin-top: clamp(80px, 13cqi, 144px); }
+.read-wide .brief p { margin: 0; font-size: clamp(19px, 1.9cqi, 23px); line-height: 1.6; color: var(--ink); }
+.read-wide .brief p + p { margin-top: 1em; }
 
 /* the thesis, set as type */
 .read-wide .thesis { margin-top: clamp(56px, 9cqi, 104px); font: 500 clamp(56px, 12.5cqi, 164px) / .9 var(--display); letter-spacing: -.06em; color: var(--ink); }
@@ -106,7 +121,7 @@
   background: #111;
 }
 .read-wide .plate img { border-radius: 0; }
-.read-wide .plate .sk img, .read-wide .plate .st img, .read-wide .hb-shot img {
+.read-wide .plate .sk img, .read-wide .plate .st img, .read-wide .pd-shot img {
   display: block; width: 100%; height: auto; aspect-ratio: 600 / 1304; object-fit: cover; border-radius: 13.5% / 6.2%;
   box-shadow: 0 0 0 1px var(--p-ring), 0 28px 56px -28px rgb(0 0 0 / .4);
 }
@@ -135,21 +150,19 @@
 .read-wide .stack.seq .sk { width: 26%; }
 .read-wide .stack.seq .sk:nth-child(2) { margin-top: clamp(16px, 3.6cqi, 40px); }
 .read-wide .stack.seq .sk:nth-child(3) { margin-top: clamp(32px, 7.2cqi, 80px); }
-.read-wide .stack.pair .sk-row { align-items: flex-start; }
-.read-wide .stack.pair .sk { width: 34%; }
-.read-wide .stack.pair .sk:nth-child(2) { margin-left: -6%; margin-top: 9%; }
 
-/* trust: two screens, and both readings beside them */
-.read-wide .ocr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 5cqi, 64px); align-items: center; }
-.read-wide .ocr-stack { position: relative; aspect-ratio: 1 / 1.42; }
-.read-wide .st { position: absolute; width: 56%; }
-.read-wide .st-a { left: 0; top: 0; }
-.read-wide .st-b { right: 0; top: 14%; z-index: 1; }
-.read-wide .readings { display: grid; gap: clamp(20px, 3.6cqi, 36px); margin: 0; }
-.read-wide .readings div { display: grid; gap: 8px; }
-.read-wide .readings dt, .read-wide .gp-tag { margin: 0; font: 600 11px / 1.3 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--p-mute); }
-.read-wide .readings dd { margin: 0; }
-.read-wide .rd-note dd, .read-wide .gp-note { max-width: 36ch; margin: 0; font: 400 14px / 1.5 var(--sans); color: var(--p-text); }
+/* trust, read top to bottom: what the display said and what Vision returned, then the two screens that catch it, side by side and large enough to read */
+.read-wide .ocr { display: grid; gap: clamp(40px, 7cqi, 80px); }
+.read-wide .readings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px clamp(24px, 5cqi, 64px); }
+.read-wide .ocr-stack { display: flex; justify-content: center; align-items: flex-start; gap: 6%; }
+.read-wide .st { position: relative; width: 40%; }
+.read-wide .st-b { margin-top: 12%; }
+.read-wide .rd-case dl { display: grid; gap: clamp(12px, 2cqi, 20px); margin: 14px 0 0; }
+.read-wide .rd-row { display: grid; gap: 6px; justify-items: start; }
+.read-wide .rd-row dt { margin: 0; font: 500 13px / 1.3 var(--sans); color: var(--p-mute); }
+.read-wide .rd-row dd { margin: 0; }
+.read-wide .rd-tag, .read-wide .gp-tag { margin: 0; font: 600 11px / 1.3 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--p-mute); }
+.read-wide .gp-note { max-width: 36ch; margin: 0; font: 400 14px / 1.5 var(--sans); color: var(--p-text); }
 
 /* honesty: the same stretch, two outcomes, side by side */
 .read-wide .gap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 6cqi, 72px); align-items: start; }
@@ -157,30 +170,33 @@
 .read-wide .gap .track { width: 100%; margin: 6px 0 10px; }
 .read-wide .gap .track li { color: var(--p-text); }
 
-/* habit: the screen and the medals on one plate */
-.read-wide .habit { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(24px, 5cqi, 64px); align-items: center; }
-.read-wide .hb-shot { position: relative; width: min(100%, 290px); justify-self: center; }
-.read-wide .hb-medals { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 3.4cqi, 36px) 12px; }
-.read-wide .hb-medals li { display: grid; justify-items: center; gap: 10px; margin: 0; text-align: center; font: 500 12px / 1.3 var(--sans); color: var(--p-mute); }
-.read-wide .hb-medals img { width: min(100%, 104px); height: auto; }
+/* the product: a still raised in the middle, two clips lower beside it, the medals underneath */
+.read-wide .pd-row { display: flex; justify-content: center; align-items: flex-start; gap: 5%; }
+.read-wide .pd-clip { width: 25%; margin-top: 14%; }
+.read-wide .pd-shot { width: 32%; }
+.read-wide .pd-medals { list-style: none; padding: 0; margin: clamp(40px, 6.4cqi, 72px) 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px clamp(12px, 3.2cqi, 36px); }
+.read-wide .pd-medals li { display: grid; justify-items: center; gap: 8px; width: clamp(64px, 10.5cqi, 104px); margin: 0; text-align: center; font: 500 12px / 1.3 var(--sans); color: var(--p-mute); }
+.read-wide .pd-medals img { width: 100%; height: auto; }
 
-/* motion: three clips on one plate */
-.read-wide .motion { display: flex; justify-content: center; gap: 4%; }
-.read-wide .motion .phone { width: 27%; }
-
-/* outcome */
-.read-wide .oc-cols { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px clamp(20px, 4cqi, 48px); }
-.read-wide .oc-cols li { margin: 0; }
-.read-wide .oc-cols h3 { margin: 0 0 10px; font: 600 12px / 1.3 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
-.read-wide .oc-cols p { margin: 0; font: 400 16px / 1.55 var(--sans); letter-spacing: -.01em; color: var(--ink); }
+/* outcome: a status ledger. The marks borrow the tank diagram's: filled = live, ring = TestFlight, dot = signal, dashed = open */
+.read-wide .ledger { display: grid; gap: clamp(18px, 2.8cqi, 28px); margin-bottom: 0; }
+.read-wide .lg-row { display: grid; grid-template-columns: minmax(10em, 2fr) minmax(0, 7fr); column-gap: clamp(16px, 4cqi, 48px); align-items: start; }
+.read-wide .lg-row dt { display: flex; align-items: center; gap: 10px; margin: 0; font: 600 12px / 25px var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+.read-wide .lg-row dd { max-width: 44em; margin: 0; font: 400 16px / 25px var(--sans); letter-spacing: -.01em; color: var(--ink-2); }
+.read-wide .lg-mark { flex: none; box-sizing: border-box; width: 12px; height: 12px; border-radius: 50%; }
+.read-wide .lg-live .lg-mark { background: var(--accent); }
+.read-wide .lg-beta .lg-mark { border: 2px solid var(--accent); }
+.read-wide .lg-signal .lg-mark { width: 8px; height: 8px; margin: 0 2px; background: var(--mute); }
+.read-wide .lg-open .lg-mark { border: 2px dashed var(--mute); }
 .read-wide .beat > .link-list { margin-top: clamp(36px, 5cqi, 56px); }
 
 @container case (max-width: 640px) {
   .read-wide .beat { grid-template-columns: minmax(0, 1fr); }
-  .read-wide .beat > p:not([class]) + p:not([class]) { margin-top: 1em; }
-  .read-wide .ocr, .read-wide .habit, .read-wide .gap { grid-template-columns: minmax(0, 1fr); }
-  .read-wide .ocr-stack { width: min(100%, 340px); justify-self: center; }
-  .read-wide .oc-cols { grid-template-columns: minmax(0, 1fr); }
+  .read-wide .beat > p:not([class]) + p:not([class]),
+  .read-wide .beat > :is(.notes, .plate-cap, .ledger) + p:not([class]) + p:not([class]) { margin-top: 1em; }
+  .read-wide .gap { grid-template-columns: minmax(0, 1fr); }
+  .read-wide .st { width: 46%; }
+  .read-wide .lg-row { grid-template-columns: minmax(0, 1fr); }
 }
 @container case (max-width: 560px) {
   .read-wide .op-photo { aspect-ratio: 4 / 5; }
@@ -194,8 +210,10 @@
   .read-wide .stack.grow .sk:nth-child(3) { width: 40%; margin-left: -8%; }
   .read-wide .stack.seq .sk-row { gap: 3%; }
   .read-wide .stack.seq .sk { width: 31%; }
-  .read-wide .stack.pair .sk { width: 46%; }
-  .read-wide .stack.pair .sk:nth-child(2) { margin-left: -8%; }
-  .read-wide .motion { gap: 3%; }
-  .read-wide .motion .phone { width: 31%; }
+  .read-wide .readings { grid-template-columns: minmax(0, 1fr); }
+  .read-wide .pd-row { gap: 4%; }
+  .read-wide .pd-clip { width: 28%; }
+  .read-wide .pd-shot { width: 36%; }
+  .read-wide .pd-medals { gap: 16px 8px; }
+  .read-wide .pd-medals li { width: calc((100% - 16px) / 3); max-width: 88px; }
 }

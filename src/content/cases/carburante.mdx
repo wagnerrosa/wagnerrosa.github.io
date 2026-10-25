@@ -10,7 +10,7 @@ presentation: editorial
 metaTitle: "Carburante: fast in, honest out | Wagner Rosa"
 description: "A motorcycle logbook I designed and shipped solo to the App Store: three-step logging, OCR that suggests and never decides, and consumption maths that won't show a number it can't stand behind."
 ogDescription: "Product case study: a solo iOS app for riders. Three decisions on friction, trust and honest consumption, from first conversations to the App Store."
-llms: "Solo product design and iOS build of a motorcycle logbook: three-step fill-ups, OCR that suggests and never decides, tank-to-tank consumption that breaks on gaps, achievements and levels. Live on the App Store in Brazil; group challenges in TestFlight."
+llms: "Solo product design and iOS build of a motorcycle logbook: three-step fill-ups, OCR that suggests and never decides, tank-to-tank consumption that breaks on gaps, achievements and levels. Live on the App Store in Brazil; group challenges in TestFlight; the success measure (more than three fill-ups per rider) not reached yet."
 blurb: "A motorcycle logbook, designed and built solo and live on the App Store. Fast to fill, honest in what it shows back: three decisions on friction, OCR trust and consumption maths."
 readMinutes: 5
 datePublished: "2026-10-25"
@@ -21,18 +21,18 @@ order: 1
 
 import { Facts, Lead, LinkList, Note } from '../../components/mdx';
 import Opening from '../../components/cases/carburante/Opening.astro';
+import Brief from '../../components/cases/carburante/Brief.astro';
 import Beat from '../../components/cases/carburante/Beat.astro';
 import Thesis from '../../components/cases/carburante/Thesis.astro';
 import Stack from '../../components/cases/carburante/Stack.astro';
 import OcrPlate from '../../components/cases/carburante/OcrPlate.astro';
 import GapPlate from '../../components/cases/carburante/GapPlate.astro';
-import MotionPlate from '../../components/cases/carburante/MotionPlate.astro';
-import HabitPlate from '../../components/cases/carburante/HabitPlate.astro';
+import ProductPlate from '../../components/cases/carburante/ProductPlate.astro';
 import Outcome from '../../components/cases/carburante/Outcome.astro';
 
 <Lead>
 
-Carburante is an iPhone app for motorcycle riders: log a fill-up in three steps, see what the bike really gets per litre, know when the next service is due. I defined it, designed it and built it, and it has been on the App Store in Brazil since 7 October 2026.
+Carburante is an iPhone logbook for motorcycles: fill-ups, consumption, maintenance. I defined it, designed it and built it on my own, and it has been on the App Store in Brazil since 7 October 2026.
 
 </Lead>
 
@@ -40,107 +40,90 @@ Carburante is an iPhone app for motorcycle riders: log a fill-up in three steps,
 
 <Facts label="Project facts" items={[{"label":"Role","value":"Product designer and developer, solo"},{"label":"Period","value":"2026 to present"},{"label":"Platform","value":"iPhone, iOS 18+. SwiftUI, SwiftData, Supabase"},{"label":"Status","value":"On the App Store in Brazil since 7 Oct 2026"},{"label":"Scope","value":"Product strategy, UX, UI, brand, motion, gamification, landing page, iOS development, AI-assisted workflow","wide":true}]} />
 
-<Beat n="01" label="Problem" title={["One wrong digit spoils the average."]}>
+<Brief>
 
-I started from my own riding and from conversations with friends and other riders about how they keep track of their bikes: fuel, spend, oil changes. They used spreadsheets, notes and apps built for cars.
+I started from my own riding and from conversations with other riders about how they keep track of their bikes: spreadsheets, notes, apps made for cars.
 
-At a petrol station a rider has a helmet in one hand and a phone in the other, so logging has to cost almost nothing. And one wrong entry spoils every average, so what the app shows back has to be honest.
+Two details shaped the rest. At the pump, a rider has a helmet in one hand and a phone in the other, so logging has to cost almost nothing. And consumption is an average, so one wrong entry quietly spoils every number after it. The fastest way to log is to accept whatever gets typed or scanned, and that is exactly what an honest average can't afford.
 
-<Thesis lines={["Fast in.", "Honest out."]}>Three decisions answer the two halves: friction, trust and honesty.</Thesis>
+</Brief>
 
-</Beat>
+<Thesis lines={["Fast in.", "Honest out."]}>Three decisions follow from it: one about effort, two about trust.</Thesis>
 
-<Beat n="02" label="Process" title={["Three builds to find the quiet."]}>
+<Beat decision n="1" label="Effort" title={["Three steps.", "One number."]}>
 
-The first build was native and correct, and average consumption was one grey row among twelve. The second borrowed from Health and gained hierarchy, and weight. The third kept one hero number.
+The Summary, the screen a rider sees every time the app opens, took three builds. The first was a native settings-style list, complete and correct, with average km/l as one grey row among twelve. The second borrowed from Apple Health: a hero number, plus a status banner, a full-width Fuel button, coloured tiles and a Wallet-style card.
 
-**Calm is subtraction.** Colour is scarce and carries meaning: a thirsty tank is information, so comparisons stay grey, and red means error or overdue.
+My note on it was short: simpler before, heavy now, too many buttons going to the same place. I had added instead of organising. The third build kept the hero number and the grid, moved the action to a + in the toolbar, dropped the banner (silence already means all is well) and took the colour out of the tiles.
 
 <Stack variant="grow" tone="soft" items={[
-  {"src":"carburante/process-v1.webp","alt":"First version of the Summary screen: grouped lists of label and value rows, with average consumption as one grey row among twelve","label":"v1","note":"Settings-style lists. Complete, and the number that matters is a grey row."},
-  {"src":"carburante/process-v2.webp","alt":"Second version of the Summary screen: a blue Fuel button, four stat tiles with coloured icon chips, and two list cards","label":"v2","note":"Health-style cards. Hierarchy arrived, and so did weight."},
-  {"src":"carburante/process-v3.webp","alt":"Third version of the Summary screen: a large 19.8 km/l figure under the bike name, then four stat tiles","label":"v3","note":"One hero number. Everything else supports it."}
+  {"src":"carburante/process-v1.webp","alt":"First version of the Summary screen: grouped lists of label and value rows, with average consumption as one grey row among twelve","label":"v1","note":"Settings-style list. Average km/l is one grey row of twelve."},
+  {"src":"carburante/process-v2.webp","alt":"Second version of the Summary screen: a blue Fuel button, four stat tiles with coloured icon chips, and two list cards","label":"v2","note":"Health-style cards. Five visual languages on one screen."},
+  {"src":"carburante/process-v3.webp","alt":"Third version of the Summary screen: a large 19.8 km/l figure under the bike name, then four stat tiles","label":"v3","note":"One hero number. Colour only where it means something."}
 ]} />
 
-</Beat>
+That became the test for every screen: does this add weight or take it away? Logging got the same treatment. It is three steps, the phone fills in the date, time and place, and both numbers can be typed or read from a photo.
 
-<Beat n="03" label="Friction" title={["Three steps.", "The phone does the rest."]}>
-
-Odometer, amount and litres, review. Date, time and place come from the phone, and the fuel type is the last one used.
-
-The first km/l needs two full tanks, so until then the Summary counts down the tanks still missing instead of showing an empty chart.
+Even the chart waits. The first km/l needs two full tanks, so until then the Summary counts down the tanks still missing instead of drawing an empty graph.
 
 <Stack variant="steps" tone="ink" items={[
   {"src":"carburante/fuel-step-1.webp","alt":"Fuel-up step one: an odometer of 22,039 km read from a photo, with a line saying 83 km since the last one","label":"Odometer.","note":"Typed, or read from a photo of the dashboard."},
   {"src":"carburante/fuel-step-2.webp","alt":"Fuel-up step two: value R$ 28.49 and 4.135 litres read from a receipt, with the price per litre worked out","label":"Amount and litres.","note":"Typed, or read from the receipt."},
-  {"src":"carburante/fuel-step-3.webp","alt":"Fuel-up review: this tank's consumption of 20.1 km/l in large type, then odometer, value and litres, fuel type, a map pin and the date","label":"Review.","note":"The tank's km/l shows before anything is saved."}
+  {"src":"carburante/fuel-step-3.webp","alt":"Fuel-up review: this tank's consumption of 20.1 km/l in large type, then odometer, value and litres, fuel type, a map pin and the date","label":"Review.","note":"Fuel type starts on the last one used. The tank's km/l shows before saving."}
 ]} />
 
 </Beat>
 
-<Beat n="04" label="Trust" title={["OCR suggests.", "The rider decides."]}>
+<Beat decision n="2" label="Trust" title={["OCR suggests.", "The rider decides."]}>
 
-Apple's Vision framework reads the odometer or the receipt on the phone and pre-fills the fields. In my own tests it also misread: a 27,119 km odometer came back as 71,190, and a pump total of R$ 28.49 as 2,849.
+Apple's Vision framework reads the photo on the phone and fills in the fields. Its mistakes look like real numbers. On a Yamaha Neo's drum odometer it lost the first digit in the bezel's shadow and stuck the tenths roller on the end: 27,119 km became 71,190, once in three tries. At a pump, R$ 28.49 became 2,849, because the decimal point on the segment display never registered.
 
-So the review is mandatory, and the interface makes errors loud.
+So the design assumes the reading will sometimes be wrong. OCR only fills fields, review is mandatory, and each check turns raw input into a figure riders have a feel for: kilometres since the last fill-up, price per litre, this tank's km/l. A misread total is easy to miss. R$ 633 a litre isn't.
 
-<OcrPlate caption="The readings illustrate a documented test failure; they are not a screenshot. Reading the pump display is still unreliable, and the product site says so."
-  pins={[
-    {"title":"Distance from the last reading","text":"sits under the odometer field."},
-    {"title":"A price per litre outside R$ 2 to 15","text":"turns its row orange."},
-    {"title":"The tank's km/l shows before saving,","text":"so a wrong digit looks absurd."}
+<OcrPlate caption="Readings from field photos, as logged in my test notes. Screens: simulator and demo data, with the misread entered to test the warnings."
+  readings={[
+    {"what":"Odometer · drum display","truth":"27119","truthLabel":"On the bike","read":"71190","readLabel":"Vision read","unit":"km","trueSays":"27,119 kilometres","readSays":"71,190 kilometres"},
+    {"what":"Pump total · segment display","truth":"28.49","truthLabel":"On the pump","read":"2849","readLabel":"Vision read","unit":"R$","trueSays":"28.49 reais","readSays":"2,849 reais"}
   ]}
-  shotA={{"src":"carburante/app-hodometro.webp","alt":"Fuel-up step one: an odometer field with 24285 km typed and a line saying 307 km since the last one","x":46,"y":35.8}}
-  shotB={{"src":"carburante/app-revisao.webp","alt":"Fuel-up review: tank consumption of 28.0 km/l in large type, then odometer, value and litres rows with price per litre","pins":[{"x":95,"y":47.4},{"x":92,"y":22}]}} />
-
-</Beat>
-
-<Beat n="05" label="Honesty" title={["A gap breaks", "the measurement."]}>
-
-Consumption is the kilometres between two full tanks divided by every litre added in between; dividing entry by entry is simpler, and wrong. Forget a few fill-ups and the kilometres are true while the litres are not.
-
-So a gap breaks the measurement: the next full tank becomes a new anchor, and only consumption skips the stretch. **I chose a missing number over a plausible lie.**
-
-<GapPlate caption="Arithmetic from one field case, not a measurement. An 80 km/l ceiling also drops impossible stretches on its own." />
-
-</Beat>
-
-<Beat n="06" label="Colour" title={["The bike's colour.", "The system's colour."]}>
-
-The accent follows the manufacturer of the active bike, ten brands in all. The rider's identity is the motorcycle, not my logo.
-
-Harley and KTM orange collides with “due soon”, so state colour never comes from the theme: grey on track, orange from 80% of the interval, red when overdue.
-
-<Stack variant="pair" tone="soft" items={[
-  {"src":"carburante/theme-harley-dark.webp","alt":"The Summary screen in dark mode with an orange theme for a Harley-Davidson: consumption card, bar chart and four tiles in orange","label":"Orange theme.","note":"The whole interface takes the bike's colour."},
-  {"src":"carburante/theme-maintenance.webp","alt":"Maintenance list in an orange theme: oil change with an orange progress bar, rear tyre and brakes with grey bars, each service with its own coloured tile","label":"State is not theme.","note":"Orange bar: due soon. Grey: on track. The tile colour is the service."}
-]} />
-
-</Beat>
-
-<Beat n="07" label="In motion" title={["The rest of the product."]}>
-
-<MotionPlate items={[
-  {"src":"/assets/carburante/consumo.mp4","poster":"/assets/carburante/consumo-poster.webp","label":"Consumption screen scrubbing through a long bar chart","caption":"Consumption, by period and against the bike's category."},
-  {"src":"/assets/carburante/manutencao.mp4","poster":"/assets/carburante/manutencao-poster.webp","label":"Maintenance list with scheduled services and a month-by-month history","caption":"Maintenance, by kilometres or months, whichever comes first."},
-  {"src":"/assets/carburante/garagem.mp4","poster":"/assets/carburante/garagem-poster.webp","label":"Garage screen with several bikes, records and lifetime totals","caption":"Garage, with records and lifetime totals. Demo data throughout."}
-]} />
-
-</Beat>
-
-<Beat n="08" label="Habit" title={["A logbook only works as a habit."]}>
-
-**25 achievements and a 10-level profile are on the App Store.** Backdated history never earns a medal, so a medal always means something the rider did. With Premium, an earned medal can become the app icon.
-
-**In TestFlight, not on the store:** group challenges, a private scoreboard for friends, adapted from GymRats. There is no usage data on them yet.
-
-<HabitPlate caption="The Achievements section, with demo data. The 3D objects are AI-assisted assets."
   pins={[
-    {"title":"A level, not a gate.","text":"Medal points add up to ten levels. No feature depends on one.","x":16,"y":45.3},
-    {"title":"Earned and Available.","text":"A bike category the rider never registered stays hidden, so the to-do list stays short.","x":90,"y":54.2},
-    {"title":"One object, four milestones.","text":"First fill-up, first average, on average and the ten-tank habit differ by number.","x":81,"y":64.5}
+    {"title":"Step 2 divides total by litres.","text":"Outside R$ 2 to 15 a litre the line turns orange. When this misread first happened, it was grey."},
+    {"title":"Review shows the tank's km/l before saving,","text":"and flags it when it's far above the bike's usual."},
+    {"title":"The warning names a second cause:","text":"fill-ups never logged, with a switch to mark them."}
   ]}
+  shotA={{"src":"carburante/app-preco-aviso.webp","alt":"Fuel-up step two: value 2,849 reais and 4.5 litres, with an orange warning underneath saying R$ 633.111 per litre, check the value and the litres","pins":[{"x":8,"y":43.9}]}}
+  shotB={{"src":"carburante/app-revisao-aviso.webp","alt":"Fuel-up review: this tank's consumption of 68.2 km/l, an orange warning that it is too high for this bike, the price per litre flagged in orange, and a switch for having filled up without logging","pins":[{"x":7,"y":37},{"x":84,"y":80.7}]}} />
+
+</Beat>
+
+<Beat decision n="3" label="Honesty" title={["A gap breaks", "the measurement."]}>
+
+Consumption is the distance between two full tanks divided by every litre added in between. Dividing each entry by the one before is simpler, and wrong as soon as someone tops up halfway. But the method assumes nothing is missing.
+
+Forget to log three fill-ups and the kilometres stay true while the litres don't: 1,066 km over 4 litres is 266 km/l, straight into the average, the chart, the records and the medals. A ceiling of 80 km/l now drops stretches like that. The harder case is a single missed fill-up, which roughly doubles the result. Wrong, and believable.
+
+<GapPlate caption="A worked example from the gap rule's spec, not a measurement." />
+
+A big odometer jump has two causes that need opposite responses. A misread is a wrong number to fix. Missed fill-ups leave the number right, but the stretch before it can't count. The app can't tell which, so it asks: the odometer's check mark turns into an orange “check the km” with a button, “I filled up without logging”. Review warns at twice the bike's median km/l, about what one missed fill-up does.
+
+A marked gap makes the next full tank a fresh start. Distance, spend and the odometer keep counting; only consumption skips the stretch, and the Summary says how many full tanks it needs to show a number again. The app never blocks a save or marks a gap by itself, since a wrong guess either way hides a real error. **I chose a missing number over a plausible lie.**
+
+</Beat>
+
+<Beat label="The product" title={["The same rules,", "everywhere else."]}>
+
+The accent colour follows the active bike's manufacturer, across ten brands: the rider's identity is the motorcycle, not my logo. But Harley and KTM orange is also the colour of “service due soon”, so state colour never comes from the theme. Maintenance bars are grey on track, orange from 80% of the interval, red when overdue.
+
+Habit matters because gaps are the problem from decision 3. There are 25 achievements and a ten-level profile on the store; levels unlock nothing, and backdated entries never earn a medal. With Premium, an earned medal can become the app icon. Group challenges, adapted from GymRats, are in TestFlight with no usage data yet.
+
+<ProductPlate caption="Demo data throughout. The 3D medals are AI-assisted."
+  left={{"src":"/assets/carburante/manutencao.mp4","poster":"/assets/carburante/manutencao-poster.webp","label":"Maintenance list in an orange theme: the oil change bar is orange because it is due soon, the tyre and brake bars are grey, then a month-by-month history"}}
   shot={{"src":"carburante/app-conquistas.webp","alt":"The Achievements section of the Garage screen: a hexagon showing level 4 with 30 points, a progress bar, an Earned and Available tab control, and a grid of 3D medals"}}
+  right={{"src":"/assets/carburante/consumo.mp4","poster":"/assets/carburante/consumo-poster.webp","label":"Consumption screen scrubbing through a long bar chart, then a comparison with the average for the bike's category"}}
+  notes={[
+    {"title":"Maintenance,","text":"by kilometres or months. The tile is the service, the bar the state."},
+    {"title":"Achievements,","text":"with a level that gates nothing."},
+    {"title":"Consumption,","text":"by period and against the bike's category."}
+  ]}
   medals={[
     {"src":"carburante/badges/firstFuel.webp","label":"First fuel-up"},
     {"src":"carburante/badges/bestConsumption.webp","label":"Above average"},
@@ -152,14 +135,19 @@ Harley and KTM orange collides with “due soon”, so state colour never comes 
 
 </Beat>
 
-<Beat n="09" label="Outcome" title={["What shipped.", "What to measure next."]}>
+<Beat label="Outcome" title={["Shipped.", "Not yet proven."]}>
 
-<Outcome
-  cols={[
-    {"title":"Delivered","text":"A native iPhone app, from concept to the App Store: three-step fill-ups with OCR assistance, tank-to-tank consumption, maintenance by kilometres or months, a garage in ten brand themes, achievements and an optional Premium plan."},
-    {"title":"Not yet known","text":"My success measure is a rider logging more than three fuel-ups. It has not been read, so I claim nothing about it. Version 1.2, in TestFlight, adds a first-run reminder and drop-off events."},
-    {"title":"Carried forward","text":"Instrument the first run before launch. Build the OCR test set before the OCR. The case is one loop: find the problem, decide, build, ship, observe, change."}
-  ]} />
+<Outcome rows={[
+  {"status":"Live","tone":"live","text":"1.0 since 7 October 2026; 1.1, with an optional Premium plan, since 16 October. Everything described above except group challenges."},
+  {"status":"In TestFlight","tone":"beta","text":"1.2: a reminder for riders who register a bike and never log, and drop-off events in the fill-up flow. 1.3: group challenges."},
+  {"status":"Early signal","tone":"signal","text":"The store data is small and points at one step: riders registered a bike and didn't come back for a first fill-up. It shows where they stop, not why."},
+  {"status":"Not reached","tone":"open","text":"My success measure, set before launch: a rider logging more than three fill-ups. Nobody from the store has reached it yet."},
+  {"status":"Not measured","tone":"open","text":"How long a fill-up takes in real use, and how often OCR gets it right. I have field cases, not rates."}
+]} />
+
+**Measure the steps as well as the result.** I launched with fill-up events and a dashboard waiting for the third one, and nothing for the steps before it. When riders stopped, I could see where but not why. Bike-form events came in 1.1; fill-up drop-off is in 1.2. Next time, the OCR test photos come before the parser, too.
+
+**Check what the nudges depend on.** The app asked for notification permission only after the first saved fill-up, so the riders who most needed a reminder could never get one. 1.2 asks right after the bike is registered. Shipping it is the next step, and the next thing to measure.
 
 <LinkList>
 
@@ -173,6 +161,6 @@ Harley and KTM orange collides with “due soon”, so state colour never comes 
 
 <Note>
 
-Screens and clips use demo data. The 3D achievement objects are AI-assisted. Written on 25 October 2026.
+Screens and clips use demo data. The interface is in Portuguese; quoted labels are my translations. The 3D medals are AI-assisted. Written on 25 October 2026, with store data as of that day.
 
 </Note>

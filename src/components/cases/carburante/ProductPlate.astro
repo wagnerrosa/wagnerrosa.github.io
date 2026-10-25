@@ -1,0 +1,36 @@
+---
+// The rest of the product on one plate: a still in the middle, larger and raised, two clips beside it lower down, the medals underneath.
+// Clips: poster until visible, played by wheel.ts while on screen, never under reduced motion. Notes under the plate, left to right.
+import { Image } from 'astro:assets';
+import { asset } from '../../../lib/assets';
+interface Clip { src: string; poster: string; label: string }
+interface Medal { src: string; label: string }
+interface Note { title: string; text: string }
+interface Props { left: Clip; shot: { src: string; alt: string }; right: Clip; medals: Medal[]; notes: Note[]; caption: string }
+const { left, shot, right, medals, notes, caption } = Astro.props;
+const row = [left, shot, right];
+---
+<div class="plate ink prod">
+  <div class="pd-row">
+    {row.map(it => 'poster' in it ? (
+      <div class="phone pd-clip">
+        <div class="ph-clip" style={`background-image:url(${it.poster})`}>
+          <video data-clip muted loop playsinline controls preload="none" poster={it.poster} aria-label={it.label}>
+            <source src={it.src} type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    ) : (
+      <div class="pd-shot">
+        <Image src={asset(it.src)} alt={it.alt} widths={[320, 480, 640, 900]} sizes="(max-width: 820px) 40vw, 300px" loading="lazy" decoding="async" fetchpriority="low" />
+      </div>
+    ))}
+  </div>
+  <ul class="pd-medals" aria-label={`${medals.length} of the 25 achievements`}>
+    {medals.map(m => <li><Image src={asset(m.src)} alt="" width={112} height={112} widths={[112, 224]} sizes="112px" loading="lazy" decoding="async" fetchpriority="low" /><span>{m.label}</span></li>)}
+  </ul>
+</div>
+<ol class="notes" style={`--n:${notes.length}`}>
+  {notes.map(n => <li><b>{n.title}</b> {n.text}</li>)}
+</ol>
+<p class="plate-cap">{caption}</p>

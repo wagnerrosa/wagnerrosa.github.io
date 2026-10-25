@@ -1,11 +1,24 @@
 ---
 // One beat of the case. No box: the page is the surface and whitespace separates beats. One left axis: eyebrow, statement,
 // then the copy in two columns, then the evidence (plates) across the full width. The whole beat drifts with the wheel as one piece.
-interface Props { n: string; label: string; title: string[] }
-const { n, label, title } = Astro.props;
+// `decision` beats carry their number as a seven-segment digit beside the statement: the three decisions are the case's spine.
+interface Props { n?: string; label: string; title: string[]; decision?: boolean }
+const { n, label, title, decision = false } = Astro.props;
 ---
-<section class="beat wide">
-  <p class="bt-label"><span class="bt-n">{n}</span><span>{label}</span></p>
-  <h2 class="bt-title">{title.map((t, i) => <>{i > 0 && <br />}{t}</>)}</h2>
+<section class:list={['beat', 'wide', { decision }]}>
+  {decision ? (
+    <div class="bt-head">
+      <span class="bt-seg" aria-hidden="true"><span class="ro-digits"><i>8</i><b>{n}</b></span></span>
+      <div>
+        <p class="bt-label"><span class="bt-n">Decision {n} of 3</span><span>{label}</span></p>
+        <h2 class="bt-title">{title.map((t, i) => <>{i > 0 && <br />}{t}</>)}</h2>
+      </div>
+    </div>
+  ) : (
+    <>
+      <p class="bt-label">{n && <span class="bt-n">{n}</span>}<span>{label}</span></p>
+      <h2 class="bt-title">{title.map((t, i) => <>{i > 0 && <br />}{t}</>)}</h2>
+    </>
+  )}
   <slot />
 </section>
