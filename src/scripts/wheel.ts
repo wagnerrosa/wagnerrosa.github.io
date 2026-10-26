@@ -177,6 +177,7 @@ function arcUpdate() {
 const docs = new Map<string, Doc>();
 const pageArticle = stage.querySelector<HTMLElement>(':scope > article[data-article]');
 if (pageArticle) {
+  holdImages(pageArticle);   // before it leaves the document: a lazy image that is detached gets fetched at once
   pageArticle.remove();
   docs.set(pageArticle.dataset.url!, { url: pageArticle.dataset.url!, slug: pageArticle.dataset.slug!, lock: pageArticle.dataset.lock!, title: pageArticle.dataset.title!, el: pageArticle, gate: null });
 }
@@ -212,7 +213,7 @@ const articleOf = (html: string) => {
   const el = new DOMParser().parseFromString(html, 'text/html').querySelector<HTMLElement>('article[data-article]');
   if (!el) return null;
   el.querySelectorAll('script, style').forEach(n => n.remove());
-  return document.importNode(el, true) as HTMLElement;
+  return el;   // stays in the parsed (inert) document until it is read
 };
 const docFrom = (el: HTMLElement, gate: Gate | null = null): Doc => ({ url: el.dataset.url!, slug: el.dataset.slug!, lock: el.dataset.lock!, title: el.dataset.title!, el, gate });
 
@@ -276,6 +277,29 @@ function bindBody(r: Reading) {   // (re)collect what the arc / photo effects mo
   if (clipIO) clipsOf(article).forEach(v => clipIO.observe(v));
 }
 
+/* Images of an article (lazy ones): the browser's own lazy loading fetched every one of them as soon as the layer arrived (a direct visit to a case loaded 16 of 16, however far down). So the layer holds them back itself: sources move to data-* on the way in, and an observer on the layer gives them back when they come within a screen or two of its visible part */
+const IMG_AHEAD = '1400px 0px';
+function holdImages(article: HTMLElement) {
+  article.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach(i => {
+    if (i.dataset.src != null || i.dataset.srcset != null) return;
+    const src = i.getAttribute('src'), srcset = i.getAttribute('srcset');
+    if (src) { i.dataset.src = src; i.removeAttribute('src'); }
+    if (srcset) { i.dataset.srcset = srcset; i.removeAttribute('srcset'); }
+  });
+}
+function releaseImages(layer: HTMLElement) {
+  const held = [...layer.querySelectorAll<HTMLImageElement>('img[data-src], img[data-srcset]')];
+  if (!held.length) return;
+  const give = (i: HTMLImageElement) => {
+    i.loading = 'eager';
+    if (i.dataset.srcset) { i.srcset = i.dataset.srcset; delete i.dataset.srcset; }
+    if (i.dataset.src) { i.src = i.dataset.src; delete i.dataset.src; }
+  };
+  if (!('IntersectionObserver' in window)) { held.forEach(give); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); give(e.target as HTMLImageElement); } }), { root: layer, rootMargin: IMG_AHEAD });
+  held.forEach(i => io.observe(i));
+}
+
 async function openReading(url: string, opts: { push?: boolean; swap?: boolean; initial?: boolean } = {}) {
   const { push = true, swap = false, initial = false } = opts;
   if (reading?.url === url) return;
@@ -290,10 +314,11 @@ async function openReading(url: string, opts: { push?: boolean; swap?: boolean; 
   const el = document.createElement('div');
   el.className = 'layer read';
   el.setAttribute('role', 'region'); el.setAttribute('aria-label', doc.title); el.tabIndex = -1;
-  if (doc.el) { prepareArticle(doc.el); el.appendChild(document.importNode(doc.el, true)); }
+  if (doc.el) { prepareArticle(doc.el); holdImages(doc.el); el.appendChild(document.importNode(doc.el, true)); }
   else el.innerHTML = gateHTML(items[readK] ? items[readK].a.textContent!.trim() : doc.slug);
   if (!initial) el.style.transform = 'translateY(100%)';
   stage.appendChild(el);
+  releaseImages(el);
 
   const prog = document.createElement('sup'); prog.className = 'prog'; prog.textContent = doc.gate ? 'Private' : '0%';
   if (els[readK]) els[readK].querySelector('a')!.appendChild(prog);
