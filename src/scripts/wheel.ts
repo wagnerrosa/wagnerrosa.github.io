@@ -444,10 +444,6 @@ function layout() {
   for (let j = Math.ceil(-1.6 / dt2); j <= Math.floor((1.6 + maxSlot * step) / dt2); j++) {
     const a = j * dt2, c = Math.cos(a), sn = Math.sin(a), len = j % 4 === 0 ? 11 : 5;
     ticks += `<line class="${j % 4 === 0 ? 'major' : ''}" x1="${(cx + dir * (R - 4) * c).toFixed(1)}" y1="${(cy + (R - 4) * sn).toFixed(1)}" x2="${(cx + dir * (R - 4 - len) * c).toFixed(1)}" y2="${(cy + (R - 4 - len) * sn).toFixed(1)}"/>`;
-    if (j % 4 === 0 && j >= 0) {                         // numbered graduation: radial, reading toward the rim, turning with the dial
-      const rr = R - 4 - len - 11, deg = (dir * a * 180 / Math.PI).toFixed(2), tx = (cx + dir * rr * c).toFixed(1), ty = (cy + rr * sn).toFixed(1);
-      ticks += `<text transform="rotate(${deg} ${tx} ${ty})" x="${tx}" y="${ty}">${String(j / 4).padStart(2, '0')}</text>`;
-    }
   }
   rim.innerHTML = `<circle cx="${cx}" cy="${cy}" r="${R}"/><g id="ticks">${ticks}</g>`;
   ticksG = rim.querySelector('#ticks') as SVGGElement;
