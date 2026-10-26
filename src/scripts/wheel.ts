@@ -446,30 +446,41 @@ function layout() {
     const a = j * dt2, c = Math.cos(a), sn = Math.sin(a), len = j % 4 === 0 ? 11 : 5;
     ticks += `<line class="${j % 4 === 0 ? 'major' : ''}" x1="${(cx + dir * (R - 4) * c).toFixed(1)}" y1="${(cy + (R - 4) * sn).toFixed(1)}" x2="${(cx + dir * (R - 4 - len) * c).toFixed(1)}" y2="${(cy + (R - 4 - len) * sn).toFixed(1)}"/>`;
   }
-  rim.innerHTML = `<circle cx="${cx}" cy="${cy}" r="${R}"/><g id="ticks">${ticks}</g>`;
+  let place = '';
+  if (mirror) {   // the label hugs the outside of the arc, centred on the dot: a circle path with the same centre, a little larger
+    const Rt = R + 6, th = 120 / Rt, px = (a: number) => (cx - Rt * Math.cos(a)).toFixed(1), py = (a: number) => (cy + Rt * Math.sin(a)).toFixed(1);
+    place = `<path id="here-path" fill="none" d="M${px(th)} ${py(th)}A${Rt} ${Rt} 0 0 1 ${px(-th)} ${py(-th)}"/><text class="here"><textPath href="#here-path" startOffset="50%" text-anchor="middle"></textPath></text>`;
+  }
+  rim.innerHTML = `<circle cx="${cx}" cy="${cy}" r="${R}"/><g id="ticks">${ticks}</g>${place}`;
   ticksG = rim.querySelector('#ticks') as SVGGElement;
+  placeEl = rim.querySelector('text.here'); placeTp = rim.querySelector('textPath');
+  paintPlace();
   pointer.style.left = (cx + dir * R) + 'px'; pointer.style.top = cy + 'px';
   arcMax = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--arc')) || 56;
   lastPos = null; lastRot = Infinity;
 }
 
-/* small screens: where you are, shown while the wheel turns and gone a moment after it stops. A child names its section and its place in it ("Home · 2/4"), since sections nest */
-const placeEl = document.createElement('span');
-placeEl.className = 'here'; placeEl.setAttribute('aria-hidden', 'true');
-nav.appendChild(placeEl);
-let placeT = 0, placeReady = false;
+/* small screens: where you are, written along the arc beside the dot while the wheel turns and gone a moment after it stops. A child names its section and its place in it ("Home · 2/4"), since sections nest */
+let placeStr = '', placeOn = false, placeT = 0, placeReady = false, placeEl: SVGTextElement | null = null, placeTp: SVGTextPathElement | null = null;
+const labelOf = (i: number) => items[i].a.querySelector('span')?.textContent || '';
 const placeText = (idx: number) => {
   const it = items[idx];
-  if (it.level === 0) return it.a.textContent || '';
+  if (it.level === 0) return labelOf(idx);
   let root = idx; while (root > 0 && items[root].level !== 0) root--;
   let last = root; while (last + 1 < N && items[last + 1].level === 1) last++;
-  return `${items[root].a.textContent} · ${idx - root}/${last - root}`;
+  return `${labelOf(root)} · ${idx - root}/${last - root}`;
+};
+const paintPlace = () => {
+  if (!placeEl || !placeTp) return;
+  placeTp.textContent = placeStr;
+  placeEl.classList.toggle('show', placeOn);
 };
 
 function setActive(idx: number) {
-  placeEl.textContent = placeText(idx);
-  if (placeReady) { placeEl.classList.add('show'); clearTimeout(placeT); placeT = window.setTimeout(() => placeEl.classList.remove('show'), 1200); }
+  placeStr = placeText(idx);
+  if (placeReady) { placeOn = true; clearTimeout(placeT); placeT = window.setTimeout(() => { placeOn = false; paintPlace(); }, 1200); }
   placeReady = true;
+  paintPlace();
   items.forEach((it, k) => {
     const on = k === idx;
     it.a.classList.toggle('on', on);

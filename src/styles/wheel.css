@@ -22,7 +22,6 @@
 .wheel li.child a::before { content: ''; position: absolute; left: 12px; top: 50%; width: 8px; height: 1px; background: var(--line-strong); }
 .wheel li.child a.on::before { background: var(--accent); }
 .wheel li.child a { position: relative; }
-.here { display: none; }
 @media (hover: hover) { .wheel li.exit a:hover { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; } }
 .wheel a sup.prog { align-self: baseline; transform: translateY(-2.5px); margin-left: 10px; font: 600 11px/1 var(--sans); letter-spacing: .04em; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
@@ -118,9 +117,10 @@
   .wheel li.child a { font-size: 18px; padding-left: 0; padding-right: 20px; }
   .wheel li.exit { display: none; }
   .wheel li.child a::before { display: none; }
-  .here { display: block; position: absolute; top: var(--cy, 50%); right: 36px; transform: translateY(-50%); font: 600 11px/1 var(--sans); letter-spacing: .04em; font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; text-shadow: 0 0 8px var(--paper), 0 0 8px var(--paper), 0 0 3px var(--paper); pointer-events: none; z-index: 2; opacity: 0; transition: opacity .4s; }
-  .here.show { opacity: 1; transition-duration: .15s; }
-  .m-open .here, .wheel.locked .here { opacity: 0; }
+  /* the position label, written along the arc (SVG text in the rim): only while the wheel turns, and not while the sheet is open or an article is read */
+  .rim text.here { font: 600 11px var(--sans); letter-spacing: .04em; fill: var(--ink-2); stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; paint-order: stroke; opacity: 0; transition: opacity .4s; }
+  .rim text.here.show { opacity: 1; transition-duration: .15s; }
+  .m-open .rim text.here, .wheel.locked .rim text.here { opacity: 0; }
   .pointer { z-index: 2; }
   /* B1/B2: the touch handle is only as wide as the visible arc, and the page keeps a gutter wider than it, so scrolling the page never grabs the wheel */
   .edge { display: block; position: absolute; right: 0; width: 16px; pointer-events: auto; touch-action: none; -webkit-tap-highlight-color: transparent; }
