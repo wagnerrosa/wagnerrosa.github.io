@@ -453,13 +453,23 @@ function layout() {
   lastPos = null; lastRot = Infinity;
 }
 
-/* small screens: where you are, next to the dot (the labels only open on touch) */
+/* small screens: where you are, shown while the wheel turns and gone a moment after it stops. A child names its section and its place in it ("Home · 2/4"), since sections nest */
 const placeEl = document.createElement('span');
 placeEl.className = 'here'; placeEl.setAttribute('aria-hidden', 'true');
 nav.appendChild(placeEl);
+let placeT = 0, placeReady = false;
+const placeText = (idx: number) => {
+  const it = items[idx];
+  if (it.level === 0) return it.a.textContent || '';
+  let root = idx; while (root > 0 && items[root].level !== 0) root--;
+  let last = root; while (last + 1 < N && items[last + 1].level === 1) last++;
+  return `${items[root].a.textContent} · ${idx - root}/${last - root}`;
+};
 
 function setActive(idx: number) {
-  placeEl.textContent = `${idx + 1}/${N}`;
+  placeEl.textContent = placeText(idx);
+  if (placeReady) { placeEl.classList.add('show'); clearTimeout(placeT); placeT = window.setTimeout(() => placeEl.classList.remove('show'), 1200); }
+  placeReady = true;
   items.forEach((it, k) => {
     const on = k === idx;
     it.a.classList.toggle('on', on);
