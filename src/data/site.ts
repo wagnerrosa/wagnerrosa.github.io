@@ -43,12 +43,12 @@ export const hero = {
 export const about = {
   background: [
     'I was born in Porto Alegre, Brazil, and began my career in communication and marketing before moving to Lisbon, where I graduated in Advertising and Marketing at the <a href="https://www.iade.europeia.pt/en/" target="_blank" rel="noopener noreferrer">Institute of Arts and Design of Lisbon</a> in 2016.',
-    'My professional path started in audiovisual production and graphic design, gradually evolving into web design and digital products. Over time, this transition shaped the way I approach product design: structured, system-oriented, and grounded in real implementation constraints.',
-    'I taught myself front-end fundamentals to better understand the boundaries and possibilities of interfaces. This allows me to collaborate closely with engineering teams and design solutions that are both conceptually clear and technically feasible.',
-    'Today, I focus on scalable digital systems, AI-powered products and operational workflows that require clarity, architecture and long-term thinking.',
+    'My professional path started in audiovisual production and graphic design, gradually evolving into web design and digital products. This transition heavily shaped how I approach product design today: structured, system-oriented, and grounded in real implementation constraints.',
+    'To better understand the boundaries of digital interfaces, I taught myself front-end fundamentals. This structural knowledge allows me to collaborate closely with engineering teams and design solutions that are both conceptually clear and technically feasible.',
+    'Today, as UX Lead at Nelogica, I focus on scalable digital systems, AI-powered products, and complex operational workflows that require architecture and long-term thinking.',
   ],
   outside:
-    'Outside of work, I run long distances (including a completed marathon), climb, and ride motorcycles - practices that reinforce focus, patience and consistency. Riding also led to <a href="https://carburante.motorcycles/?lang=en" target="_blank" rel="noopener noreferrer">Carburante ↗</a>, a native iOS logbook for motorcycles that I design and build as a personal project.',
+    'Outside of work, I run long distances (including a completed marathon), climb, and ride motorcycles — practices that reinforce focus, patience, and consistency. Riding also led me to create <a href="https://carburante.motorcycles/?lang=en" target="_blank" rel="noopener noreferrer">Carburante ↗</a>, a native iOS logbook for motorcycles that I design, develop, and maintain as a personal project.',
 };
 
 // Person node shared by every JSON-LD block (@id lets pages reference it instead of repeating it).
