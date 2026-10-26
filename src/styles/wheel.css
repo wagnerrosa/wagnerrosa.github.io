@@ -18,6 +18,11 @@
 .wheel li.child a { font-size: 18px; font-size: clamp(16px, 1.5vw, 21px); font-weight: 500; letter-spacing: -.02em; padding-left: 32px; color: var(--ink-2); }
 .wheel li.child a.on { color: var(--accent); font-weight: 700; }
 .wheel li.exit a { color: var(--accent); font-weight: 600; }
+/* a short dash ahead of each child: it follows the arc with its row, so the group reads as one list under its section */
+.wheel li.child a::before { content: ''; position: absolute; left: 12px; top: 50%; width: 10px; height: 1px; background: currentColor; opacity: .35; }
+.wheel li.child a.on::before { opacity: 1; }
+.wheel li.child a { position: relative; }
+.here { display: none; }
 @media (hover: hover) { .wheel li.exit a:hover { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; } }
 .wheel a sup.prog { align-self: baseline; transform: translateY(-2.5px); margin-left: 10px; font: 600 11px/1 var(--sans); letter-spacing: .04em; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
@@ -112,6 +117,9 @@
   .wheel a { font-size: 28px; text-shadow: 0 0 16px var(--paper), 0 0 6px var(--paper); }
   .wheel li.child a { font-size: 18px; padding-left: 0; padding-right: 20px; }
   .wheel li.exit { display: none; }
+  .wheel li.child a::before { display: none; }
+  .here { display: block; position: absolute; top: var(--cy, 50%); right: 36px; transform: translateY(-50%); font: 600 11px/1 var(--sans); letter-spacing: .04em; font-variant-numeric: tabular-nums; color: var(--mute); text-shadow: 0 0 6px var(--paper), 0 0 3px var(--paper); pointer-events: none; z-index: 2; transition: opacity .25s; }
+  .m-open .here, .wheel.locked .here { opacity: 0; }
   .pointer { z-index: 2; }
   /* B1/B2: the touch handle is only as wide as the visible arc, and the page keeps a gutter wider than it, so scrolling the page never grabs the wheel */
   .edge { display: block; position: absolute; right: 0; width: 16px; pointer-events: auto; touch-action: none; -webkit-tap-highlight-color: transparent; }

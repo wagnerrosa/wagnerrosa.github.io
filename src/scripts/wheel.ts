@@ -453,7 +453,13 @@ function layout() {
   lastPos = null; lastRot = Infinity;
 }
 
+/* small screens: where you are, next to the dot (the labels only open on touch) */
+const placeEl = document.createElement('span');
+placeEl.className = 'here'; placeEl.setAttribute('aria-hidden', 'true');
+nav.appendChild(placeEl);
+
 function setActive(idx: number) {
+  placeEl.textContent = `${idx + 1}/${N}`;
   items.forEach((it, k) => {
     const on = k === idx;
     it.a.classList.toggle('on', on);
