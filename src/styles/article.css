@@ -37,7 +37,7 @@
 .read-body .table-wrap { overflow-x: auto; }
 
 /* components used by the MDX articles */
-.read-body .lead { font: 400 19px/1.6 var(--sans); font: 400 clamp(18px, 1.4vw, 21px)/1.6 var(--sans); letter-spacing: -.01em; color: var(--ink-2); }
+.read-body .lead { font: 400 19px/1.6 var(--serif); font: 400 clamp(18px, 1.4vw, 21px)/1.6 var(--serif); letter-spacing: 0; color: var(--ink-2); }   /* the opening is long-form too: same serif as the body */
 .read-body .lead p + p { margin-top: 1em; }
 .read-body .kicker { font: 500 11px/1.3 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); margin-bottom: 14px; }
 .read-body .badges { display: flex; flex-wrap: wrap; gap: 8px; }
