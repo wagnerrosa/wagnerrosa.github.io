@@ -18,7 +18,7 @@
   --accent: var(--link);
   --danger: #e5484d;
   color-scheme: light;
-  --sans: 'Inter Variable', 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Figtree Variable', 'Figtree', -apple-system, 'Helvetica Neue', Arial, sans-serif;
   --display: 'Figtree Variable', 'Figtree', var(--sans);
   --serif: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, serif;
   --mono: var(--sans);
