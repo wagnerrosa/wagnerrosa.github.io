@@ -18,10 +18,6 @@
 .wheel li.child a { font-size: 18px; font-size: clamp(16px, 1.5vw, 21px); font-weight: 500; letter-spacing: -.02em; padding-left: 32px; color: var(--ink-2); }
 .wheel li.child a.on { color: var(--accent); font-weight: 700; }
 .wheel li.exit a { color: var(--accent); font-weight: 600; }
-/* a short dash ahead of each child: it follows the arc with its row, so the group reads as one list under its section */
-.wheel li.child a::before { content: ''; position: absolute; left: 12px; top: 50%; width: 8px; height: 1px; background: var(--line-strong); }
-.wheel li.child a.on::before { background: var(--accent); }
-.wheel li.child a { position: relative; }
 @media (hover: hover) { .wheel li.exit a:hover { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; } }
 .wheel a sup.prog { align-self: baseline; transform: translateY(-2.5px); margin-left: 10px; font: 600 11px/1 var(--sans); letter-spacing: .04em; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
@@ -116,7 +112,6 @@
   .wheel a { font-size: 28px; text-shadow: 0 0 16px var(--paper), 0 0 6px var(--paper); }
   .wheel li.child a { font-size: 18px; padding-left: 0; padding-right: 20px; }
   .wheel li.exit { display: none; }
-  .wheel li.child a::before { display: none; }
   /* the position label, written along the arc (SVG text in the rim): only while the wheel turns, and not while the sheet is open or an article is read */
   .rim text.here { font: 600 11px var(--sans); letter-spacing: .04em; fill: var(--ink-2); stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; paint-order: stroke; opacity: 0; transition: opacity .4s; }
   .rim text.here.show { opacity: 1; transition-duration: .15s; }
