@@ -90,6 +90,8 @@ ul, ol { list-style: none; }
 .prose h2 { color: var(--mute); margin: clamp(28px, 5cqi, 52px) 0 12px; padding-top: 14px; border-top: 1px solid var(--line); }
 .prose h2:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
 .prose p { font-size: 19px; font-size: clamp(18px, 2.1cqi, 22px); line-height: 1.5; letter-spacing: -.012em; margin-bottom: 1.05em; }
+/* About is long-form: the same serif reading register as the case studies */
+[data-id="about"] .prose p { font-family: var(--serif); font-size: 18px; font-size: clamp(18px, 1.35vw, 20px); line-height: 1.7; letter-spacing: 0; color: var(--read); max-width: 66ch; margin-bottom: 1.1em; }
 .fig { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 32px 0 0; max-width: 100%; }
 .fig img { width: 100%; height: auto; border-radius: 6px; display: block; }
 

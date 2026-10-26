@@ -45,7 +45,7 @@ const start = model.items.find(i => i.id === startId)!;
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <link rel="preload" as="font" type="font/woff2" href={interLatin} crossorigin />
     <link rel="preload" as="font" type="font/woff2" href={figtreeLatin} crossorigin />
-    {page === 'article' && <link rel="preload" as="font" type="font/woff2" href={serifLatin} crossorigin />}
+    {(page === 'article' || page === 'about') && <link rel="preload" as="font" type="font/woff2" href={serifLatin} crossorigin />}
     <Seo {...seo} />
     <JsonLd data={jsonld} />
     <ThemeScript js={wheel} />
