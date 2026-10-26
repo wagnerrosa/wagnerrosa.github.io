@@ -6,6 +6,7 @@
   --mute: #666;
   --line: rgb(0 0 0 / .14);
   --line-strong: rgb(0 0 0 / .26);   /* major ruler ticks, bullet hairlines, quote rules */
+  --rim: rgb(0 0 0 / .42);           /* the dial's rim and its numbered graduations */
   --ink-2: #3a3a3a;                  /* secondary text (child rows) */
   --read: #1f1f1f;                   /* long-form reading text */
   --chip: #fafafa;                   /* key caps */
@@ -26,7 +27,7 @@
 
 :root[data-theme="dark"] {
   --paper: #0a0a0a; --ink: #f5f5f5; --mute: #a3a3a3;
-  --line: rgb(255 255 255 / .14); --line-strong: rgb(255 255 255 / .3);
+  --line: rgb(255 255 255 / .14); --line-strong: rgb(255 255 255 / .3); --rim: rgb(255 255 255 / .5);
   --ink-2: #d4d4d4; --read: #d4d4d4;
   --chip: #171717; --chip-line: rgb(255 255 255 / .2);
   --code: #1f1f1f; --code-block: #151515;
@@ -36,7 +37,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --paper: #0a0a0a; --ink: #f5f5f5; --mute: #a3a3a3;
-    --line: rgb(255 255 255 / .14); --line-strong: rgb(255 255 255 / .3);
+    --line: rgb(255 255 255 / .14); --line-strong: rgb(255 255 255 / .3); --rim: rgb(255 255 255 / .5);
     --ink-2: #d4d4d4; --read: #d4d4d4;
     --chip: #171717; --chip-line: rgb(255 255 255 / .2);
     --code: #1f1f1f; --code-block: #151515;

@@ -164,7 +164,7 @@ function arcUpdate() {
       const r = rects[i];
       if (r.bottom < sr.top - 120 || r.top > sr.bottom + 120) { if (el.style.transform) el.style.transform = ''; return; }   // B22
       const t = Math.min(1, Math.abs((r.top + r.height / 2 - mid) / half));
-      el.style.transform = `translateX(${((mirror ? -arcMax : arcMax) * (1 - t * t)).toFixed(1)}px)`;
+      el.style.transform = driftK ? `translateX(${((mirror ? -arcMax : arcMax) * driftK * (1 - t * t)).toFixed(1)}px)` : '';
     });
     L.figs.forEach(g => figFx(g, sr));
   };
@@ -444,6 +444,10 @@ function layout() {
   for (let j = Math.ceil(-1.6 / dt2); j <= Math.floor((1.6 + maxSlot * step) / dt2); j++) {
     const a = j * dt2, c = Math.cos(a), sn = Math.sin(a), len = j % 4 === 0 ? 11 : 5;
     ticks += `<line class="${j % 4 === 0 ? 'major' : ''}" x1="${(cx + dir * (R - 4) * c).toFixed(1)}" y1="${(cy + (R - 4) * sn).toFixed(1)}" x2="${(cx + dir * (R - 4 - len) * c).toFixed(1)}" y2="${(cy + (R - 4 - len) * sn).toFixed(1)}"/>`;
+    if (j % 4 === 0 && j >= 0) {                         // numbered graduation: radial, reading toward the rim, turning with the dial
+      const rr = R - 4 - len - 11, deg = (dir * a * 180 / Math.PI).toFixed(2), tx = (cx + dir * rr * c).toFixed(1), ty = (cy + rr * sn).toFixed(1);
+      ticks += `<text transform="rotate(${deg} ${tx} ${ty})" x="${tx}" y="${ty}">${String(j / 4).padStart(2, '0')}</text>`;
+    }
   }
   rim.innerHTML = `<circle cx="${cx}" cy="${cy}" r="${R}"/><g id="ticks">${ticks}</g>`;
   ticksG = rim.querySelector('#ticks') as SVGGElement;
@@ -463,8 +467,8 @@ function setActive(idx: number) {
 
 /* ---------- frame ---------- */
 /* layers for the drifting lines and figures exist only while something moves (CSS keys off .moving) */
-let movingT = 0, movingOn = false;
-function moving() {
+let movingT = 0, movingOn = false, driftK = 0, lastMotion = 0;   // driftK: 0 at rest, 1 while moving
+function markMoving() {
   if (!movingOn) { stage.classList.add('moving'); movingOn = true; }
   clearTimeout(movingT);
   movingT = window.setTimeout(() => { stage.classList.remove('moving'); movingOn = false; }, 300);
@@ -543,12 +547,22 @@ function frame(now: number) {
     const idx = nearest(clamp(pos));
     if (idx !== shown) { shown = idx; setActive(reading?.el ? reading.readK : idx); }
   }
-  if (arcDirty || busy) moving();
+  // the lines drift while something moves and ease back to the grid at rest (0 drift = aligned, which also stops the stair-step in "Related")
+  let easing = false;
+  const motion = busy || arcDirty;
+  if (motion) lastMotion = now;
+  const want = !reduce && now - lastMotion < 160 ? 1 : 0;
+  if (want || driftK) {
+    driftK += (want - driftK) * (1 - Math.exp(-dt * 7));
+    if (!want && driftK < 0.004) driftK = 0;
+    arcDirty = true; easing = true;   // keeps frames coming without counting as motion (the address bar waits only for the wheel)
+  }
+  if (motion || driftK) markMoving();
   if (arcDirty) { arcDirty = false; arcUpdate(); }
 
   // the address bar follows the wheel once it has come to rest (no history spam while it spins)
   if (!busy && !reading && !pull?.on && shown != null && shown !== urlIdx) { commitStop(shown, replaceNext); replaceNext = false; }
-  if (busy) kick();
+  if (busy || easing) kick();
 }
 
 /* the wheel came to rest on a stop the address bar doesn't describe yet */

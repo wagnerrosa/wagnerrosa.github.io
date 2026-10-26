@@ -8,7 +8,8 @@ body {
   -webkit-font-smoothing: antialiased; overflow: hidden;
 }
 a { color: inherit; }
-.panel a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+.panel a { color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color .2s; }   /* links read as ink; the accent is only the underline, the state colour */
+@media (hover: hover) { .panel a:hover { color: var(--link); } }
 .panel .rows a { text-decoration: none; }
 .panel .rows .mono { color: var(--mute); }
 ul, ol { list-style: none; }

@@ -23,9 +23,10 @@
 
 /* the rim: only half of a big circle shows; photo + name sit inside the visible half */
 .rim { position: absolute; inset: 0; pointer-events: none; width: 100%; height: 100%; }
-.rim circle { fill: none; stroke: var(--line); stroke-width: 1; transition: stroke .6s; }
-.rim line { stroke: var(--line); stroke-width: 1; }
-.rim line.major { stroke: var(--line-strong); }
+.rim circle { fill: none; stroke: var(--rim); stroke-width: 1; transition: stroke .6s; }
+.rim line { stroke: var(--line-strong); stroke-width: 1; }
+.rim line.major { stroke: var(--rim); }
+.rim text { fill: var(--mute); font: 500 10px/1 var(--mono); font-variant-numeric: tabular-nums; letter-spacing: .06em; dominant-baseline: middle; text-anchor: middle; }
 .pointer { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); transform: translate(-50%, -50%); z-index: 2; pointer-events: none; transition: width .4s, height .4s, background .4s, box-shadow .4s; }
 .hub {
   position: absolute; top: 50%; z-index: 3; left: 44px; display: flex; flex-direction: column; align-items: flex-start; gap: 0;
@@ -124,7 +125,6 @@
   .m-open .pointer::before, .m-open .pointer::after { opacity: 1; background: var(--accent); }
   .m-open .pointer::before { transform: rotate(45deg); }
   .m-open .pointer::after { transform: rotate(-45deg); }
-  .rim circle { stroke: var(--line-strong); }
 }
 
 /* No JS: the page is an ordinary document. The wheel becomes a plain list of links and every real panel is stacked in the page. */

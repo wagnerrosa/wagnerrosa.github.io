@@ -11,7 +11,8 @@
 .read-body h2 + *, .read-body h3 + *, .read-body h4 + * { margin-top: .8em; }
 .read-body strong { font-weight: 600; }
 .read-body em { font-style: italic; }
-.read-body a { overflow-wrap: anywhere; color: var(--link); text-decoration: underline; text-underline-offset: .18em; text-decoration-thickness: 1px; }
+.read-body a { overflow-wrap: anywhere; color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: .2em; text-decoration-thickness: 2px; transition: color .2s; }
+@media (hover: hover) { .read-body a:hover { color: var(--link); } }
 .read-body ul, .read-body ol { padding-left: 1.3em; }
 .read-body ul { list-style: disc; }
 .read-body ol { list-style: decimal; }
