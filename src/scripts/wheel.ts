@@ -164,7 +164,8 @@ function arcUpdate() {
       const r = rects[i];
       if (r.bottom < sr.top - 120 || r.top > sr.bottom + 120) { if (el.style.transform) el.style.transform = ''; return; }   // B22
       const t = Math.min(1, Math.abs((r.top + r.height / 2 - mid) / half));
-      el.style.transform = driftK ? `translateX(${((mirror ? -arcMax : arcMax) * driftK * (1 - t * t)).toFixed(1)}px)` : '';
+      const k = driftHist.length ? driftAt(frameNow - DRIFT_WAVE * Math.min(1, Math.max(0, (r.top + r.height / 2 - sr.top) / sr.height))) : 0;   // lines higher up lead, lower ones follow
+      el.style.transform = Math.abs(k) > 0.001 ? `translateX(${((mirror ? -arcMax : arcMax) * k * (1 - t * t)).toFixed(1)}px)` : '';
     });
     L.figs.forEach(g => figFx(g, sr));
   };
@@ -462,13 +463,15 @@ function setActive(idx: number) {
 }
 
 /* ---------- frame ---------- */
-/* layers for the drifting lines and figures exist only while something moves (CSS keys off .moving) */
-let movingT = 0, movingOn = false, driftK = 0, lastMotion = 0;   // driftK: 0 at rest, 1 while moving
-function markMoving() {
-  if (!movingOn) { stage.classList.add('moving'); movingOn = true; }
-  clearTimeout(movingT);
-  movingT = window.setTimeout(() => { stage.classList.remove('moving'); movingOn = false; }, 300);
-}
+let driftK = 0, driftV = 0, lastMotion = 0, frameNow = 0;   // driftK: 0 at rest, 1 while moving (a spring, so it settles instead of stopping)
+const driftHist: { t: number; k: number }[] = [];   // recent driftK, so each line can follow it a little later than the one above (a wave, not a block)
+const DRIFT_WAVE = 280;                              // ms between the top and the bottom line
+const driftAt = (t: number) => {
+  for (let i = driftHist.length - 1; i >= 0; i--) {
+    if (driftHist[i].t <= t) { const a = driftHist[i], b = driftHist[i + 1]; return b ? a.k + (b.k - a.k) * ((t - a.t) / (b.t - a.t || 1)) : a.k; }
+  }
+  return driftHist.length ? driftHist[0].k : 0;
+};
 const side$ = side.classList;
 function frame(now: number) {
   raf = 0;
@@ -552,13 +555,16 @@ function frame(now: number) {
   let easing = false;
   const motion = busy || arcDirty;
   if (motion) lastMotion = now;
-  const want = !reduce && now - lastMotion < 160 ? 1 : 0;
-  if (want || driftK) {
-    driftK += (want - driftK) * (1 - Math.exp(-dt * 7));
-    if (!want && driftK < 0.004) driftK = 0;
-    arcDirty = true; easing = true;   // keeps frames coming without counting as motion (the address bar waits only for the wheel)
-  }
-  if (motion || driftK) markMoving();
+  const want = !reduce && now - lastMotion < 220 ? 1 : 0;
+  frameNow = now;
+  driftV += ((want - driftK) * 64 - driftV * 12) * dt;   // a soft spring (a touch under critical): eases in, and settles with a hint of give
+  driftK += driftV * dt;
+  if (!want && Math.abs(driftK) < 0.002 && Math.abs(driftV) < 0.02) driftK = driftV = 0;
+  driftHist.push({ t: now, k: driftK });
+  while (driftHist.length > 2 && driftHist[1].t < now - DRIFT_WAVE - 60) driftHist.shift();
+  const live = want || driftK || driftHist.some(h => Math.abs(h.k) > 0.001);
+  if (live) { arcDirty = true; easing = true; }   // keeps frames coming without counting as motion (the address bar waits only for the wheel)
+  else driftHist.length = 0;
   if (arcDirty) { arcDirty = false; arcUpdate(); }
 
   // the address bar follows the wheel once it has come to rest (no history spam while it spins)
