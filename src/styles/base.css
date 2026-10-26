@@ -64,7 +64,7 @@ ul, ol { list-style: none; }
 .rows li:last-child a { padding-bottom: 0; }
 .rows a { text-decoration: none; display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: baseline; padding: 14px 0; transition: padding .3s, color .2s; }
 @media (hover: hover) { .rows a:hover { padding-left: 10px; } }
-.rows .t { text-decoration: underline; text-underline-offset: 3px; font-size: 18px; font-weight: 600; letter-spacing: -.025em; line-height: 1.2; }
+.rows .t { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color .2s; font-size: 18px; font-weight: 600; letter-spacing: -.025em; line-height: 1.2; }
 .rows .m { color: var(--mute); text-align: right; }
 .links { display: flex; gap: 24px; flex-wrap: wrap; font-weight: 600; margin-top: 24px; }
 .links a { text-underline-offset: 4px; }
