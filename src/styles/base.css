@@ -41,6 +41,7 @@ ul, ol { list-style: none; }
 .app-icon--tile img { object-fit: contain; }
 .lede { font-family: var(--display); font-size: 20px; font-size: clamp(18px, 2.4cqi, 28px); line-height: 1.25; letter-spacing: -.02em; font-weight: 450; max-width: 34ch; }
 .lede.wide { max-width: 50ch; }
+.nb { white-space: nowrap; }
 .lead-in { margin-top: clamp(16px, 3cqi, 32px); max-width: 38ch; }   /* a little wider than the .lede default, so a short last line ("Sul.") folds back up */
 .p-body { margin-top: clamp(28px, 6cqi, 72px); display: grid; gap: 32px; grid-template-columns: 1fr; align-items: start; }
 .p-body.single { display: block; }
