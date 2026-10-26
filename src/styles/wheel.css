@@ -44,7 +44,6 @@
 .layer { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; background: var(--paper); will-change: transform; touch-action: pan-y pinch-zoom; overscroll-behavior-y: contain; }
 .layer:focus { outline: none; }
 .layer.read { z-index: 4; transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
-.moving [data-arc] { will-change: transform; }
 .wheel.locked .rim circle { stroke: rgb(var(--accent-rgb) / .5); }
 /* locked: the pointer turns into a close button (x) sitting on the rim */
 .wheel.locked .pointer { width: 24px; height: 24px; background: var(--paper); box-shadow: 0 0 0 1.5px var(--accent), 0 0 0 8px rgb(var(--accent-rgb) / .1); pointer-events: auto; cursor: pointer; }

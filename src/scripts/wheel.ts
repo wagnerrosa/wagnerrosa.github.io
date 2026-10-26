@@ -494,7 +494,12 @@ function frame(now: number) {
   if (sc) {                                           // smooth scroll inside the current page
     const d = sc.t - sc.el.scrollTop;
     if (Math.abs(d) < 0.5) { sc.el.scrollTop = sc.t; sc = null; }
-    else { sc.el.scrollTop += d * (1 - Math.exp(-dt * 11)); busy = true; }
+    else {
+      const before = sc.el.scrollTop, step = d * (1 - Math.exp(-dt * 11));
+      sc.el.scrollTop += Math.abs(step) < 1 ? Math.sign(d) : step;   // scrollTop is rounded by the browser: a sub-pixel step would never arrive (WebKit stopped 5px short, the loop and the drift ran forever)
+      if (sc.el.scrollTop === before) { sc.el.scrollTop = sc.t; sc = null; }   // clamped by a fractional max: nowhere left to go
+      else busy = true;
+    }
     arcDirty = true;
   }
 
