@@ -178,3 +178,9 @@ html.intro-go .theme, html.intro-go .keys { animation: intro-fade .6s .9s backwa
   .m-peek-off:not(.m-open) .wheel::before { transition: opacity .4s; }
   .m-peek:not(.m-open) .wheel li, .m-peek-off:not(.m-open) .wheel li { pointer-events: none !important; }
 }
+
+/* the summary under an open article fades its text out (and back in on close); the theme switch cross-fades */
+.layer:not(.read) .in { transition: opacity .35s ease .3s; }   /* coming back: after the article has slid off the title */
+.stage.reading-on .layer:not(.read) .in { opacity: 0; transition: opacity .16s ease; }   /* going away: quick, before the article's own title arrives */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .3s; animation-timing-function: ease; }
+@media (prefers-reduced-motion: reduce) { .layer:not(.read) .in { transition: none; } }

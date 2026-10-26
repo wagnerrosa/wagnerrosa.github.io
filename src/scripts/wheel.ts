@@ -297,7 +297,7 @@ async function openReading(url: string, opts: { push?: boolean; swap?: boolean; 
 
   const prog = document.createElement('sup'); prog.className = 'prog'; prog.textContent = doc.gate ? 'Private' : '0%';
   if (els[readK]) els[readK].querySelector('a')!.appendChild(prog);
-  nav.classList.add('locked');
+  nav.classList.add('locked'); stage.classList.add('reading-on');   // the summary under the article lets go of its title and blurb, so nothing shows twice while the article slides over it
   setSheet(false);
   pointer.removeAttribute('aria-hidden'); pointer.setAttribute('role', 'button'); pointer.setAttribute('aria-label', 'Close'); pointer.tabIndex = 0;
   if (!exitLi) {
@@ -374,7 +374,7 @@ function closeReading(opts: { keep?: boolean } = {}) {
   const r = reading; reading = null; readRot = 0; ++loading;
   r.prog?.remove();
   clipsOf(r.el!).forEach(v => { clipIO?.unobserve(v); v.pause(); });
-  if (!keep) { nav.classList.remove('locked'); pointer.setAttribute('aria-hidden', 'true'); pointer.removeAttribute('role'); pointer.removeAttribute('aria-label'); pointer.removeAttribute('tabindex'); }
+  if (!keep) { nav.classList.remove('locked'); stage.classList.remove('reading-on'); pointer.setAttribute('aria-hidden', 'true'); pointer.removeAttribute('role'); pointer.removeAttribute('aria-label'); pointer.removeAttribute('tabindex'); }
   const xl = exitLi; if (!keep) { exitLi = null; exitOut = xl; setTimeout(() => { xl?.remove(); if (exitOut === xl) exitOut = null; }, 700); }
   if (!keep) { r.el!.style.transform = 'translateY(100%)'; r.el!.style.pointerEvents = 'none'; }   // when swapping, the old article stays put under the new one sliding in
   setTimeout(() => r.el!.remove(), keep ? 1000 : 850);
@@ -876,9 +876,13 @@ addEventListener('scroll', () => { if (scrollX || scrollY) scrollTo(0, 0); }, { 
 $('theme').addEventListener('click', () => {
   const root = document.documentElement, dark = matchMedia('(prefers-color-scheme: dark)').matches;
   const cur = root.dataset.theme || (dark ? 'dark' : 'light'), next = cur === 'dark' ? 'light' : 'dark';
-  root.dataset.theme = next;
-  try { localStorage.setItem('theme', next); } catch {}
-  $('theme').setAttribute('aria-pressed', String(next === 'dark'));
+  const apply = () => {
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch {}
+    $('theme').setAttribute('aria-pressed', String(next === 'dark'));
+  };
+  const vt = (document as any).startViewTransition;
+  if (vt && !reduce) vt.call(document, apply); else apply();   // a short cross-fade instead of a hard cut where the browser can do it
 });
 $('theme').setAttribute('aria-pressed', String((document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark'));
 
