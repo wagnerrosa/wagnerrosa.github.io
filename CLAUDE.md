@@ -85,7 +85,7 @@ Head, Open Graph, canonical, hreflang (Planton Academy EN/PT), robots, JSON-LD (
 
 ## Analytics
 
-`Analytics.astro`: Google Analytics + Microsoft Clarity, off on localhost, with `localStorage.dev_mode = 'true'`, or after `?preview=dev`. Links carry `data-track`, `data-category`, `data-location`; one delegated listener sends them. GA4 must have *Enhanced measurement → Page changes based on browser history events* on, because the wheel navigates with `pushState`.
+`Analytics.astro`: Google Analytics only (Clarity was removed on 2026-10-27: it set third-party cookies and dropped Lighthouse Best Practices to 77), off on localhost, with `localStorage.dev_mode = 'true'`, or after `?preview=dev`. Links carry `data-track`, `data-category`, `data-location`; one delegated listener sends them. GA4 must have *Enhanced measurement → Page changes based on browser history events* on, because the wheel navigates with `pushState`.
 
 ## Password-protected case study
 

@@ -18,8 +18,6 @@ order: 5
 
 import { Badges, Beat, DefList, Lead, LinkList, Note, Part, PullQuote } from '../../components/mdx';
 
-February 2026 · Case Study · 10 min read
-
 <Lead>
 
 Redesigning the Planton website meant designing and implementing a multilingual product site while defining the visual system, component architecture, and interactive storytelling that would carry the brand. On top of that, I could not treat implementation as isolated experimentation. The visual direction needed stakeholder approval before I committed to full production buildout. That constraint shaped everything.
@@ -28,7 +26,7 @@ Redesigning the Planton website meant designing and implementing a multilingual 
 
 <Badges items={["Next.js 16","React 19","TypeScript","next-intl","Tailwind CSS v4","GSAP","motion/react"]} />
 
-18 days · 221 commits · 9 fully localized pages
+18 days · 221 commits · 7 routes, localized in Portuguese and English
 
 <LinkList>
 
@@ -125,7 +123,7 @@ AI-assisted development is not a cleaner version of normal work. It is normal wo
   </div>
   <div>
     <dt>Scope</dt>
-    <dd>9 fully localized pages (Portuguese and English).</dd>
+    <dd>7 routes, each localized in Portuguese and English.</dd>
   </div>
   <div>
     <dt>Architecture</dt>
@@ -139,7 +137,7 @@ AI-assisted development is not a cleaner version of normal work. It is normal wo
 
 </Part>
 
-The site is in production as a fully multilingual Portuguese and English experience across 9 pages, with localized routing and localized pathnames for every route. The section architecture covers more than 30 reusable components. The Planton Genius interactive module is live with its full scroll-driven, multi-scene experience. Integrations include HubSpot Forms for lead capture, Google Analytics, and Microsoft Clarity for behavioral tracking. The entire project (design, implementation, and production deployment) was completed across 221 commits in 18 days.
+The site is in production as a fully multilingual Portuguese and English experience across 7 routes, with localized routing and localized pathnames for every route. The section architecture covers more than 30 reusable components. The Planton Genius interactive module is live with its full scroll-driven, multi-scene experience. Integrations include HubSpot Forms for lead capture, Google Analytics, and Microsoft Clarity for behavioral tracking. The entire project (design, implementation, and production deployment) was completed across 221 commits in 18 days.
 
 The site launched with a home page, five product pages, and an about page: seven routes in total, fully localized in Portuguese and English. Sections were deliberately reused across pages rather than rebuilt. The same structural components appear throughout the site, but with content, copy, and calls to action adapted to the context of each product. The CTA section is a clear example of this. Rather than a generic contact invitation, it responds to where the user is in the site: inviting someone reading about emissions inventory to start their inventory, and someone on the carbon footprint page to begin their footprint assessment. The same component, different conversations.
 

@@ -15,7 +15,6 @@ export const site = {
   badge: 'Open to remote',
   invitation: 'Open to remote Product Design opportunities.',
   ga: 'G-VTCEP9QKNC',
-  clarity: 'vhbu1gthme',
   ogImage: '/assets/og/og-default.png',
   ogImageVersion: '20261002',
   ogImageAlt: 'Wagner Rosa — Product Designer. UX, Product Design, Design Systems, Applied AI.',
