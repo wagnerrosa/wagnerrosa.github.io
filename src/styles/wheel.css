@@ -156,12 +156,12 @@ html:not(.js) .panel .in { padding-left: clamp(20px, 5vw, 64px); }
 
 /* Entrance (first landing per tab session on Home, About, the hub). ThemeScript adds .intro before first paint, wheel.ts adds .intro-go when it takes over and removes both when the sweep ends or the visitor interacts.
    Until the script runs, what it will animate stays hidden; if it never runs, intro-safe shows everything after 3s. Only transform/opacity, and `translate` so it composes with the arc drift on [data-arc]. */
-html.intro:not(.intro-go) .stage > .panel, html.intro:not(.intro-go) .wheel li, html.intro:not(.intro-go) .hub, html.intro:not(.intro-go) .theme, html.intro:not(.intro-go) .rim, html.intro:not(.intro-go) .pointer, html.intro:not(.intro-go) .keys { opacity: 0; animation: intro-safe .01s 3s forwards; }
+html.intro:not(.intro-go) .stage > .panel, html.intro:not(.intro-go) .wheel li, html.intro:not(.intro-go) .hub, html.intro:not(.intro-go) .theme, html.intro:not(.intro-go) .rim, html.intro:not(.intro-go) .pointer, html.intro:not(.intro-go) .keys { opacity: .01; animation: intro-safe .01s 3s forwards; }
 @keyframes intro-safe { to { opacity: 1; } }
-@keyframes intro-rise { from { opacity: 0; translate: 0 18px; } }
-@keyframes intro-swing { from { opacity: 0; rotate: var(--swing, 0deg); } }
-@keyframes intro-fade { from { opacity: 0; } }
-@keyframes intro-pop { from { opacity: 0; scale: .2; } }
+@keyframes intro-rise { from { opacity: .01; translate: 0 18px; } }
+@keyframes intro-swing { from { opacity: .01; rotate: var(--swing, 0deg); } }
+@keyframes intro-fade { from { opacity: .01; } }
+@keyframes intro-pop { from { opacity: .01; scale: .2; } }
 html.intro-go .layer { animation: intro-swing .9s cubic-bezier(.2, .8, .2, 1) backwards; }
 html.intro-go .layer [data-arc] { animation: intro-rise .7s cubic-bezier(.2, .8, .2, 1) var(--d, 0s) backwards; }
 html.intro-go .rim { animation: intro-fade .9s backwards; }
