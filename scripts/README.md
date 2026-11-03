@@ -4,7 +4,7 @@
 |---|---|
 | `seo-snapshot.mjs` | Snapshots the head, JSON-LD, links and visible text of every HTML page in a directory, and diffs two snapshots. Used to prove SEO parity with the legacy site. |
 | `build-protected.sh` | Builds and encrypts the protected case study (see below). |
-| `gate-template.html` | The password page (staticrypt template), in the site's tokens. Standalone: it is encrypted into the blob, so it cannot use the site bundle. |
+| `gate-fragment.html` | The password screen: form, styles and staticrypt script. `src/pages/protected-gate/[name].astro` wraps it in the site shell (like the 404) and the result is the staticrypt template. Emitted only when `INCLUDE_PRIVATE=1`. |
 | `og-template.html` | Source of `public/assets/og/og-default.png`. |
 
 ## SEO snapshot
@@ -24,7 +24,7 @@ private/planton-genius.mdx                  (git-ignored, only on the author's m
    │  INCLUDE_PRIVATE=1 astro build --outDir .protected-build
    ▼
 .protected-build/case-studies/planton-genius.html   (the page in the full site shell)
-   │  staticrypt --template scripts/gate-template.html
+   │  staticrypt --template .protected-build/protected-gate/template.html   (src/pages/protected-gate + scripts/gate-fragment.html)
    ▼
 public/case-studies/planton-genius.html     (AES-256 blob + decryption JS; committed and published)
 ```
@@ -36,7 +36,7 @@ npm run build:protected
 ```
 
 - Password: `.env.local` → `STATICRYPT_PASSWORD="…"`. Salt: `.staticrypt.json` (keep it: changing it invalidates every "remember me" already saved in visitors' browsers).
-- The password hint is hardcoded in `scripts/gate-template.html` (`staticrypt-hint`); change it there with the password.
+- The password hint is hardcoded in `scripts/gate-fragment.html` (`staticrypt-hint`); change it there with the password.
 - The reading layer on the site fetches this file, reads the salt and ciphertext as text, and decrypts in the browser with the same key derivation staticrypt uses. If you upgrade staticrypt, check that its key derivation (1k SHA-1, 14k SHA-256, 585k SHA-256) is unchanged, or the in-page unlock in `src/scripts/wheel.ts` breaks while the standalone gate keeps working.
 - **The blob freezes the shell.** Stylesheet and script file names are hashed; after any layout, style or script change, run `npm run build:protected` again and commit the new blob. Images used by a private article must live in `public/` (the private build's `_astro/` files are not published).
 

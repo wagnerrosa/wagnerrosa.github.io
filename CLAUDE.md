@@ -35,7 +35,7 @@ src/styles/             tokens.css, base.css, wheel.css, article.css
 src/pages/              index, about, cv, 404, case-studies/index, case-studies/[slug], sitemap.xml.ts, llms.txt.ts
 public/                 CNAME, robots.txt, favicons, og image, CV (.md + PDF), videos, encrypted case blob
 private/                git-ignored: planton-genius.mdx (source of the protected case)
-scripts/                seo-snapshot.mjs, build-protected.sh, gate-template.html, og-template.html
+scripts/                seo-snapshot.mjs, build-protected.sh, gate-fragment.html, og-template.html
 ```
 
 ### URLs and the wheel
@@ -89,6 +89,6 @@ Head, Open Graph, canonical, hreflang (Planton Academy EN/PT), robots, JSON-LD (
 
 ## Password-protected case study
 
-`private/planton-genius.mdx` (git-ignored) → `npm run build:protected` builds it with `INCLUDE_PRIVATE=1`, encrypts the page with staticrypt using `scripts/gate-template.html`, and writes `public/case-studies/planton-genius.html` (committed). Password: `.env.local` → `STATICRYPT_PASSWORD`; salt in `.staticrypt.json` (both git-ignored — back them up). The public stub `src/content/cases/planton-genius.mdx` carries only the frontmatter for the wheel and hub. **The blob freezes the page shell:** re-run `build:protected` whenever the layout, styles or scripts change, and keep images of private articles in `public/`. Details: `scripts/README.md`.
+`private/planton-genius.mdx` (git-ignored) → `npm run build:protected` builds it with `INCLUDE_PRIVATE=1`, encrypts the page with staticrypt using the password screen as template (`src/pages/protected-gate` + `scripts/gate-fragment.html`, the site shell around the form), and writes `public/case-studies/planton-genius.html` (committed). Password: `.env.local` → `STATICRYPT_PASSWORD`; salt in `.staticrypt.json` (both git-ignored — back them up). The public stub `src/content/cases/planton-genius.mdx` carries only the frontmatter for the wheel and hub. **The blob freezes the page shell:** re-run `build:protected` whenever the layout, styles or scripts change, and keep images of private articles in `public/`. Details: `scripts/README.md`.
 
 Do not add the protected page to `robots.txt`: the gate sends `noindex, nofollow`, and a `Disallow:` would stop crawlers from seeing it.

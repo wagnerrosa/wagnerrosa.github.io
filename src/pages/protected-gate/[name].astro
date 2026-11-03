@@ -1,0 +1,30 @@
+---
+import Shell from '../../layouts/Shell.astro';
+import { getModel } from '../../lib/model';
+import fragment from '../../../scripts/gate-fragment.html?raw';
+
+// The password screen of the protected case, built only by the local `build:protected` run (INCLUDE_PRIVATE=1): there it becomes the
+// staticrypt template (scripts/build-protected.sh). A normal build emits nothing, so this page never reaches the public site.
+export function getStaticPaths() {
+  return process.env.INCLUDE_PRIVATE ? [{ params: { name: 'template' } }] : [];
+}
+
+const model = await getModel();
+const startId = model.items.some(i => i.id === 'case-planton-genius') ? 'case-planton-genius' : 'cases';
+---
+<Shell
+  model={model}
+  page="index"
+  startId={startId}
+  wheel={false}
+  seo={{
+    title: 'Planton Genius | Wagner Rosa',
+    description: 'Private case study, shared by password.',
+    path: '/case-studies/planton-genius.html',
+    noindex: true,
+    nofollow: true,
+    canonical: false,
+  }}
+>
+  <Fragment set:html={fragment} />
+</Shell>

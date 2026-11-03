@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Builds the protected case study and encrypts it with staticrypt.
 #
-#   private/planton-genius.mdx  --astro build (INCLUDE_PRIVATE=1)-->  .protected-build/case-studies/planton-genius.html
-#   --staticrypt with scripts/gate-template.html-->  public/case-studies/planton-genius.html   (committed, published)
+#   private/planton-genius.mdx  --astro build (INCLUDE_PRIVATE=1)-->  .protected-build/case-studies/planton-genius.html (+ protected-gate/template.html)
+#   --staticrypt with the gate page as template-->  public/case-studies/planton-genius.html   (committed, published)
 #
 # The source never leaves this machine; only the encrypted blob is committed. The blob freezes the page shell as of this
 # run (stylesheet and script file names are hashed), so run this again whenever the layout changes.
@@ -43,9 +43,16 @@ if [ ! -f "$PAGE" ]; then
   exit 1
 fi
 
+# The password screen is an Astro page too (src/pages/protected-gate), so it wears the site shell; the build above emitted it as the template.
+GATE="$BUILD/protected-gate/template.html"
+if [ ! -f "$GATE" ]; then
+  echo "Error: astro build produced no $GATE" >&2
+  exit 1
+fi
+
 mkdir -p "$(dirname "$OUT")"
 npx staticrypt "$PAGE" \
-  --template scripts/gate-template.html \
+  --template "$GATE" \
   --template-title "Planton Genius" \
   --template-instructions "A redesign of a B2B emissions inventory SaaS, prototyped in production React alongside the engineering team. This one is private, shared by password." \
   --template-placeholder "Password" \
