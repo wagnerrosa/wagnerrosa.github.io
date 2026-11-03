@@ -85,6 +85,7 @@ let raf = 0, arcDirty = true, arcMax = 56, lastRot = Infinity, lockF = 0, lastRe
 let soft = pos, lastT = 0, readRot = 0, readRotS = 0;
 /* entrance: on a first Home landing the dial sweeps back from Contact to Home (visual offset only, the pages stay put) while the page text rises in */
 const root = document.documentElement;
+const LABEL_FLOOR = 0.7;   // lowest opacity of a clickable label (WCAG 1.4.3 on --bg, light theme is the tight one)
 const INTRO_MS = 1500, INTRO_MS_M = 2000;   // small screens: the sheet is open while the dial sweeps (0-1.65s), then closes, so the arc is seen to be a menu
 let introOn = false, introOff = 0, introOff0 = 0, introT0 = 0, introF = 1, lastIntro = 0;
 const endPeek = () => {   // the labels fade out for a moment after the peek: keep them from taking the tap that interrupted it
@@ -570,10 +571,10 @@ function frame(now: number) {
     if (Math.abs(th) > 1.15 || edgeX < 4) { el.style.opacity = '0'; el.style.pointerEvents = 'none'; return; }
     const y = cy + R * Math.sin(th);
     const s = 1 - Math.abs(th) * 0.16;
-    const op = Math.max(0.6, 1 - Math.abs(th) * 0.8) * Math.min(1, Math.max(0, mirror ? (edgeX - 6) / 30 : (edgeX - 24) / 70)) * mult;   // also fade as a row nears the left edge, so nothing is cut mid-word
+    const op = Math.max(LABEL_FLOOR, 1 - Math.abs(th) * 0.8) * Math.min(1, Math.max(0, mirror ? (edgeX - 6) / 30 : (edgeX - 24) / 70)) * mult;   // also fade as a row nears the left edge, so nothing is cut mid-word
     el.style.opacity = op.toFixed(3);
-    el.style.pointerEvents = op < 0.05 ? 'none' : '';
-    const bl = Math.min(0.9, Math.max(0, Math.abs(th) - 0.3) * 2.6);   // depth: rows leaving the centre soften (floor of 0.6 opacity + light blur keeps every clickable label above 4.5:1)
+    el.style.pointerEvents = op < LABEL_FLOOR - 0.01 ? 'none' : '';   // a row fading out at the edge (or under a lock) is decoration, not a target: only labels at full floor contrast take clicks
+    const bl = Math.min(0.9, Math.max(0, Math.abs(th) - 0.3) * 2.6);   // depth: rows leaving the centre soften (the floor keeps every clickable label above 4.5:1 on white: measured 4.6:1 at 0.70; 0.60 gave 3.5:1)
     el.style.filter = bl > 0.05 ? `blur(${bl.toFixed(2)}px)` : '';
     el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(${mirror ? '-100%' : '0'}, -50%) scale(${s.toFixed(3)})`;
     el.style.transformOrigin = mirror ? '100% 50%' : '0 50%';
