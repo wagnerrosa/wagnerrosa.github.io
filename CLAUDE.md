@@ -12,6 +12,8 @@ npm run preview          # serve dist/ locally
 npm run build:protected  # re-encrypt the password-protected case study (local only, needs private/ and .env.local)
 npm run seo:snapshot     # snapshot head/JSON-LD/links/text of dist/ → positioning/baseline/current.json
 npm run seo:diff         # compare that snapshot with the legacy site (git tag legacy-final)
+npm run qa:install       # once: installs scripts/qa/node_modules (puppeteer-core, axe-core, lighthouse; kept out of the deploy's npm ci)
+npm run qa               # after a build: behaviour, axe, label contrast, reflow, keyboard (details: scripts/qa/README.md)
 ```
 
 Deploy: pushing to `main` runs `.github/workflows/deploy.yml` (Pages source: **GitHub Actions**). Nothing generated is committed except the encrypted blob `public/case-studies/planton-genius.html`.
@@ -35,7 +37,7 @@ src/styles/             tokens.css, base.css, wheel.css, article.css
 src/pages/              index, about, cv, 404, case-studies/index, case-studies/[slug], sitemap.xml.ts, llms.txt.ts
 public/                 CNAME, robots.txt, favicons, og image, CV (.md + PDF), videos, encrypted case blob
 private/                git-ignored: planton-genius.mdx (source of the protected case)
-scripts/                seo-snapshot.mjs, build-protected.sh, gate-fragment.html, og-template.html
+scripts/                seo-snapshot.mjs, build-protected.sh, gate-fragment.html, og-template.html, qa/ (regression checks)
 ```
 
 ### URLs and the wheel

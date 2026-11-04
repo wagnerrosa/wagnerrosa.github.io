@@ -10,6 +10,8 @@
     "preview": "astro preview",
     "build:protected": "bash scripts/build-protected.sh",
     "seo:snapshot": "node scripts/seo-snapshot.mjs dist positioning/baseline/current.json",
+    "qa:install": "npm --prefix scripts/qa install",
+    "qa": "node scripts/qa/run.mjs",
     "seo:diff": "node scripts/seo-snapshot.mjs --diff positioning/baseline/legacy-final-2026-10-24.json positioning/baseline/current.json"
   },
   "author": "Wagner Rosa",
