@@ -9,24 +9,34 @@ import { readFileSync, existsSync } from 'node:fs';
 import ThemeScript from '../../components/ThemeScript.astro';
 import { abs } from '../../data/site';
 import { apto } from '../../data/apto';
+import { shots } from '../../data/apto-plan';
+import { cone } from '../../lib/plan-svg';
+import Plan from '../../components/apto/Plan.astro';
 
 type Photo = { file: string; video?: string; caption: string; group: string; groupLabel: string; w: number; h: number };
 const manifest: Photo[] = existsSync('public/apto/photos.json') ? JSON.parse(readFileSync('public/apto/photos.json', 'utf8')) : [];
-const photos = manifest.map((p, i) => ({
-  full: `/apto/${p.file}`,
-  thumb: `/apto/thumb/${p.file}`,
-  video: p.video ? `/apto/${p.video}` : '',
-  alt: `${p.caption} (foto ${i + 1} de ${manifest.length})`,
-  caption: p.caption,
-  group: p.group,
-  first: i === 0 || manifest[i - 1].group !== p.group,   // first photo of a room: carries the jump anchor
-  ar: +(p.w / p.h).toFixed(4),
-}));
+const shotOf = (p: Photo) => shots[p.file.replace(/\.webp$/, '')];
+const photos = manifest.map((p, i) => {
+  const s = shotOf(p);
+  return {
+    full: `/apto/${p.file}`,
+    thumb: `/apto/thumb/${p.file}`,
+    video: p.video ? `/apto/${p.video}` : '',
+    alt: `${p.caption} (foto ${i + 1} de ${manifest.length})`,
+    caption: p.caption,
+    group: p.group,
+    first: i === 0 || manifest[i - 1].group !== p.group,   // first photo of a room: carries the jump anchor
+    ar: +(p.w / p.h).toFixed(4),
+    shot: s ? { x: s[0], y: s[1], d: cone(s[0], s[1], s[2]) } : null,   // where it was taken, for the viewer's mini map
+  };
+});
 const groups = manifest.reduce<{ id: string; label: string; n: number }[]>((acc, p) => {
   const g = acc.find(x => x.id === p.group);
   g ? g.n++ : acc.push({ id: p.group, label: p.groupLabel, n: 1 });
   return acc;
 }, []);
+const counts = Object.fromEntries(groups.map(g => [g.id, g.n]));
+const planShots = manifest.flatMap((p, i) => { const s = shotOf(p); return s ? [{ i, g: p.group, x: s[0], y: s[1], a: s[2] }] : []; });
 const hasOg = existsSync('public/apto/og.jpg');
 const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 ---
@@ -88,8 +98,23 @@ const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', curren
       </div>
 
       {photos.length > 0 && (
-        <section class="gallery" aria-label="Fotos">
+        <div class="gallery">
+        <section class="plan-sec" id="planta" aria-labelledby="plan-h">
+          <h2 class="mono" id="plan-h">Planta</h2>
+          <Plan o="land" counts={counts} shots={planShots} />
+          <Plan o="port" counts={counts} />
+          <div class="plan-foot">
+            <ul class="plan-key" aria-label="Legenda">
+              <li><i class="k-wood"></i>Parquet</li>
+              <li><i class="k-tile"></i>Piso frio</li>
+              <li><i class="k-win"></i>Janela</li>
+            </ul>
+            <p class="plan-hint"><span class="h-hover">Clique num ambiente para ver as fotos; passe o mouse para ver de onde cada uma foi tirada.</span><span class="h-touch">Toque num ambiente para ver as fotos.</span> Planta ilustrativa, sem escala. <a href="/apto/planta.svg" download="planta-apartamento.svg">Baixar planta ↓</a></p>
+          </div>
+        </section>
+        <section class="photos" aria-label="Fotos">
           <nav class="chips" id="chips" aria-label="Ir para o ambiente">
+            <a href="#planta" class="chip-plan" data-plan><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1.5 1.5h13v13h-13zM1.5 8h5M9.5 1.5v6.5h5M6.5 8v6.5"/></svg>Planta</a>
             {groups.map(g => <a href={`#${g.id}`} data-g={g.id}>{g.label}<span>{g.n}</span></a>)}
           </nav>
           <ul class="grid" id="grid">
@@ -108,17 +133,30 @@ const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', curren
             ))}
           </ul>
         </section>
+        </div>
       )}
     </div>
 
+    <!-- Desktop: photo centered, caption/count/mini map float over it (.lb-stage, .lb-bar, .lb-meta are display: contents).
+         Phone: photo on top, a bar underneath with the caption and the plan across the full width. -->
     <dialog id="lb" aria-label="Galeria de fotos">
-      <img id="lb-img" alt="" />
-      <video id="lb-vid" controls playsinline preload="metadata" hidden></video>
-      <p class="lb-l" id="lb-label"></p>
+      <div class="lb-stage" id="lb-stage">
+        <img id="lb-img" alt="" />
+        <video id="lb-vid" controls playsinline preload="metadata" hidden></video>
+        <button type="button" class="lb-n lb-prev" id="lb-prev" aria-label="Foto anterior">‹</button>
+        <button type="button" class="lb-n lb-next" id="lb-next" aria-label="Próxima foto">›</button>
+      </div>
+      <div class="lb-bar">
+        <div class="lb-meta">
+          <p class="lb-l" id="lb-label"></p>
+          <p class="lb-c mono" id="lb-count"></p>
+        </div>
+        <div class="lb-map off" id="lb-map">
+          <Plan o="land" mini shots={planShots} extra={'<path id="lb-cone" class="lb-cone" d="M0 0"/><circle id="lb-cam" class="lb-cam" r="13" cx="0" cy="0"/>'} />
+          <p class="lb-off">Área comum, fora da planta do apartamento</p>
+        </div>
+      </div>
       <button type="button" class="lb-x" id="lb-close" aria-label="Fechar">×</button>
-      <button type="button" class="lb-n lb-prev" id="lb-prev" aria-label="Foto anterior">‹</button>
-      <button type="button" class="lb-n lb-next" id="lb-next" aria-label="Próxima foto">›</button>
-      <p class="lb-c mono" id="lb-count"></p>
     </dialog>
 
     <script is:inline define:vars={{ photos }}>
@@ -132,17 +170,61 @@ const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', curren
         else { vid.removeAttribute('src'); vid.load(); img.src = photos[cur].full; img.alt = photos[cur].alt; }
         count.textContent = (cur + 1) + ' / ' + photos.length;
         label.textContent = photos[cur].caption;
+        aim(photos[cur]);
         // warm the neighbours so next/prev feels instant
         [cur + 1, cur - 1].forEach(function (n) { new Image().src = photos[(n + photos.length) % photos.length].full; });
       }
+      function openAt(i) { if (!dlg.open) dlg.showModal(); show(i); }
       document.querySelectorAll('.grid button').forEach(function (b) {
-        b.addEventListener('click', function () { dlg.showModal(); show(+b.dataset.i); });
+        b.addEventListener('click', function () { openAt(+b.dataset.i); });
       });
+
+      // Floor plan. A room opens the viewer at its first photo (without JS its link jumps to the room's photos).
+      // In the viewer a mini map shows where the current photo was taken and which way the camera points.
+      // The other photos of the same room show as dots, so swiping reads as walking around the room.
+      // Photos outside the flat (condomínio…): hidden on desktop, dimmed with a note on phones (the bar keeps its height).
+      var map = document.getElementById('lb-map'), lcone = document.getElementById('lb-cone'), lcam = document.getElementById('lb-cam'), firstOf = {};
+      var mroom = map.querySelectorAll('.room'), mdots = map.querySelectorAll('.shot');
+      photos.forEach(function (p, i) { if (!(p.group in firstOf)) firstOf[p.group] = i; });
+      function aim(p) {
+        map.classList.toggle('off', !p.shot);
+        mroom.forEach(function (r) { r.classList.toggle('cur', r.dataset.g === p.group); });
+        mdots.forEach(function (s) { s.classList.toggle('on', !!p.shot && s.dataset.g === p.group && +s.dataset.i !== cur); });
+        if (!p.shot) return;
+        lcone.setAttribute('d', p.shot.d);
+        lcam.setAttribute('cx', p.shot.x); lcam.setAttribute('cy', p.shot.y);
+      }
+      document.querySelectorAll('.plan .room').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          if (!(a.dataset.g in firstOf)) return;
+          e.preventDefault();
+          openAt(firstOf[a.dataset.g]);
+        });
+      });
+      // Desktop plan: hovering a room shows its photo markers; hovering a marker previews the photo, clicking opens it.
+      var land = document.querySelector('.plan-land'), tip = land && land.querySelector('.plan-tip');
+      if (land && tip && matchMedia('(hover: hover)').matches) {
+        var marks = land.querySelectorAll('.shot');
+        land.addEventListener('pointerover', function (e) {
+          var t = e.target.closest('.room, .shot');
+          if (!t) return;
+          marks.forEach(function (s) { s.classList.toggle('on', s.dataset.g === t.dataset.g); });
+          if (!t.classList.contains('shot')) { tip.hidden = true; return; }
+          var p = photos[+t.dataset.i], c = t.querySelector('.cam').getBoundingClientRect(), b = land.getBoundingClientRect();
+          tip.src = p.thumb;
+          tip.style.setProperty('--x', (c.left + c.width / 2 - b.left) + 'px');
+          tip.style.setProperty('--y', (c.top - b.top) + 'px');
+          tip.hidden = false;
+        });
+        land.addEventListener('pointerleave', function () { marks.forEach(function (s) { s.classList.remove('on'); }); tip.hidden = true; });
+        marks.forEach(function (s) { s.addEventListener('click', function () { tip.hidden = true; openAt(+s.dataset.i); }); });
+      }
       dlg.addEventListener('close', function () { vid.pause(); });
       document.getElementById('lb-close').onclick = function () { dlg.close(); };
       document.getElementById('lb-prev').onclick = function () { show(cur - 1); };
       document.getElementById('lb-next').onclick = function () { show(cur + 1); };
-      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+      var stage = document.getElementById('lb-stage');
+      dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target === stage) dlg.close(); });
       dlg.addEventListener('keydown', function (e) {
         if (e.target === vid) return;   // arrows seek inside the video
         if (e.key === 'ArrowRight') show(cur + 1);
@@ -183,7 +265,7 @@ const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', curren
       }
       if (chips) {
         chips.addEventListener('click', function (e) {
-          var a = e.target.closest('a'); if (!a || !phone.matches) return;
+          var a = e.target.closest('a'); if (!a || !phone.matches || a.hasAttribute('data-plan')) return;   // "Planta" is a plain jump
           e.preventDefault();
           var first = grid.querySelector('li[data-g="' + a.dataset.g + '"]');
           grid.scrollTo({ left: first.offsetLeft - grid.offsetLeft - 20, behavior: 'smooth' });

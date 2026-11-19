@@ -1,0 +1,22 @@
+---
+// The /apto/ floor plan: SVG drawing + room names as HTML on top (readable at any width). See src/lib/plan-svg.ts.
+import { planSvg, planLabels, type O, type PlanShot } from '../../lib/plan-svg';
+interface Props { o: O; counts?: Record<string, number>; shots?: PlanShot[]; mini?: boolean; extra?: string }
+const { o, counts = {}, shots = [], mini = false, extra = '' } = Astro.props;
+const svg = planSvg({ o, id: mini ? 'pm' : `p${o}`, counts, shots, mini, extra });
+const labels = mini ? [] : planLabels(o, counts);
+---
+<div class={`plan plan-${o}${mini ? ' plan-mini' : ''}`}>
+  <Fragment set:html={svg} />
+  {labels.length > 0 && (
+    <div class="pl-layer" aria-hidden="true">
+      {labels.map(l => (
+        <span class={`pl${l.kind ? ` ${l.kind}` : ''}`} style={`left:${l.left}%;top:${l.top}%`}>
+          {l.lines.map(t => <b>{t}</b>)}
+          {l.sub && <small>{l.sub}</small>}
+        </span>
+      ))}
+    </div>
+  )}
+  {shots.length > 0 && !mini && <img class="plan-tip" alt="" hidden />}
+</div>
