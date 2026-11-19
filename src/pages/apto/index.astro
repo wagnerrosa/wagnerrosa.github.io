@@ -1,5 +1,5 @@
 ---
-// Private-ish listing page: shared by link only. Not in sitemap.xml / llms.txt, noindex, no analytics, no site shell.
+// Private-ish listing page: shared by link only. Not in sitemap.xml / llms.txt, noindex, no site shell (Google Analytics is added on its own).
 // Photos are read from public/apto/ at build time (see scripts/apto-photos.mjs), so adding a photo needs no code change.
 import '@fontsource-variable/figtree';
 import '@fontsource-variable/source-serif-4';
@@ -7,6 +7,7 @@ import '../../styles/tokens.css';
 import '../../styles/apto.css';
 import { readFileSync, existsSync } from 'node:fs';
 import ThemeScript from '../../components/ThemeScript.astro';
+import Analytics from '../../components/Analytics.astro';
 import { abs } from '../../data/site';
 import { apto } from '../../data/apto';
 import { shots } from '../../data/apto-plan';
@@ -61,6 +62,7 @@ const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', curren
     {hasOg && <meta property="og:image:height" content="630" />}
     <meta name="twitter:card" content={hasOg ? 'summary_large_image' : 'summary'} />
     <ThemeScript js={false} />
+    <Analytics />
   </head>
   <body>
     <button type="button" id="theme" class="theme" aria-label="Alternar tema claro/escuro" title="Alternar tema claro/escuro">
@@ -204,19 +206,25 @@ const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', curren
       // Desktop plan: hovering a room shows its photo markers; hovering a marker previews the photo, clicking opens it.
       var land = document.querySelector('.plan-land'), tip = land && land.querySelector('.plan-tip');
       if (land && tip && matchMedia('(hover: hover)').matches) {
-        var marks = land.querySelectorAll('.shot');
+        var marks = land.querySelectorAll('.shot'), grp = '', wait = 0;
+        // Switching rooms waits a beat, so the pointer can cross a neighbouring room to reach a marker that sits outside its own room.
+        function setGroup(g) { grp = g; marks.forEach(function (s) { s.classList.toggle('on', s.dataset.g === g); }); }
         land.addEventListener('pointerover', function (e) {
           var t = e.target.closest('.room, .shot');
           if (!t) return;
-          marks.forEach(function (s) { s.classList.toggle('on', s.dataset.g === t.dataset.g); });
-          if (!t.classList.contains('shot')) { tip.hidden = true; return; }
+          var isShot = t.classList.contains('shot');
+          clearTimeout(wait);
+          if (t.dataset.g === grp) { /* same group: keep */ }
+          else if (isShot || !grp) setGroup(t.dataset.g);
+          else wait = setTimeout(function () { setGroup(t.dataset.g); tip.hidden = true; }, 350);
+          if (!isShot) { if (t.dataset.g === grp) tip.hidden = true; return; }
           var p = photos[+t.dataset.i], c = t.querySelector('.cam').getBoundingClientRect(), b = land.getBoundingClientRect();
           tip.src = p.thumb;
           tip.style.setProperty('--x', (c.left + c.width / 2 - b.left) + 'px');
           tip.style.setProperty('--y', (c.top - b.top) + 'px');
           tip.hidden = false;
         });
-        land.addEventListener('pointerleave', function () { marks.forEach(function (s) { s.classList.remove('on'); }); tip.hidden = true; });
+        land.addEventListener('pointerleave', function () { clearTimeout(wait); grp = ''; marks.forEach(function (s) { s.classList.remove('on'); }); tip.hidden = true; });
         marks.forEach(function (s) { s.addEventListener('click', function () { tip.hidden = true; openAt(+s.dataset.i); }); });
       }
       dlg.addEventListener('close', function () { vid.pause(); });

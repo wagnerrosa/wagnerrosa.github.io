@@ -49,8 +49,8 @@ const GROUPS = {
   sala: 'Sala', cozinha: 'Cozinha', corredor: 'Corredor', quarto: 'Quarto', escritorio: 'Escritório', banheiro: 'Banheiro',
   dependencia: 'Dependência', 'area-servico': 'Área de serviço', condominio: 'Condomínio', garagem: 'Garagem', salao: 'Salão de festas',
 };
-// Original file that opens the page and becomes the link preview (og.jpg). Empty = first photo.
-const COVER = 'sala-20230920_132340.jpg';
+// Original files pinned to the top, in this order. The first opens the page and becomes the link preview (og.jpg).
+const FIRST = ['sala-corredor-cozinha20230920_132325.jpg', 'sala-20230920_132340.jpg'];
 const roomOf = f => path.basename(f).match(/^(.*?)-?(?:l?IMG_|\d)/)?.[1] ?? '';
 
 const slug = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -59,7 +59,8 @@ const files = (await readdir(SRC, { recursive: true }))
   .filter(f => EXT.test(f) && !path.basename(f).startsWith('.'))
   .map(f => ({ f, room: roomOf(f), video: isVideo(f) }))
   .sort((a, b) => {
-    if (a.f === COVER || b.f === COVER) return a.f === COVER ? -1 : 1;
+    const pa = FIRST.indexOf(a.f), pb = FIRST.indexOf(b.f);
+if (pa >= 0 || pb >= 0) return (pa < 0 ? 99 : pa) - (pb < 0 ? 99 : pb);
     const ra = ROOMS.findIndex(r => r[0] === a.room), rb = ROOMS.findIndex(r => r[0] === b.room);
     return ((ra < 0 ? 99 : ra) - (rb < 0 ? 99 : rb)) || (b.video - a.video) || a.f.localeCompare(b.f, 'pt', { numeric: true });
   });
