@@ -16,3 +16,6 @@
 !/private/.gitkeep
 /case-studies-src
 .protected-build
+
+# apto: raw photos (300MB); only the compressed ones in public/apto/ are published
+/apto-src

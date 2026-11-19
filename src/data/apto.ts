@@ -1,0 +1,65 @@
+// Content of /apto/. Edit here; the page renders it. Leave `price` at 0 to hide it.
+export const apto = {
+  title: "Apartamento 2 dormitórios + dependência · Mont'Serrat, Porto Alegre",
+  neighborhood: "Mont'Serrat",
+  headline: 'Amplo, iluminado e silencioso',
+  summary: '2 dormitórios + dependência (possível 3º dormitório), 76,33 m² privativos, garagem escriturada, condomínio de apenas 12 apartamentos. Reformado em 2023.',
+  address: 'Rua Doutor Freire Alemão, 646, Porto Alegre, RS',
+  price: 0,                // number in R$, e.g. 650000
+  facts: [
+    ['Área privativa', '76,33 m²'],
+    ['Área total', '117,78 m²'],
+    ['Dormitórios', '2 + dependência'],
+    ['Banheiros', '2'],
+    ['Garagem', '1 vaga escriturada'],
+    ['Condomínio', 'R$ 400 (boleto ≈ R$ 550)'],
+  ] as [string, string][],
+  sections: [
+    {
+      title: 'O imóvel',
+      intro: 'Apartamento com 76,33 m² de área privativa e 117,78 m² de área total, composto por dois amplos dormitórios e dependência de empregada também ampla, com possibilidade de utilização como terceiro dormitório.',
+      items: [
+        'Os dois dormitórios principais têm orientação solar leste, com sol da manhã.',
+        'Ampla sala e cozinha integrada, com orientação solar norte.',
+        'Ventilação cruzada, com janelas em todos os ambientes.',
+        'Muito silencioso, sem paredes compartilhadas com unidades vizinhas.',
+        'Janelas amplas em todos os ambientes, inclusive na cozinha e no box do banheiro.',
+        'Área íntima separada da área social.',
+        'Área de serviço com acesso pela cozinha e pela dependência de empregada, com banheiro integrado.',
+        'Dependência de empregada ampla, perfeitamente utilizável como terceiro dormitório.',
+        'Dois banheiros, sendo o auxiliar já preparado para depósito.',
+        'Dois aparelhos de ar-condicionado instalados: um no dormitório e outro na sala/cozinha, de 22.000 BTUs.',
+        'Chuveiro a gás, com aquecimento independente do gás do fogão.',
+        'Cofre original embutido na parede.',
+        'Imóvel reformado em 2023.',
+      ],
+    },
+    {
+      title: 'Condomínio',
+      items: [
+        'Tranquilo, familiar e amigável.',
+        'Apenas 12 apartamentos.',
+        'Taxa condominial de R$ 400,00; boleto mensal total de aproximadamente R$ 550,00.',
+        'Hall de entrada.',
+        'Salão de festas do condomínio, com churrasqueira.',
+        'Prédio muito bem iluminado, com janelas amplas.',
+        'Uma vaga de garagem escriturada, com portões automatizados.',
+      ],
+      outro: 'Edifício construído pela Tedesco, empresa gaúcha tradicional com selo de qualidade.',
+    },
+    {
+      title: 'Localização',
+      intro: "Bairro Mont'Serrat, Porto Alegre. Rua Doutor Freire Alemão, entre as quadras da Anita Garibaldi, Silva Jardim e Tito Lívio Zambecari. Região com excelente infraestrutura e todas as comodidades do bairro, próximo a:",
+      items: [
+        'Dois supermercados Zaffari, um deles a uma quadra de distância.',
+        'Duas unidades da Panvel, uma a cada quadra.',
+        'Diversas academias.',
+        'Unisinos.',
+        'Posto de gasolina e lavanderias.',
+        'Diversos restaurantes e mercadinhos.',
+        'Comércio e serviços variados.',
+      ],
+    },
+  ] as { title: string; intro?: string; items?: string[]; outro?: string }[],
+  closing: 'Um imóvel que reúne amplitude, privacidade, silêncio, excelente orientação solar e ventilação natural, em um condomínio pequeno, tranquilo e com baixo custo mensal.',
+};
