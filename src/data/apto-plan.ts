@@ -57,6 +57,10 @@ export const openings: Seg[] = [{ dir: 'h', at: 261, from: 800, to: 1112 }];
 // Hall (outside the flat): entrance arrow and compass live here.
 export const hall = { entrance: [1132, 313] as [number, number], compass: [1187, 505] as [number, number], label: [1187, 368] as [number, number] };
 
+// Demo tour on the desktop plan (page load): one photo per stop, in this order. Its room lights up, the room's markers come in,
+// and this photo shows as the thumbnail. File stems as in `shots` below (captions "Sala 1"… are renumbered by scripts/apto-photos.mjs).
+export const tour = ['02-sala', '27-banheiro', '09-cozinha'];   // Sala 1, Banheiro 1, Cozinha 2
+
 // Where each photo was taken: file stem (public/apto/photos.json) → [x, y, direction°] on this plan (0 = right, 90 = down).
 // Estimated from the photos; tweak freely. Photos missing here (condomínio, garagem, salão) show no marker.
 export const shots: Record<string, [number, number, number]> = {

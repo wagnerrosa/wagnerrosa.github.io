@@ -87,6 +87,16 @@ h1 { font-family: var(--display); font-weight: 450; line-height: .98; letter-spa
 .shot .cam { fill: var(--accent); stroke: var(--paper); stroke-width: 3; }
 .shot:hover .cone { fill: rgb(var(--accent-rgb) / .38); }
 .shot:hover .cam { fill: var(--ink); }
+/* desktop plan: a room's markers come in with the dot popping and the cone opening out of it (origin set inline, at the camera) */
+.plan-land:not(.plan-mini) .shot .cone { transform: scale(.2); transition: fill .15s, transform .4s cubic-bezier(.2, .8, .3, 1); }
+.plan-land:not(.plan-mini) .shot .cam { transform-box: fill-box; transform-origin: center; transform: scale(.3); transition: fill .15s, transform .3s cubic-bezier(.3, 1.5, .5, 1); }
+.plan-land .shot.on .cone, .plan-land .shot.on .cam { transform: none; }
+/* one-time demo (script): markers one after the other; .lit and .hot stand in for the hover */
+.plan-land.demo .shot, .plan-land.demo .shot .cone, .plan-land.demo .shot .cam { transition-delay: calc(var(--k, 0) * 90ms); }
+.plan-land.demo .shot.hot .cone, .plan-land.demo .shot.hot .cam { transition-delay: 0s; }
+.room.lit .rf { fill: rgb(var(--accent-rgb) / .1); }
+.shot.hot .cone { fill: rgb(var(--accent-rgb) / .38); }
+.shot.hot .cam { fill: var(--ink); }
 .pl-layer { position: absolute; inset: 0; pointer-events: none; }
 .pl { position: absolute; translate: -50% -50%; display: grid; justify-items: center; gap: 1px; text-align: center; white-space: nowrap; }
 .pl b { font: 600 11px/1.15 var(--sans); letter-spacing: .06em; text-transform: uppercase; }
@@ -94,8 +104,15 @@ h1 { font-family: var(--display); font-weight: 450; line-height: .98; letter-spa
 .pl.dim b { color: var(--mute); font-weight: 500; letter-spacing: 0; text-transform: none; font-size: 12px; }
 .pl.n b { font-size: 12px; font-weight: 700; letter-spacing: 0; }
 .plan-port .pl.v { rotate: -90deg; }   /* narrow corridor on the upright plan: label along it */
-.plan-tip { position: absolute; left: var(--x); top: var(--y); z-index: 3; width: 168px; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; translate: -50% calc(-100% - 12px); box-shadow: 0 6px 24px rgb(0 0 0 / .28); pointer-events: none; background: var(--code); }
+/* phone plan: the photo count is a chip with a camera, so the room reads as something to tap */
+.plan-port .pl small { display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; padding: 2px 8px 2px 6px; border-radius: 999px; border: 1px solid rgb(var(--accent-rgb) / .45); background: var(--paper); color: var(--accent); font-weight: 500; }
+.plan-port .pl small::before { content: ''; flex: none; width: 12px; height: 12px; background: currentColor; -webkit-mask: var(--i-cam) center / contain no-repeat; mask: var(--i-cam) center / contain no-repeat; }
+.plan-port { --i-cam: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M5.6 2.8h4.8l1.1 1.7h2.3a.8.8 0 0 1 .8.8v7.1a.8.8 0 0 1-.8.8H2.2a.8.8 0 0 1-.8-.8V5.3a.8.8 0 0 1 .8-.8h2.3z'/%3E%3Ccircle cx='8' cy='8.6' r='2.5'/%3E%3C/svg%3E"); }
+.plan-tip { position: absolute; left: var(--x); top: var(--y); z-index: 3; width: 168px; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; translate: -50% calc(-100% - 12px); box-shadow: 0 6px 24px rgb(0 0 0 / .28); pointer-events: none; background: var(--code); animation: tip-in .2s ease-out; }
 .plan-tip[hidden] { display: none; }
+.plan-tip.below { translate: -50% 12px; animation-name: tip-in-below; }
+@keyframes tip-in { from { opacity: 0; translate: -50% calc(-100% - 4px); } }
+@keyframes tip-in-below { from { opacity: 0; translate: -50% 4px; } }
 .plan-foot { display: grid; gap: 10px; margin-top: 16px; }
 .plan-key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--mute); }
 .plan-key li { display: inline-flex; align-items: center; gap: 7px; }
@@ -149,10 +166,15 @@ h1 { font-family: var(--display); font-weight: 450; line-height: .98; letter-spa
 
   .theme { position: fixed; top: 16px; right: 24px; }
   .gallery { display: block; margin-top: 0; padding: 0 24px 64px; }
-  .plan-sec { padding: 28px 56px 36px 0; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  .plan-sec { padding: 28px 56px 36px 0; border-bottom: 1px solid var(--line); }
   .plan-land { display: block; max-width: 1100px; }
   .plan-port { display: none; }
-  .chips { position: sticky; top: 0; z-index: 5; flex-wrap: wrap; padding: 16px 56px 12px 0; margin-bottom: 4px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  /* legend and hint on one row, as wide as the plan; when the hint would get too narrow it drops under the legend */
+  .plan-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 64px; max-width: 1100px; }
+  .plan-key { flex-wrap: nowrap; }
+  .plan-hint { flex: 1 1 380px; }
+  .h-meta { display: block; margin-top: 2px; }   /* "Planta ilustrativa… Baixar planta" on its own line */
+  .chips { position: sticky; top: 0; z-index: 5; flex-wrap: wrap; padding: 20px 56px 20px 0; margin-bottom: 4px; background: var(--paper); }   /* same space above and below the chips; no rule under them */
   /* justified rows: each tile grows with its aspect ratio so rows fill the width and portrait phone photos are never cropped.
      max-width keeps the last, short row of a room from stretching into one giant photo. */
   .grid { --h: 400px; flex-wrap: wrap; align-items: stretch; overflow: visible; scroll-snap-type: none; padding: 0; gap: 10px; }
@@ -199,6 +221,19 @@ h1 { font-family: var(--display); font-weight: 450; line-height: .98; letter-spa
 .lb-map .room:hover .rf { fill: rgb(255 255 255 / .12); }
 .lb-cone { fill: rgb(96 165 250 / .55); }
 .lb-cam { fill: #fff; stroke: #2563eb; stroke-width: 6; }
+/* the camera (cone + dot) is one group placed by a CSS transform, so it glides from photo to photo; .snap places it without gliding */
+.lb-pos { transition: transform .45s cubic-bezier(.3, .7, .2, 1); }
+.lb-pos.snap { transition: none; }
+/* one-time hint on phones: a pulse around the dot + a label pointing at it */
+.lb-ring { display: none; fill: none; stroke: #fff; stroke-width: 5; transform-box: fill-box; transform-origin: center; }
+.lb-map.coach .lb-ring { display: inline; animation: lb-ring 1.4s ease-out infinite; }
+@keyframes lb-ring { from { transform: scale(1); opacity: .9; } to { transform: scale(4); opacity: 0; } }
+.lb-coach { position: absolute; z-index: 2; left: var(--x); top: var(--y); translate: -50% calc(-100% - 14px); padding: 6px 12px; border-radius: 999px; background: #fff; color: #111; font: 600 13px/1.2 var(--sans); letter-spacing: -.01em; white-space: nowrap; box-shadow: 0 4px 18px rgb(0 0 0 / .45); pointer-events: none; animation: coach-in .3s ease-out both; }
+.lb-coach.below { translate: -50% 14px; }
+.lb-coach::after { content: ''; position: absolute; left: calc(50% + var(--ax, 0px)); top: 100%; translate: -50% 0; border: 6px solid transparent; border-top-color: #fff; }
+.lb-coach.below::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #fff; }
+.lb-coach[hidden] { display: none; }
+@keyframes coach-in { from { opacity: 0; } }
 
 /* phone viewer: photo on top, a bar under it with caption + count and the plan across the full width
    (the cone moves as you swipe; tap a room to jump to it). Phone held sideways: the bar goes to the right. */
@@ -215,12 +250,20 @@ h1 { font-family: var(--display); font-weight: 450; line-height: .98; letter-spa
   .lb-map { position: relative; top: auto; left: auto; width: 100%; max-width: 520px; margin: 0 auto; padding: 0; background: none; box-shadow: none; }
   .lb-map.off { display: block; }
   .lb-map.off .plan-svg { opacity: .15; }
-  .lb-map.off .lb-cone, .lb-map.off .lb-cam { display: none; }
+  .lb-map.off .lb-pos { display: none; }
   .lb-map.off .lb-off { display: grid; place-items: center; position: absolute; inset: 0; padding: 0 24px; color: rgb(255 255 255 / .75); font-size: 13px; text-align: center; }
 }
 @media (max-width: 899px) and (orientation: landscape) {
   #lb[open] { flex-direction: row; }
   .lb-bar { width: min(340px, 42vw); display: flex; flex-direction: column; justify-content: center; padding: 64px 16px calc(14px + env(safe-area-inset-bottom)); border-top: 0; border-left: 1px solid rgb(255 255 255 / .1); }
 }
-@media (prefers-reduced-motion: reduce) { .grid img, .chips a { transition: none; } html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) {
+  .grid img, .chips a { transition: none; } html { scroll-behavior: auto; }
+  /* markers and the viewer's camera appear in place; the hint's pulse becomes a still halo */
+  .plan-land:not(.plan-mini) .shot .cone, .plan-land:not(.plan-mini) .shot .cam { transform: none; transition: fill .15s; }
+  .plan-land.demo .shot { transition-delay: 0s; }
+  .lb-pos { transition: none; }
+  .lb-map.coach .lb-ring { animation: none; transform: scale(2.2); opacity: .6; }
+  .plan-tip, .lb-coach { animation: none; }
+}
 html { scroll-behavior: smooth; }

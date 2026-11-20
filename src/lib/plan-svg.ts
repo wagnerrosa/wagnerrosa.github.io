@@ -3,6 +3,7 @@
 // - On the page the room names are HTML laid over the SVG (planLabels), so they keep a readable px size at any width.
 //   The downloadable file (planFile) carries them as SVG text instead, with its own colors.
 import { PLAN, NORTH, rooms, outline, doors, windows, openings, hall, type Seg } from '../data/apto-plan';
+import { abs } from '../data/site';
 
 export type O = 'land' | 'port';
 export type PlanShot = { i: number; g: string; x: number; y: number; a: number };
@@ -123,8 +124,9 @@ export function planSvg({ o, id, mini = false, text = false, counts = {}, shots 
     out.push('<g class="shots" aria-hidden="true">');
     for (const s of shots) {
       const [x, y] = pt(o, s.x, s.y);
-      // only the dot is clickable (the cone would swallow clicks meant for the room); .hit widens it to a 24px+ target
-      out.push(`<g class="shot" data-i="${s.i}" data-g="${s.g}"><path class="cone" d="${cone(x, y, ang(o, s.a), 90)}"/><circle class="hit" cx="${n(x)}" cy="${n(y)}" r="20"/><circle class="cam" cx="${n(x)}" cy="${n(y)}" r="10"/></g>`);
+      // only the dot is clickable (the cone would swallow clicks meant for the room); .hit widens it to a 24px+ target.
+      // transform-origin at the camera: the cone opens out of the dot when the room's markers appear.
+      out.push(`<g class="shot" data-i="${s.i}" data-g="${s.g}"><path class="cone" d="${cone(x, y, ang(o, s.a), 90)}" style="transform-origin:${n(x)}px ${n(y)}px"/><circle class="hit" cx="${n(x)}" cy="${n(y)}" r="20"/><circle class="cam" cx="${n(x)}" cy="${n(y)}" r="10"/></g>`);
     }
     out.push('</g>');
   }
@@ -168,9 +170,11 @@ export function planFile() {
     .rf{fill:none}
     text{font-family:'Figtree','Helvetica Neue',Arial,sans-serif;fill:#111;text-anchor:middle}
     .t{font-size:17px;font-weight:600;letter-spacing:1px}.t.dim{fill:#666;font-weight:500;font-size:14px}.t.n{font-size:16px;font-weight:700}
-    .cap{font-size:14px;fill:#666;text-anchor:start}`;
-  const capY = PLAN.h + 24 + 34;
+    .cap{font-size:14px;fill:#666;text-anchor:start}.url{font-size:14px;font-weight:600;fill:#111;text-anchor:end}`;
+  const capY = PLAN.h + 24 + 34, url = abs('/apto/');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb.join(' ')}" width="${vb[2]}" height="${vb[3]}">` +
     `<title>Planta ilustrativa do apartamento</title><style>${css}</style><rect x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" fill="#fff"/>${body}` +
-    `<text x="0" y="${capY}" class="cap">Planta ilustrativa, sem escala · 76,33 m² privativos · 2 dormitórios + dependência · Mont'Serrat, Porto Alegre</text></svg>`;
+    `<text x="0" y="${capY}" class="cap">Planta ilustrativa, sem escala · 76,33 m² privativos · 2 dormitórios + dependência · Mont'Serrat, Porto Alegre</text>` +
+    // the listing's address, so a forwarded copy of the file leads back to the photos (a link in the SVG, plain text in the PNG)
+    `<a href="${url}"><text x="${PLAN.w}" y="${capY}" class="url">${url}</text></a></svg>`;
 }
