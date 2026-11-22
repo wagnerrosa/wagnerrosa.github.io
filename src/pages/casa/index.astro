@@ -47,8 +47,10 @@ const hasOg = existsSync('public/casa/og.jpg');
     </button>
     <main class="page">
       <header class="head">
+        <p class="head-k">{casa.kicker}</p>
         <h1>{casa.heading}</h1>
-        <p>{casa.sub}</p>
+        <p class="head-p">{casa.town}</p>
+        <p class="head-c"><span>Committente</span>{casa.client}</p>
       </header>
       <Pianta />
       <Render />

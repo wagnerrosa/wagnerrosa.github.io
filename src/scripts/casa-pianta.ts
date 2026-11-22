@@ -3,6 +3,9 @@
 //   double click / double tap zooms in on that point (at the closest zoom it goes back to the full view).
 // - Touch: two fingers pinch and pan; one finger keeps scrolling the page (touch-action: pan-y), so the plan never traps the page.
 // - Render viewpoints (.cp-mk) keep about their size on screen at any zoom; pressing one never starts a drag (it opens the render).
+// - Legend: each chip switches one kind of annotation off/on (data-off on .cp; the rules are in src/styles/casa.css).
+// - Pianta / Mappa: the satellite map replaces the drawing in the same box and works right away; its iframe is created the first time it
+//   is asked for, so Google loads nothing until then. It is turned by CSS so that its north matches the plan's.
 const MAX = 8;          // closest zoom, × the full view
 
 type V = { el: HTMLElement; svg: SVGSVGElement; full: number[]; vb: number[]; mks: SVGGElement[] };
@@ -120,7 +123,6 @@ for (const v of views) {
 
 if (bar && views.length) {
   bar.hidden = false;
-  root!.querySelector<HTMLElement>('.cp-hint')!.hidden = false;
   bar.addEventListener('click', e => {
     const z = (e.target as Element).closest<HTMLButtonElement>('[data-z]')?.dataset.z, v = visible();
     if (!z || !v) return;
@@ -129,4 +131,46 @@ if (bar && views.length) {
   });
   // width changes (rotation, resize, the other orientation showing up) change what is readable and which buttons apply
   new ResizeObserver(() => views.forEach(apply)).observe(root!);
+
+  // legend
+  const legend = root!.querySelector<HTMLElement>('.cp-legend');
+  if (legend) {
+    legend.hidden = false;
+    const off = new Set<string>();
+    legend.addEventListener('change', e => {
+      const i = e.target as HTMLInputElement;
+      if (!i.dataset.l) return;
+      if (i.checked) off.delete(i.dataset.l); else off.add(i.dataset.l);
+      root!.dataset.off = [...off].join(' ');
+    });
+  }
+
+  // Pianta / Mappa
+  const seg = root!.querySelector<HTMLElement>('.cp-seg'), map = root!.querySelector<HTMLElement>('.cp-map');
+  const title = root!.querySelector<HTMLElement>('.cp-h');
+  if (seg && map) {
+    seg.hidden = false;
+    seg.addEventListener('click', e => {
+      const to = (e.target as Element).closest<HTMLButtonElement>('[data-v]')?.dataset.v;
+      if (!to || root!.dataset.view === to) return;
+      root!.dataset.view = to;
+      seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === to)));
+      if (title) title.textContent = title.dataset[to] ?? title.textContent;
+      if (to === 'map') {
+        map.hidden = false;
+        const box = map.querySelector('.cp-map-frame')!;
+        if (!box.firstChild) {
+          const f = document.createElement('iframe');
+          f.src = map.dataset.src!;
+          f.title = 'Il terreno sulla mappa satellitare';
+          f.referrerPolicy = 'no-referrer-when-downgrade';
+          f.allowFullscreen = true;
+          box.append(f);
+        }
+      } else {
+        map.hidden = true;
+        views.forEach(apply);   // the zoom buttons were out of play meanwhile
+      }
+    });
+  }
 }

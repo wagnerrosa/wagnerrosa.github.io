@@ -171,6 +171,17 @@ export function cono(a: number, r: number, half = 28) {
 // marker size in cm at the full view (about 6 px dot, 21 px hit area, 70 px cone on a desktop screen); the viewer keeps it in px when zooming
 export const MK = { cam: 17, hit: 60, cone: 200 };
 
+/**
+ * Where the satellite map is turned to, in degrees clockwise, so that its north matches the plan's (as drawn: NORTH, 0 = right, y down;
+ * upright on phones: the sheet is turned 90° clockwise). `cover` = what an iframe turned by that angle needs to cover a box (k1 × width
+ * + k2 × height, k2 × width + k1 × height).
+ */
+export function mappa(o: O) {
+  const th = NORTH + 90 + (o === 'port' ? 90 : 0);
+  const r = (th * Math.PI) / 180;
+  return { th, k1: Math.abs(Math.cos(r)), k2: Math.abs(Math.sin(r)) };
+}
+
 export function pianta(o: O, scatti: Scatto[] = []) {
   const { linee, testi } = stato();
   const out: string[] = [];

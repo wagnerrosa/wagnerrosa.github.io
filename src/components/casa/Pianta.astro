@@ -1,25 +1,61 @@
 ---
-// The /casa/ floor plan: the drawing (src/lib/casa-pianta.ts) in both orientations, zoom controls and the PDF download.
-// Zoom/pan live in src/scripts/casa-pianta.ts; without JS the whole drawing shows at once.
+// The /casa/ floor plan: the drawing (src/lib/casa-pianta.ts) in both orientations, the Pianta / Mappa switch, zoom controls, the legend
+// (what to show on the drawing) and the PDF download. Zoom/pan, legend and map live in src/scripts/casa-pianta.ts; without JS the whole
+// drawing shows at once, with everything on.
 // The renders' viewpoints are drawn on it; .cp-tip is their preview on hover (src/scripts/casa-render.ts, viewer in Render.astro).
-import { pianta, type Scatto } from '../../lib/casa-pianta';
+import { pianta, mappa, type Scatto } from '../../lib/casa-pianta';
 import { foto } from '../../lib/casa-render';
+import { casa } from '../../data/casa';
 const scatti: Scatto[] = foto().flatMap(f => (f.at ? [{ i: f.i, at: f.at }] : []));
+
+// Satellite map (Google, loaded only when asked for): same box as the plan, turned so that its north matches the plan's.
+const { place } = casa;
+const embed = `https://maps.google.com/maps?ll=${place.lat},${place.lng}&z=${place.zoom}&t=k&hl=it&output=embed`;
+const [ml, mp] = [mappa('land'), mappa('port')];
+const mapVars = `--th-l:${ml.th.toFixed(1)}deg;--k1-l:${ml.k1.toFixed(4)};--k2-l:${ml.k2.toFixed(4)};--th-p:${mp.th.toFixed(1)}deg;--k1-p:${mp.k1.toFixed(4)};--k2-p:${mp.k2.toFixed(4)}`;
+
+// What the legend can switch off (classes of the drawing: .k-room … in src/lib/casa-pianta.ts; the rules are in src/styles/casa.css)
+const legenda = [
+  { id: 'amb', t: 'Ambienti e mq', d: 'Nomi dei locali e superfici', i: '<text x="8" y="11.5" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor" stroke="none">Aa</text>' },
+  { id: 'liv', t: 'Livelli', d: 'Quote di livello (+1.10, +2.10…)', i: '<circle cx="5" cy="8" r="3.4"/><path d="M5 3.6v8.8M1.6 8H15"/>' },
+  { id: 'quo', t: 'Quote', d: 'Misure dei muri e degli ambienti', i: '<path d="M1.5 4v8M14.5 4v8M1.5 8h13"/>' },
+  { id: 'ape', t: 'Aperture', d: 'Larghezza e altezza di porte e finestre', i: '<path d="M2 13.5V2.5M2 13.5h5.5M2 13.5A8 8 0 0 1 10 5.5"/>' },
+  ...(scatti.length ? [{ id: 'vis', t: 'Punti di vista', d: 'Punti blu: passaci sopra per vedere il render da lì, clic per ingrandirlo', i: '<path d="M2.5 8 14 2.5v11z" fill="currentColor" fill-opacity=".25" stroke="none"/><circle cx="3" cy="8" r="2.4" fill="currentColor" stroke="none"/>' }] : []),
+];
 ---
-<section class="cp" aria-labelledby="cp-h">
+<section class="cp" data-view="plan" data-off="" aria-labelledby="cp-h">
   <div class="cp-bar">
-    <h2 id="cp-h" class="cp-h">Pianta del piano terra</h2>
-    <div class="cp-zoom" role="group" aria-label="Zoom della pianta" hidden>
-      <button type="button" data-z="out" aria-label="Riduci" title="Riduci"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-      <button type="button" data-z="in" aria-label="Ingrandisci" title="Ingrandisci"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-      <button type="button" data-z="fit" aria-label="Vista intera" title="Vista intera"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <h2 id="cp-h" class="cp-h" data-plan="Pianta del piano terra" data-map="Il terreno sulla mappa">Pianta del piano terra</h2>
+    <div class="cp-ctrl">
+      <div class="cp-zoom" role="group" aria-label="Zoom della pianta" title="Ctrl + rotellina o pizzica per ingrandire, trascina per spostarti, doppio clic per avvicinare" hidden>
+        <button type="button" data-z="out" aria-label="Riduci" title="Riduci"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        <button type="button" data-z="in" aria-label="Ingrandisci" title="Ingrandisci"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        <button type="button" data-z="fit" aria-label="Vista intera" title="Vista intera"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+      <div class="cp-seg" role="group" aria-label="Vista" hidden>
+        <button type="button" data-v="plan" aria-pressed="true">Pianta</button>
+        <button type="button" data-v="map" aria-pressed="false" data-track="open_mappa" data-category="casa" data-location="pianta">Mappa</button>
+      </div>
     </div>
   </div>
   <div class="cp-view cp-land"><Fragment set:html={pianta('land', scatti)} /></div>
   <div class="cp-view cp-port"><Fragment set:html={pianta('port', scatti)} /></div>
+  <div class="cp-map" data-src={embed} style={mapVars} hidden>
+    <div class="cp-map-frame"></div>
+    <span class="cp-map-n" aria-hidden="true"><span class="n-dial"><svg viewBox="0 0 36 36" width="36" height="36"><path d="M18 12 22.5 28 18 25 13.5 28Z"/></svg><b>N</b></span></span>
+    <a class="cp-map-link" href={place.link} target="_blank" rel="noopener" data-track="open_google_maps" data-category="casa" data-location="mappa">Apri in Google Maps <span aria-hidden="true">↗</span></a>
+  </div>
   {scatti.length > 0 && <figure class="cp-tip" hidden aria-hidden="true" data-track="open_render" data-category="casa" data-location="anteprima"><img alt="" /><figcaption><span></span><b><svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Ingrandisci</b></figcaption></figure>}
   <div class="cp-foot">
-    <p class="cp-hint" hidden><span class="h-hover">Ctrl + rotellina (o pizzica sul trackpad) per ingrandire, trascina per spostarti; doppio clic per avvicinare.</span><span class="h-touch">Pizzica con due dita per ingrandire e spostarti; doppio tocco per avvicinare.</span> Ingrandisci per leggere quote, livelli e misure delle aperture.{scatti.length > 0 && <><span class="h-hover"> Con il mouse sulla pianta compaiono dei punti blu: passaci sopra per vedere il render da lì, clic per ingrandirlo.</span><span class="h-touch"> Tocca un punto blu per aprire il render visto da lì.</span></>}</p>
+    <div class="cp-legend" role="group" aria-label="Cosa mostrare sulla pianta" hidden>
+      <span class="cp-lg-h">Mostra</span>
+      {legenda.map(l => (
+        <label class="cp-chip" title={l.d}>
+          <input type="checkbox" data-l={l.id} checked />
+          <span><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true" set:html={l.i} />{l.t}</span>
+        </label>
+      ))}
+    </div>
     <a class="cp-dl" href="/casa/pianta.pdf" download="Casa - Pianta piano terra.pdf" data-track="download_pianta_pdf" data-category="casa" data-location="pianta">Scarica la pianta in PDF (A3, scala 1:100) <span aria-hidden="true">↓</span></a>
   </div>
 </section>

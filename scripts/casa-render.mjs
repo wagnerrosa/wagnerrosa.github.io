@@ -4,6 +4,7 @@
 //
 // - The file name (without extension) is the render's key: src/data/casa-render.ts gives it a title and its viewpoint on the plan.
 //   A render with no entry there is compressed but not shown (the script warns).
+// - <key>-i.jpg is the same render with notes on it (sizes, materials…): the viewer switches to it with a toggle. It gets no thumb.
 // - sharp drops all metadata by default and .rotate() applies the EXIF orientation first. Images are never enlarged.
 // - The first render of src/data/casa-render.ts also becomes public/casa/og.jpg (1200x630), the WhatsApp/iMessage link preview.
 import { readdir, mkdir, rm, writeFile, readFile } from 'node:fs/promises';
@@ -31,9 +32,11 @@ for (const f of files) {
   if (!/^[a-z0-9-]+$/.test(name)) throw new Error(`casa-render: rename ${f} (lower case, digits and hyphens only)`);
   const img = sharp(path.join(SRC, f)).rotate();
   const full = await img.clone().resize(FULL_PX, FULL_PX, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 80 }).toFile(`${OUT}/${name}.webp`);
-  const thumb = await img.clone().resize(THUMB_PX, THUMB_PX, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 76 }).toFile(`${THUMB}/${name}.webp`);
-  manifest.push({ file: name, w: full.width, h: full.height, tw: thumb.width });
-  console.log(`${name}  ${full.width}x${full.height}  ${(full.size / 1024) | 0}KB + ${(thumb.size / 1024) | 0}KB${keys.includes(name) ? '' : '  (not in src/data/casa-render.ts: not shown)'}`);
+  const note = name.endsWith('-i');
+  const thumb = note ? null : await img.clone().resize(THUMB_PX, THUMB_PX, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 76 }).toFile(`${THUMB}/${name}.webp`);
+  manifest.push({ file: name, w: full.width, h: full.height, ...(thumb && { tw: thumb.width }) });
+  const known = keys.includes(note ? name.slice(0, -2) : name);
+  console.log(`${name}  ${full.width}x${full.height}  ${(full.size / 1024) | 0}KB${thumb ? ` + ${(thumb.size / 1024) | 0}KB` : ''}${known ? '' : '  (not in src/data/casa-render.ts: not shown)'}`);
 }
 for (const k of keys) if (!manifest.some(m => m.file === k)) console.warn(`casa-render: ${k} is in src/data/casa-render.ts but not in ${SRC}`);
 await writeFile(`${OUT}/render.json`, JSON.stringify(manifest));
