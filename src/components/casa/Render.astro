@@ -2,7 +2,9 @@
 // Renders of the project: a gallery under the plan and the viewer (the render, its title and, on a small copy of the plan, where it is seen from).
 // Gallery: every render whole, in its own shape, in rows of one height (src/styles/casa.css .cr-grid).
 // The viewer focuses itself when it opens (src/scripts/casa-render.ts), not its first button, so ‹ never shows a focus ring on a click; Tab still reaches them.
-// A render with an annotated twin (<key>-i.jpg) shows an "Info" tag on its card and a Render | Info switch in the viewer.
+// Cards: a hairline-free figure, number (its place in the walk-through) + title, "con note" when an annotated twin (<key>-i) exists.
+// Viewer: on a wide screen a rail (render count, title, whole-plan locator, Immagine | Note, ‹ ›) beside the picture; on a small one the rail dissolves into
+// bands around the picture (locator on top, title + switch below), same elements.
 // Data: src/lib/casa-render.ts. Behaviour: src/scripts/casa-render.ts. Without JS a card opens the image itself.
 import { foto } from '../../lib/casa-render';
 import { mappa } from '../../lib/casa-pianta';
@@ -10,7 +12,7 @@ const list = foto();
 ---
 {list.length > 0 && (
   <section class="cr" aria-labelledby="cr-h">
-    <h2 id="cr-h" class="cp-h">Render</h2>
+    <h2 id="cr-h" class="sr">Render</h2>
     <ul class="cr-grid">
       {list.map(f => (
         <li style={`--ar:${(f.w / f.h).toFixed(4)}`}>
@@ -18,8 +20,7 @@ const list = foto();
             data-info={f.info} data-ar={(f.w / f.h).toFixed(4)} data-track="open_render" data-category="casa" data-location="galleria">
             <img src={f.thumb} srcset={`${f.thumb} ${f.tw}w, ${f.full} ${f.w}w`} sizes="(min-width: 900px) 34vw, 92vw" alt=""
               width={f.w} height={f.h} loading="lazy" decoding="async" />
-            {f.info && <b class="cr-tag">Info</b>}
-            <span>{f.titolo}</span>
+            <span><i>{String(f.i + 1).padStart(2, '0')}</i><b>{f.titolo}{f.info && <em>con note</em>}</b></span>
           </a>
         </li>
       ))}
@@ -28,16 +29,22 @@ const list = foto();
 )}
 {list.length > 0 && (
   <dialog class="cr-lb" id="cr-lb" aria-label="Render" tabindex="-1">
-    <img class="cr-img" id="cr-img" alt="" />
-    <div class="cr-map" id="cr-map" aria-hidden="true" style={`--th:${mappa('land').th.toFixed(1)}deg`}><span class="cr-north"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 1.5 12 14 8 11.2 4 14Z"/></svg><b>N</b></span></div>
-    <p class="cr-t" id="cr-t"></p>
-    <div class="cr-seg" id="cr-seg" role="group" aria-label="Versione dell'immagine" hidden>
-      <button type="button" data-m="img" aria-pressed="true">Render</button>
-      <button type="button" data-m="info" aria-pressed="false">Info</button>
+    <div class="cr-rail">
+      <p class="cr-k"><span>Render</span>{list.length > 1 && <b class="cr-c" id="cr-c"></b>}</p>
+      <p class="cr-t" id="cr-t"></p>
+      <div class="cr-map" id="cr-map" style={`--th:${mappa('land').th.toFixed(1)}deg`}><span class="cr-north" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 1.5 12 14 8 11.2 4 14Z"/></svg><b>N</b></span></div>
+      <div class="cr-seg" id="cr-seg" role="group" aria-label="Versione dell'immagine" hidden>
+        <button type="button" data-m="img" aria-pressed="true">Immagine</button>
+        <button type="button" data-m="info" aria-pressed="false" aria-keyshortcuts="I">Note<kbd aria-hidden="true">I</kbd></button>
+      </div>
+      {list.length > 1 && (
+        <div class="cr-nav">
+          <button type="button" class="cr-n cr-prev" id="cr-prev" aria-label="Render precedente">‹</button>
+          <button type="button" class="cr-n cr-next" id="cr-next" aria-label="Render successivo">›</button>
+        </div>
+      )}
     </div>
-    {list.length > 1 && <p class="cr-c" id="cr-c"></p>}
-    {list.length > 1 && <button type="button" class="cr-n cr-prev" id="cr-prev" aria-label="Render precedente">‹</button>}
-    {list.length > 1 && <button type="button" class="cr-n cr-next" id="cr-next" aria-label="Render successivo">›</button>}
+    <div class="cr-stage"><img class="cr-img" id="cr-img" alt="" /></div>
     <button type="button" class="cr-x" id="cr-x" aria-label="Chiudi">×</button>
   </dialog>
 )}

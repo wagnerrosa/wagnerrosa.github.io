@@ -2,8 +2,9 @@
 // - Plan, with a mouse: hovering a viewpoint shows its render, whole, as a preview above it; a click on the viewpoint or on the preview
 //   ("Ingrandisci") opens the viewer. The preview stays while the pointer moves onto it. Touch: a tap opens the viewer.
 // - Gallery: a card opens the viewer (without JS, the image); hovering a card lights its viewpoint on the plan.
-// - Viewer: a render with notes on it (data-info) has a Render | Info switch (also the I key) that swaps the image in place; moving on starts again at the plain render.
-// - Viewer: the render, its title and, on a small copy of the whole plan, the camera and its cone of view. ‹ › and the arrow keys when there are several renders; Esc, × or a click outside the image close it.
+// - Viewer: a render with notes on it (data-info) has an Immagine | Note switch (also the I key) that fades to the annotated twin; moving on starts again at the plain render.
+// - Viewer: the render, its title and, on a small copy of the whole plan, the camera and its cone of view. On a wide screen with a mouse the other viewpoints show
+//   on that plan as dots and a click on one goes to its render. ‹ › and the arrow keys when there are several renders; Esc, × or a click outside the image close it.
 type F = { full: string; info: string | null; thumb: string; titolo: string; ar: string; at: number[] | null };
 
 const cards = [...document.querySelectorAll<HTMLAnchorElement>('.cr-card')];
@@ -40,7 +41,7 @@ if (dlg && list.length) {
 
   // ---- mini map: the whole plan as drawn (a locator, never cropped, the same on every screen), without texts and markers; the camera slides
   // to each render's viewpoint and its cone of view turns to where it looks ----
-  const CARD = 360;   // nominal width in px (the card is a little narrower or wider by screen): sizes of the camera in px are turned into drawing units from it
+  const CARD = 300;   // nominal width in px (the locator is a little narrower or wider by screen): sizes of the camera in px are turned into drawing units from it
   let map: { cam: SVGGElement; cone: SVGPathElement; a: number } | null = null;
   function buildMap() {
     if (map) return map;
@@ -52,8 +53,11 @@ if (dlg && list.length) {
     const u = Number(svg.dataset.full!.split(' ')[2]) / CARD;   // drawing units per px
     // the camera goes where the markers were; the cone is drawn pointing right and turned, so it can slide and turn between renders
     const shots = svg.querySelector('.cp-shots')!;
-    shots.innerHTML = `<defs><radialGradient id="cr-g" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="${(56 * u).toFixed(0)}"><stop offset="0" stop-color="#2563eb" stop-opacity=".62"/><stop offset="1" stop-color="#2563eb" stop-opacity=".1"/></radialGradient></defs>`
-      + `<g class="cr-cam"><path class="cr-cone" d="${cono(0, 56 * u)}"/><circle class="cr-dot" r="${(5.5 * u).toFixed(0)}"/></g>`;
+    // the other viewpoints: small dots (shown on a wide screen with a mouse), each with a larger invisible target; a click goes to its render
+    const pts = list.map((f, i) => f.at ? `<g class="cr-pt" data-i="${i}" transform="translate(${f.at[0]} ${f.at[1]})"><title>${String(i + 1).padStart(2, '0')} · ${f.titolo.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</title><circle class="cr-hit" r="${(11 * u).toFixed(0)}"/><circle class="cr-p" r="${(4.2 * u).toFixed(1)}"/></g>` : '').join('');
+    shots.innerHTML = `<defs><radialGradient id="cr-g" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="${(56 * u).toFixed(0)}"><stop class="cr-g0" offset="0" stop-opacity=".62"/><stop class="cr-g0" offset="1" stop-opacity=".1"/></radialGradient></defs>`
+      + pts + `<g class="cr-cam"><path class="cr-cone" d="${cono(0, 56 * u)}"/><circle class="cr-dot" r="${(5.5 * u).toFixed(0)}"/></g>`;
+    shots.querySelectorAll<SVGGElement>('.cr-pt').forEach(g => g.addEventListener('click', () => show(+g.dataset.i!)));
     mapBox.replaceChildren(svg, ...mapBox.querySelectorAll('.cr-north'));
     map = { cam: shots.querySelector('.cr-cam')!, cone: shots.querySelector('.cr-cone')!, a: 0 };
     return map;
@@ -63,6 +67,7 @@ if (dlg && list.length) {
     if (!f.at) return;
     const first = !map, m = buildMap();
     const [x, y, a] = f.at;
+    mapBox.querySelectorAll('.cr-pt').forEach(g => g.classList.toggle('cur', (g as SVGGElement).dataset.i === String(cur)));
     // turn the short way round
     let d = (((a - m.a) % 360) + 540) % 360 - 180;
     if (first) d = a - m.a;
@@ -75,9 +80,23 @@ if (dlg && list.length) {
 
   // ---- viewer ----
   /** Plain render or the one with notes. */
+  let swap = 0;
+  /** Fade to another image: it is decoded first, so the old one is never replaced by a half-loaded one. */
+  function paint(src: string) {
+    if (img.getAttribute('src') === src) return;
+    const id = ++swap;
+    if (img.getAttribute('src')) img.classList.add('lo');
+    const n = new Image();
+    n.src = src;
+    n.decode().catch(() => {}).then(() => {
+      if (id !== swap) return;
+      img.src = src;
+      img.classList.remove('lo');
+    });
+  }
   function mode(m: 'img' | 'info') {
     const f = list[cur], note = m === 'info' && !!f.info;
-    img.src = note ? f.info! : f.full;
+    paint(note ? f.info! : f.full);
     img.alt = `${note ? 'Render con note' : 'Render'}: ${f.titolo}`;
     seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.m === 'info') === note)));
   }
@@ -88,12 +107,13 @@ if (dlg && list.length) {
     mode('img');
     if (f.info) new Image().src = f.info;
     title.textContent = f.titolo;
-    if (count) count.textContent = `${cur + 1} / ${list.length}`;
+    if (count) count.textContent = `${String(cur + 1).padStart(2, '0')} / ${String(list.length).padStart(2, '0')}`;
     aim(f);
     if (list.length > 1) [cur + 1, cur - 1].forEach(n => { new Image().src = list[(n + list.length) % list.length].full; });
   }
   function open(i: number) {
     hideTip();
+    if (!dlg!.open) { img.removeAttribute('src'); img.classList.remove('lo'); }   // no flash of the render seen last
     show(i);
     if (!dlg!.open) {
       dlg!.showModal();
