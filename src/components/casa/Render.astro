@@ -12,7 +12,7 @@ const list = foto();
 ---
 {list.length > 0 && (
   <section class="cr" aria-labelledby="cr-h">
-    <h2 id="cr-h" class="cp-h cr-h">Il percorso in {list.length} render</h2>
+    <h2 id="cr-h" class="sr">Render</h2>
     <ul class="cr-grid">
       {list.map(f => (
         <li style={`--ar:${(f.w / f.h).toFixed(4)}`}>

@@ -159,8 +159,8 @@ a { color: inherit; }
 @keyframes cr-tip { from { opacity: 0; translate: -50% calc(-100% - 4px); } }
 @keyframes cr-tip-below { from { opacity: 0; translate: -50% 4px; } }
 
-.cr { margin-top: 44px; }
-.cr-h { margin-bottom: 16px; }   /* the gallery's title, as the plan's */
+.cr { margin-top: 40px; }
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* heading for screen readers only */
 /* gallery: every render whole, in its own shape (--ar on each li). Rows of one height: each card grows in proportion to its shape
    from a 200px-tall start. A last row with room to spare keeps that start: the ::after filler joins it when a quarter of the width
    is still free and takes the slack; when less is free it wraps onto a line of its own (0 tall, and the rows are spaced by margin,
