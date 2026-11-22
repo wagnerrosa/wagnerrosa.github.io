@@ -104,4 +104,13 @@ export const revisioni: Revisione[] = [
       'r2-mq': ['mq', 'mq 12.30', 2033.2, 890.8, 0],
     },
   },
+  {
+    id: 'r3',
+    data: '2026-11-22',
+    titolo: 'Soggiorno: tolta la superficie, resta "mq"',
+    togli: ['t91'],   // 'mq 12.90'
+    testi: {
+      'r3-mq': ['mq', 'mq', 1094.2, 920.5, 0],   // under the name, which is centred at 1094.2
+    },
+  },
 ];
