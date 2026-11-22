@@ -95,9 +95,13 @@ a { color: inherit; }
 .cr { margin-top: 40px; }
 .cr .cp-h { margin-bottom: 12px; }
 /* gallery: every render whole, in its own shape (--ar on each li). Rows of one height: each card grows in proportion to its shape
-   from a 200px-tall start; a lone card on the last row stops at 400px tall instead of filling the width */
-.cr-grid { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; }
-.cr-grid li { flex: var(--ar) 1 calc(var(--ar) * 200px); max-width: calc(var(--ar) * 400px); min-width: 0; }
+   from a 200px-tall start. A last row with room to spare keeps that start: the ::after filler joins it when a quarter of the width
+   is still free and takes the slack; when less is free it wraps onto a line of its own (0 tall, and the rows are spaced by margin,
+   not row-gap, so that line adds nothing) and the row fills the width like the others. Grow = 10 × the shape, not the shape: a line
+   whose grow factors add up to less than 1 (one upright render alone) only hands out that fraction of the free space */
+.cr-grid { display: flex; flex-wrap: wrap; column-gap: 12px; margin-bottom: -12px; list-style: none; }
+.cr-grid::after { content: ''; flex: 99999 1 25%; }
+.cr-grid li { flex: calc(var(--ar) * 10) 1 calc(var(--ar) * 200px); max-width: calc(var(--ar) * 400px); min-width: 0; margin-bottom: 12px; }
 .cr-card { display: block; border-radius: 10px; overflow: hidden; outline: 1px solid var(--line); outline-offset: -1px; text-decoration: none; background: var(--paper); cursor: zoom-in; }   /* an outline drawn inside, over the image, not a border: a border would make narrow cards a few px shorter */
 .cr-card img { display: block; width: 100%; height: auto; aspect-ratio: var(--ar); object-fit: cover; background: var(--code); }
 .cr-card span { display: block; padding: 9px 12px 10px; font-size: 14px; font-weight: 600; }
