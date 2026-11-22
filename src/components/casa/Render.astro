@@ -1,0 +1,40 @@
+---
+// Renders of the project: a gallery under the plan and the viewer (the render, its title and, on a small copy of the plan, where it is seen from).
+// Gallery: every render whole, in its own shape, in rows of one height (src/styles/casa.css .cr-grid).
+// The viewer focuses itself when it opens (src/scripts/casa-render.ts), not its first button, so ‹ never shows a focus ring on a click; Tab still reaches them.
+// Data: src/lib/casa-render.ts. Behaviour: src/scripts/casa-render.ts. Without JS a card opens the image itself.
+import { foto } from '../../lib/casa-render';
+const list = foto();
+---
+{list.length > 0 && (
+  <section class="cr" aria-labelledby="cr-h">
+    <h2 id="cr-h" class="cp-h">Render</h2>
+    <ul class="cr-grid">
+      {list.map(f => (
+        <li style={`--ar:${(f.w / f.h).toFixed(4)}`}>
+          <a class="cr-card" href={f.full} data-i={f.i} data-full={f.full} data-thumb={f.thumb} data-titolo={f.titolo} data-at={f.at?.join(' ')}
+            data-ar={(f.w / f.h).toFixed(4)} data-track="open_render" data-category="casa" data-location="galleria">
+            <img src={f.thumb} srcset={`${f.thumb} ${f.tw}w, ${f.full} ${f.w}w`} sizes="(min-width: 900px) 34vw, 92vw" alt=""
+              width={f.w} height={f.h} loading="lazy" decoding="async" />
+            <span>{f.titolo}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+{list.length > 0 && (
+  <dialog class="cr-lb" id="cr-lb" aria-label="Render" tabindex="-1">
+    <img class="cr-img" id="cr-img" alt="" />
+    <div class="cr-map" id="cr-map" aria-hidden="true"></div>
+    <p class="cr-t" id="cr-t"></p>
+    {list.length > 1 && <p class="cr-c" id="cr-c"></p>}
+    {list.length > 1 && <button type="button" class="cr-n cr-prev" id="cr-prev" aria-label="Render precedente">‹</button>}
+    {list.length > 1 && <button type="button" class="cr-n cr-next" id="cr-next" aria-label="Render successivo">›</button>}
+    <button type="button" class="cr-x" id="cr-x" aria-label="Chiudi">×</button>
+  </dialog>
+)}
+
+<script>
+  import '../../scripts/casa-render';
+</script>

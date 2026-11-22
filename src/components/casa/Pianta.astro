@@ -1,0 +1,29 @@
+---
+// The /casa/ floor plan: the drawing (src/lib/casa-pianta.ts) in both orientations, zoom controls and the PDF download.
+// Zoom/pan live in src/scripts/casa-pianta.ts; without JS the whole drawing shows at once.
+// The renders' viewpoints are drawn on it; .cp-tip is their preview on hover (src/scripts/casa-render.ts, viewer in Render.astro).
+import { pianta, type Scatto } from '../../lib/casa-pianta';
+import { foto } from '../../lib/casa-render';
+const scatti: Scatto[] = foto().flatMap(f => (f.at ? [{ i: f.i, at: f.at }] : []));
+---
+<section class="cp" aria-labelledby="cp-h">
+  <div class="cp-bar">
+    <h2 id="cp-h" class="cp-h">Pianta del piano terra</h2>
+    <div class="cp-zoom" role="group" aria-label="Zoom della pianta" hidden>
+      <button type="button" data-z="out" aria-label="Riduci" title="Riduci"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <button type="button" data-z="in" aria-label="Ingrandisci" title="Ingrandisci"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <button type="button" data-z="fit" aria-label="Vista intera" title="Vista intera"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+  <div class="cp-view cp-land"><Fragment set:html={pianta('land', scatti)} /></div>
+  <div class="cp-view cp-port"><Fragment set:html={pianta('port', scatti)} /></div>
+  {scatti.length > 0 && <figure class="cp-tip" hidden aria-hidden="true" data-track="open_render" data-category="casa" data-location="anteprima"><img alt="" /><figcaption><span></span><b><svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Ingrandisci</b></figcaption></figure>}
+  <div class="cp-foot">
+    <p class="cp-hint" hidden><span class="h-hover">Ctrl + rotellina (o pizzica sul trackpad) per ingrandire, trascina per spostarti; doppio clic per avvicinare.</span><span class="h-touch">Pizzica con due dita per ingrandire e spostarti; doppio tocco per avvicinare.</span> Ingrandisci per leggere quote, livelli e misure delle aperture.{scatti.length > 0 && <><span class="h-hover"> Con il mouse sulla pianta compaiono dei punti blu: passaci sopra per vedere il render da lì, clic per ingrandirlo.</span><span class="h-touch"> Tocca un punto blu per aprire il render visto da lì.</span></>}</p>
+    <a class="cp-dl" href="/casa/pianta.pdf" download="Casa - Pianta piano terra.pdf" data-track="download_pianta_pdf" data-category="casa" data-location="pianta">Scarica la pianta in PDF (A3, scala 1:100) <span aria-hidden="true">↓</span></a>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/casa-pianta';
+</script>

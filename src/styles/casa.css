@@ -1,0 +1,130 @@
+/* /casa/ only. Uses the site tokens (colors, fonts, dark mode); none of the wheel/shell CSS. */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--paper); }
+body { background: var(--paper); color: var(--ink); font: 400 16px/1.45 var(--sans); letter-spacing: -.01em; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---------- theme toggle (top right) ---------- */
+.theme { position: absolute; top: 14px; right: 16px; z-index: 20; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border-radius: 999px; border: 1px solid var(--line-strong); background: color-mix(in srgb, var(--paper) 80%, transparent); color: var(--ink); cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.theme .i-sun { display: none; }
+:root[data-theme="dark"] .theme .i-sun { display: block; }
+:root[data-theme="dark"] .theme .i-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme .i-sun { display: block; }
+  :root:not([data-theme="light"]) .theme .i-moon { display: none; }
+}
+@media (hover: hover) { .theme:hover { background: var(--code); } }
+
+/* ---------- page ---------- */
+.page { min-height: 100svh; }
+.page { max-width: 1680px; margin: 0 auto; padding: 28px 24px 56px; }
+.head { padding-right: 56px; }   /* clear of the theme toggle */
+.head h1 { font: 600 clamp(26px, 3.2vw, 38px)/1.1 var(--display); letter-spacing: -.025em; }
+.head p { margin-top: 6px; color: var(--mute); font-size: 15px; }
+
+/* ---------- floor plan (src/components/casa/Pianta.astro, drawing: src/lib/casa-pianta.ts) ----------
+   Desktop and phones held sideways: the plan as drawn (land). Phones upright: turned 90° (port). */
+.cp { margin-top: 28px; }
+.cp-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.cp-h { font: 600 13px/1.2 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
+.cp-zoom { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; overflow: hidden; background: var(--paper); }
+.cp-zoom[hidden] { display: none; }
+.cp-zoom button { display: grid; place-items: center; width: 44px; height: 38px; padding: 0; border: 0; background: none; color: var(--ink); cursor: pointer; }
+.cp-zoom button + button { border-left: 1px solid var(--line); }
+.cp-zoom button:disabled { color: var(--mute); opacity: .45; cursor: default; }
+@media (hover: hover) { .cp-zoom button:not(:disabled):hover { background: var(--code); } }
+.cp-view { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); touch-action: pan-y; }
+.cp-view.zoomed { cursor: grab; }
+.cp-view.dragging { cursor: grabbing; }
+.cp-port { display: none; }
+@media (max-width: 820px) and (orientation: portrait) {
+  .page { padding: 20px 16px 48px; }
+  .cp-land { display: none; }
+  .cp-port { display: block; }
+}
+.cp-svg { display: block; width: 100%; height: auto; -webkit-user-select: none; user-select: none; }
+.cp-svg path, .cp-svg circle { vector-effect: non-scaling-stroke; }
+.a-i { fill: color-mix(in srgb, #b07b3c 9%, var(--paper)); }
+.a-e { fill: color-mix(in srgb, #6b8f3e 8%, var(--paper)); }
+.l-m, .l-mc, .l-d, .l-s, .l-t { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; }
+.l-m, .l-mc { stroke-width: 1.5px; }
+.l-mc { fill: var(--paper); }
+.l-d { stroke-width: 1px; }
+.l-s, .l-t { stroke-width: .75px; stroke: color-mix(in srgb, var(--ink) 72%, var(--paper)); }
+.l-t { stroke-dasharray: 3 2; }
+.l-f { fill: var(--ink); stroke: none; }
+.cp-svg text { fill: var(--ink); font-family: var(--sans); text-anchor: middle; }
+.cp-svg .k-room { font-weight: 600; }
+.cp-svg .k-mq, .cp-svg .k-lvl, .cp-svg .k-dim, .cp-svg .k-frac, .cp-svg .k-forno { fill: var(--ink-2); }
+.cp-svg .k-ext, .cp-svg .k-sez, .cp-svg .k-nord { font-weight: 600; }
+.cp-svg .k-via { font-weight: 500; fill: var(--mute); }
+.cp-foot { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 24px; margin-top: 14px; }
+.cp-hint { max-width: 62em; font-size: 13px; line-height: 1.45; color: var(--mute); }
+.cp-hint[hidden] { display: none; }
+.h-hover { display: none; }
+@media (hover: hover) { .h-hover { display: inline; } .h-touch { display: none; } }
+.cp-dl { font-size: 15px; font-weight: 600; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; white-space: nowrap; }
+
+/* ---------- renders: viewpoints on the plan, preview, gallery, viewer (src/components/casa/Render.astro, src/scripts/casa-render.ts) ---------- */
+.cp { position: relative; }   /* the preview is placed in this box */
+.cp-shot { cursor: zoom-in; }
+.cp-cone { fill: rgb(var(--accent-rgb) / .16); stroke: rgb(var(--accent-rgb) / .5); stroke-width: 1px; transition: fill .15s; }
+.cp-hit { fill: transparent; }
+.cp-cam { fill: var(--accent); stroke: var(--paper); stroke-width: 2.5px; transition: fill .15s; }
+.cp-shot.on .cp-cone { fill: rgb(var(--accent-rgb) / .36); }
+.cp-shot.on .cp-cam { fill: var(--ink); }
+@media (hover: hover) { .cp-shot:hover .cp-cone { fill: rgb(var(--accent-rgb) / .36); } .cp-shot:hover .cp-cam { fill: var(--ink); } }
+.cp-view.dragging .cp-shot { pointer-events: none; }
+/* with a mouse the viewpoints show only while the pointer is on the plan (or a gallery card lights one up); touch: always */
+@media (hover: hover) {
+  .cp-shot { opacity: 0; transition: opacity .2s; }
+  .cp-view:hover .cp-shot, .cp-shot.on { opacity: 1; }
+}
+/* preview: the whole render in its own shape (--ar, set on hover), at most 320 wide and 300 tall; a click on it opens the viewer */
+.cp-tip { --ar: 1.5; position: absolute; left: var(--x); top: var(--y); z-index: 5; width: min(320px, calc(300px * var(--ar))); translate: -50% calc(-100% - 12px); border-radius: 8px; overflow: hidden; background: var(--paper); box-shadow: 0 8px 28px rgb(0 0 0 / .28), 0 0 0 1px var(--line); cursor: zoom-in; animation: cr-tip .18s ease-out; }
+.cp-tip[hidden] { display: none; }
+.cp-tip.below { translate: -50% 12px; animation-name: cr-tip-below; }
+.cp-tip img { display: block; width: 100%; aspect-ratio: var(--ar); object-fit: cover; background: var(--code); }
+.cp-tip figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 10px; padding: 7px 10px 8px; font-size: 13px; font-weight: 600; }
+.cp-tip b { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: var(--accent); white-space: nowrap; }
+@media (hover: hover) { .cp-tip:hover b { text-decoration: underline; text-underline-offset: 3px; } }
+@keyframes cr-tip { from { opacity: 0; translate: -50% calc(-100% - 4px); } }
+@keyframes cr-tip-below { from { opacity: 0; translate: -50% 4px; } }
+
+.cr { margin-top: 40px; }
+.cr .cp-h { margin-bottom: 12px; }
+/* gallery: every render whole, in its own shape (--ar on each li). Rows of one height: each card grows in proportion to its shape
+   from a 200px-tall start; a lone card on the last row stops at 400px tall instead of filling the width */
+.cr-grid { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; }
+.cr-grid li { flex: var(--ar) 1 calc(var(--ar) * 200px); max-width: calc(var(--ar) * 400px); min-width: 0; }
+.cr-card { display: block; border-radius: 10px; overflow: hidden; outline: 1px solid var(--line); outline-offset: -1px; text-decoration: none; background: var(--paper); cursor: zoom-in; }   /* an outline drawn inside, over the image, not a border: a border would make narrow cards a few px shorter */
+.cr-card img { display: block; width: 100%; height: auto; aspect-ratio: var(--ar); object-fit: cover; background: var(--code); }
+.cr-card span { display: block; padding: 9px 12px 10px; font-size: 14px; font-weight: 600; }
+@media (hover: hover) { .cr-card:hover { outline-color: var(--line-strong); } .cr-card:hover span { color: var(--accent); } }
+
+/* viewer: always dark, so its colors are fixed (the mini plan too) */
+.cr-lb { border: 0; padding: 0; background: transparent; width: 100vw; height: 100dvh; max-width: none; max-height: none; overflow: hidden; color: #fff; }
+.cr-lb::backdrop { background: rgb(0 0 0 / .92); }
+.cr-lb[open] { display: grid; place-items: center; }
+.cr-lb:focus { outline: none; }
+.cr-img { max-width: 100vw; max-height: 100dvh; object-fit: contain; }
+.cr-x, .cr-n { position: absolute; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 999px; background: rgb(0 0 0 / .5); color: #fff; font-size: 28px; line-height: 1; cursor: pointer; }
+.cr-x { top: 16px; right: 16px; }
+.cr-n { top: 50%; translate: 0 -50%; }
+.cr-prev { left: 12px; }
+.cr-next { right: 12px; }
+.cr-t { position: absolute; left: 16px; bottom: 16px; padding: 6px 12px; border-radius: 999px; background: rgb(0 0 0 / .6); font-size: 14px; font-weight: 600; }
+.cr-c { position: absolute; right: 16px; bottom: 22px; font-size: 13px; text-shadow: 0 1px 4px rgb(0 0 0 / .6); }
+.cr-map { position: absolute; top: 16px; left: 16px; width: clamp(160px, 22vw, 300px); aspect-ratio: 3 / 2; border-radius: 10px; overflow: hidden; background: #141414; box-shadow: 0 0 0 1px rgb(255 255 255 / .1); }
+.cr-map[hidden] { display: none; }
+.cr-svg { display: block; width: 100%; height: 100%; }
+.cr-svg .a-i { fill: rgb(255 255 255 / .07); }
+.cr-svg .a-e { fill: rgb(120 170 90 / .12); }
+.cr-svg .l-m, .cr-svg .l-mc { stroke: rgb(255 255 255 / .85); stroke-width: 1px; }
+.cr-svg .l-mc { fill: #141414; }
+.cr-svg .l-d, .cr-svg .l-s, .cr-svg .l-t { stroke: rgb(255 255 255 / .35); stroke-width: .6px; }
+.cr-svg .l-f { fill: rgb(255 255 255 / .5); }
+.cr-cone { fill: rgb(96 165 250 / .35); stroke: rgb(96 165 250 / .8); stroke-width: 1px; }
+.cr-dot { fill: #60a5fa; stroke: #141414; stroke-width: 2px; }
+@media (prefers-reduced-motion: reduce) { .cp-tip { animation: none; } .cp-shot, .cp-cone, .cp-cam { transition: none; } }

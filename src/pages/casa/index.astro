@@ -1,0 +1,64 @@
+---
+// Shared by link only. Not in sitemap.xml / llms.txt, noindex, no site shell (Google Analytics is added on its own).
+// The whole page is in Italian. Raw assets go in casa-src/ (git-ignored); the compressed ones that ship live in public/casa/.
+// Floor plan: src/components/casa/Pianta.astro (data: src/data/casa-pianta*.ts; PDF: /casa/pianta.pdf).
+// Renders: src/components/casa/Render.astro (data: src/data/casa-render.ts; images: scripts/casa-render.mjs, which also writes og.jpg).
+import '@fontsource-variable/figtree';
+import '@fontsource-variable/source-serif-4';
+import '../../styles/tokens.css';
+import '../../styles/casa.css';
+import { existsSync } from 'node:fs';
+import ThemeScript from '../../components/ThemeScript.astro';
+import Analytics from '../../components/Analytics.astro';
+import { abs } from '../../data/site';
+import { casa } from '../../data/casa';
+import Pianta from '../../components/casa/Pianta.astro';
+import Render from '../../components/casa/Render.astro';
+const hasOg = existsSync('public/casa/og.jpg');
+---
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{casa.title}</title>
+    <meta name="description" content={casa.summary} />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <meta property="og:title" content={casa.title} />
+    <meta property="og:description" content={casa.summary} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:url" content={abs('/casa/')} />
+    {hasOg && <meta property="og:image" content={abs('/casa/og.jpg')} />}
+    {hasOg && <meta property="og:image:width" content="1200" />}
+    {hasOg && <meta property="og:image:height" content="630" />}
+    <meta name="twitter:card" content={hasOg ? 'summary_large_image' : 'summary'} />
+    <ThemeScript js={false} />
+    <Analytics />
+  </head>
+  <body>
+    <button type="button" id="theme" class="theme" aria-label="Tema chiaro/scuro" title="Tema chiaro/scuro">
+      <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <main class="page">
+      <header class="head">
+        <h1>{casa.heading}</h1>
+        <p>{casa.sub}</p>
+      </header>
+      <Pianta />
+      <Render />
+    </main>
+    <script is:inline>
+      document.getElementById('theme').addEventListener('click', function () {
+        var d = document.documentElement, dark = d.dataset.theme ? d.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        d.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', d.dataset.theme); } catch (e) {}
+      });
+    </script>
+  </body>
+</html>

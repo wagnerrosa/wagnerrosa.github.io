@@ -19,3 +19,6 @@
 
 # apto: raw photos (300MB); only the compressed ones in public/apto/ are published
 /apto-src
+
+# casa: raw architecture assets (renders, photos, plan files); only the compressed ones in public/casa/ are published
+/casa-src
