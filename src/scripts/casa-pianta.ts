@@ -2,22 +2,27 @@
 // - Buttons − / + / full view; ctrl/⌘ + wheel (a trackpad pinch arrives as ctrl + wheel); mouse drag pans once zoomed in;
 //   double click / double tap zooms in on that point (at the closest zoom it goes back to the full view).
 // - Touch: two fingers pinch and pan; one finger keeps scrolling the page (touch-action: pan-y), so the plan never traps the page.
-// - Render viewpoints (.cp-mk) keep about their size on screen at any zoom; pressing one never starts a drag (it opens the render).
+// - Render viewpoints: the cone (.cp-mk) keeps about its size on screen at any zoom, the numbered pin (.cp-pin) exactly; pressing one never
+//   starts a drag (it opens the render).
+// - Graphic scale (.cp-scale) beside the title: a round length that follows the zoom.
 // - Legend: each chip switches one kind of annotation off/on (data-off on .cp; the rules are in src/styles/casa.css).
 // - Pianta / Mappa: the satellite map replaces the drawing in the same box and works right away; its iframe is created the first time it
 //   is asked for, so Google loads nothing until then. It is turned by CSS so that its north matches the plan's.
 const MAX = 8;          // closest zoom, × the full view
 
-type V = { el: HTMLElement; svg: SVGSVGElement; full: number[]; vb: number[]; mks: SVGGElement[] };
+type V = { el: HTMLElement; svg: SVGSVGElement; full: number[]; vb: number[]; mks: SVGGElement[]; pins: SVGGElement[] };
 const views: V[] = [...document.querySelectorAll<HTMLElement>('.cp-view')].map(el => {
   const svg = el.querySelector('svg')!;
   const full = svg.getAttribute('viewBox')!.split(' ').map(Number);
-  return { el, svg, full, vb: [...full], mks: [...svg.querySelectorAll<SVGGElement>('.cp-mk')] };
+  return { el, svg, full, vb: [...full], mks: [...svg.querySelectorAll<SVGGElement>('.cp-mk')], pins: [...svg.querySelectorAll<SVGGElement>('.cp-pin')] };
 });
 const onShot = (e: Event) => !!(e.target as Element).closest?.('.cp-shot');
 const root = document.querySelector<HTMLElement>('.cp');
 const bar = root?.querySelector<HTMLElement>('.cp-zoom');
 const btn = (z: string) => bar?.querySelector<HTMLButtonElement>(`[data-z="${z}"]`);
+// graphic scale beside the title: a round length (10, 5, 2, 1 or 0.5 m) at most 150 px long at the current zoom
+const scale = root?.querySelector<HTMLElement>('.cp-scale');
+const STEPS = [10, 5, 2, 1, 0.5];
 
 const visible = () => views.find(v => v.el.offsetParent !== null);
 const zoomOf = (v: V) => v.full[2] / v.vb[2];
@@ -26,13 +31,25 @@ function apply(v: V) {
   v.svg.setAttribute('viewBox', v.vb.map(x => Math.round(x * 10) / 10).join(' '));
   const z = zoomOf(v);
   v.el.classList.toggle('zoomed', z > 1.001);
-  // markers: shrink in drawing units as the plan grows, a little less than the zoom so they still feel part of the drawing
+  // cones: shrink in drawing units as the plan grows, a little less than the zoom so they still feel part of the drawing
   const k = Math.pow(1 / z, 0.85).toFixed(3);
   v.mks.forEach(g => g.setAttribute('transform', `scale(${k})`));
+  // pins: drawn in px, scaled by the drawing units per px, so the number keeps its size (a hidden view has no width: left as it is)
+  const w = v.svg.getBoundingClientRect().width;
+  if (w) v.pins.forEach(g => g.setAttribute('transform', `scale(${(v.vb[2] / w).toFixed(4)})`));
   if (v === visible()) {
     btn('out')!.disabled = z <= 1.001;
     btn('fit')!.disabled = z <= 1.001;
     btn('in')!.disabled = z >= MAX - 0.001;
+    if (scale && w) {
+      const pxm = (w / v.vb[2]) * 100;   // px per metre (drawing units are cm)
+      const m = STEPS.find(s => s * pxm <= 150) ?? STEPS.at(-1)!;
+      const t = `${String(m).replace('.', ',')} m`;
+      scale.querySelector('i')!.style.width = `${(m * pxm).toFixed(1)}px`;
+      scale.querySelector('b')!.textContent = t;
+      scale.setAttribute('aria-label', `Scala grafica: la barra misura ${t}`);
+      scale.hidden = false;
+    }
   }
 }
 
@@ -130,7 +147,9 @@ if (bar && views.length) {
     else zoomAt(v, z === 'in' ? 1.6 : 1 / 1.6, ...centre(v));
   });
   // width changes (rotation, resize, the other orientation showing up) change what is readable and which buttons apply
-  new ResizeObserver(() => views.forEach(apply)).observe(root!);
+  const ro = new ResizeObserver(() => views.forEach(apply));
+  ro.observe(root!);
+  views.forEach(v => ro.observe(v.el));   // a view that was hidden gets its width: its pins and the scale follow
 
   // legend
   const legend = root!.querySelector<HTMLElement>('.cp-legend');

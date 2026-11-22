@@ -168,8 +168,11 @@ export function cono(a: number, r: number, half = 28) {
   const p = (d: number) => `${n(r * Math.cos((d * Math.PI) / 180))} ${n(r * Math.sin((d * Math.PI) / 180))}`;
   return `M0 0L${p(a - half)}A${r} ${r} 0 0 1 ${p(a + half)}Z`;
 }
-// marker size in cm at the full view (about 6 px dot, 21 px hit area, 70 px cone on a desktop screen); the viewer keeps it in px when zooming
-export const MK = { cam: 17, hit: 60, cone: 200 };
+// cone of view in cm at the full view (about 70 px on a desktop screen); src/scripts/casa-pianta.ts keeps about that size when zooming
+export const MK = { cone: 200 };
+// the pin (dot with the render's number, same as the gallery's) in screen px: src/scripts/casa-pianta.ts scales it by the drawing units
+// per px, so it stays this size at any width and zoom (text never under 11px). PIN.k = that scale on a desktop at full view, for no JS.
+export const PIN = { cam: 10.5, hit: 17, num: 11, k: 2.8 };
 
 /**
  * Where the satellite map is turned to, in degrees clockwise, so that its north matches the plan's (as drawn: NORTH, 0 = right, y down;
@@ -216,11 +219,16 @@ export function pianta(o: O, scatti: Scatto[] = []) {
   const [nx, ny] = [bx + ux * (br + 26), by_ + uy * (br + 26)];
   out.push(`<g class="cp-t">${o === 'land' ? text('nord', 'N', nx, ny + 10.5, 0, 30) : text('nord', 'N', nx + 10.5, ny, -90, 30)}</g>`);
 
-  // render viewpoints, on top of everything. Only the dot reacts to the pointer (.cp-hit widens it); the cone shows the view.
+  // render viewpoints, on top of everything: the cone (.cp-mk) shows the view; the pin carries the render's number, and only it reacts to
+  // the pointer (.cp-hit widens it). Upright plan: the number turns back against the sheet so it reads upright.
   if (scatti.length) {
     out.push('<g class="cp-shots">');
-    for (const { i, at: [x, y, a] } of scatti)
-      out.push(`<g class="cp-shot" data-i="${i}" data-track="open_render" data-category="casa" data-location="pianta" transform="translate(${n(x)} ${n(y)})"><g class="cp-mk"><path class="cp-cone" d="${cono(a, MK.cone)}"/><circle class="cp-hit" r="${MK.hit}"/><circle class="cp-cam" r="${MK.cam}"/></g></g>`);
+    for (const { i, at: [x, y, a] } of scatti) {
+      const num = `<text class="cp-num" y="${n(G * PIN.num)}" font-size="${PIN.num}"${o === 'port' ? ' transform="rotate(-90)"' : ''}>${String(i + 1).padStart(2, '0')}</text>`;
+      out.push(`<g class="cp-shot" data-i="${i}" data-track="open_render" data-category="casa" data-location="pianta" transform="translate(${n(x)} ${n(y)})">` +
+        `<g class="cp-mk"><path class="cp-cone" d="${cono(a, MK.cone)}"/></g>` +
+        `<g class="cp-pin" transform="scale(${PIN.k})"><circle class="cp-hit" r="${PIN.hit}"/><circle class="cp-cam" r="${PIN.cam}"/>${num}</g></g>`);
+    }
     out.push('</g>');
   }
 

@@ -153,7 +153,7 @@ if (dlg && list.length) {
 
   // ---- plan: preview on hover, viewer on click / tap ----
   const tip = sec?.querySelector<HTMLElement>('.cp-tip');
-  const tipImg = tip?.querySelector('img'), tipCap = tip?.querySelector('figcaption span');
+  const tipImg = tip?.querySelector('img'), tipNum = tip?.querySelector('figcaption i'), tipCap = tip?.querySelector('figcaption em');
   let tipI = -1, leaving = 0;
   function hideTip() {
     clearTimeout(leaving);
@@ -164,12 +164,13 @@ if (dlg && list.length) {
   // leaving a viewpoint waits a beat, so the pointer can cross the gap to the preview and click it
   const hideSoon = () => { clearTimeout(leaving); leaving = setTimeout(hideTip, 160); };
   function peek(s: SVGGElement, i: number) {
-    if (!tip || !sec || !tipImg || !tipCap) return;
+    if (!tip || !sec || !tipImg || !tipCap || !tipNum) return;
     clearTimeout(leaving);
     document.querySelectorAll('.cp-shot.on').forEach(o => o !== s && o.classList.remove('on'));
     s.classList.add('on');
     tipI = i;
     tipImg.src = list[i].thumb;
+    tipNum.textContent = String(i + 1).padStart(2, '0');   // the number on the pin and on the gallery card
     tipCap.textContent = list[i].titolo;
     tip.style.setProperty('--ar', list[i].ar);   // its own shape, so nothing is cut
     tip.hidden = false;

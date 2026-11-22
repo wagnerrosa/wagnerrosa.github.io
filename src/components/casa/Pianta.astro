@@ -25,7 +25,10 @@ const legenda = [
 ---
 <section class="cp" data-view="plan" data-off="" aria-labelledby="cp-h">
   <div class="cp-bar">
-    <h2 id="cp-h" class="cp-h" data-plan="Pianta del piano terra" data-map="Il terreno sulla mappa">Pianta del piano terra</h2>
+    <div class="cp-hg">
+      <h2 id="cp-h" class="cp-h" data-plan="Pianta del piano terra" data-map="Il terreno sulla mappa">Pianta del piano terra</h2>
+      <span class="cp-scale" role="img" hidden><i></i><b></b></span>
+    </div>
     <div class="cp-ctrl">
       <div class="cp-zoom" role="group" aria-label="Zoom della pianta" title="Ctrl + rotellina o pizzica per ingrandire, trascina per spostarti, doppio clic per avvicinare" hidden>
         <button type="button" data-z="out" aria-label="Riduci" title="Riduci"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
@@ -45,7 +48,7 @@ const legenda = [
     <span class="cp-map-n" aria-hidden="true"><span class="n-dial"><svg viewBox="0 0 36 36" width="36" height="36"><path d="M18 12 22.5 28 18 25 13.5 28Z"/></svg><b>N</b></span></span>
     <a class="cp-map-link" href={place.link} target="_blank" rel="noopener" data-track="open_google_maps" data-category="casa" data-location="mappa">Apri in Google Maps <span aria-hidden="true">↗</span></a>
   </div>
-  {scatti.length > 0 && <figure class="cp-tip" hidden aria-hidden="true" data-track="open_render" data-category="casa" data-location="anteprima"><img alt="" /><figcaption><span></span><b><svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Ingrandisci</b></figcaption></figure>}
+  {scatti.length > 0 && <figure class="cp-tip" hidden aria-hidden="true" data-track="open_render" data-category="casa" data-location="anteprima"><img alt="" /><figcaption><span><i></i><em></em></span><b><svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Ingrandisci</b></figcaption></figure>}
   <div class="cp-foot">
     <div class="cp-legend" role="group" aria-label="Cosa mostrare sulla pianta" hidden>
       <span class="cp-lg-h">Mostra</span>

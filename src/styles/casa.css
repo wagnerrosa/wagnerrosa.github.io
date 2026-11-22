@@ -20,19 +20,24 @@ a { color: inherit; }
 .page { min-height: 100svh; }
 .page { max-width: 1680px; margin: 0 auto; padding: 28px 24px 56px; }
 /* introduction: a title block, nothing more, so the plan is the first thing on the page. A kicker with a hairline running out from it, the name
-   large, the place under it as a quiet serif italic, and the client at the right end, on the baseline of the place. */
+   large, the place under it as a quiet serif italic, and at the right end, on the baseline of the place, the client (label over value,
+   as in a title block; more pairs would sit side by side). */
 .head { display: grid; grid-template-columns: 1fr auto; column-gap: 40px; }
 .head-k { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; padding-right: 56px; font: 600 12px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }   /* the rule stops before the theme toggle */
 .head-k::after { content: ''; flex: 1; height: 1px; background: var(--line-strong); }
 .head h1 { grid-column: 1; margin-top: 14px; font: 600 clamp(32px, 4.4vw, 56px)/1.02 var(--display); letter-spacing: -.035em; text-wrap: balance; }
 .head-p { grid-column: 1; margin-top: 8px; font: italic 400 clamp(17px, 1.7vw, 22px)/1.25 var(--serif); letter-spacing: .005em; color: var(--mute); }
-.head-c { grid-column: 2; grid-row: 2 / 4; align-self: end; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-bottom: 3px; font: 600 16px/1.25 var(--display); letter-spacing: -.01em; text-align: right; white-space: nowrap; }
-.head-c span { font: 600 12px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.head-c { grid-column: 2; grid-row: 2 / 4; align-self: end; display: flex; gap: 36px; padding-bottom: 3px; }
+.head-c div { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; text-align: right; white-space: nowrap; }
+.head-c dt { font: 600 12px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.head-c dd { font: 600 16px/1.25 var(--display); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
 @media (max-width: 820px) {
   .head { grid-template-columns: 1fr; }
   .head-k { padding-right: 48px; }
   .head h1 { margin-top: 12px; }
-  .head-c { grid-column: 1; grid-row: auto; align-self: start; align-items: flex-start; margin-top: 16px; padding-bottom: 0; text-align: left; font-size: 15px; }
+  .head-c { grid-column: 1; grid-row: auto; align-self: start; flex-wrap: wrap; gap: 12px 28px; margin-top: 16px; padding-bottom: 0; }
+  .head-c div { align-items: flex-start; text-align: left; }
+  .head-c dd { font-size: 15px; }
 }
 
 /* ---------- floor plan (src/components/casa/Pianta.astro, drawing: src/lib/casa-pianta.ts) ----------
@@ -40,6 +45,11 @@ a { color: inherit; }
 .cp { margin-top: 24px; }
 .cp-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .cp-h { font: 600 13px/1.2 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
+/* graphic scale beside the title (src/scripts/casa-pianta.ts sets its length): a bar in two halves, black and white, as on a drawing */
+.cp-hg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; }
+.cp-scale { display: inline-flex; align-items: center; gap: 8px; font: 600 12px/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; }
+.cp-scale[hidden], .cp[data-view="map"] .cp-scale { display: none; }
+.cp-scale i { display: block; height: 6px; border: 1px solid var(--ink); background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
 .cp-ctrl { display: flex; align-items: center; gap: 10px; }
 .cp-seg { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--paper); }
 .cp-seg[hidden] { display: none; }
@@ -123,7 +133,9 @@ a { color: inherit; }
 .cp-shot { cursor: zoom-in; }
 .cp-cone { fill: rgb(var(--accent-rgb) / .16); stroke: rgb(var(--accent-rgb) / .5); stroke-width: 1px; transition: fill .15s; }
 .cp-hit { fill: transparent; }
-.cp-cam { fill: var(--accent); stroke: var(--paper); stroke-width: 2.5px; transition: fill .15s; }
+.cp-cam { fill: var(--accent); stroke: var(--paper); stroke-width: 2px; transition: fill .15s; }
+/* the render's number on the pin (the gallery's number); paper on the accent, and on the ink when lit, in both themes */
+.cp-svg .cp-num { fill: var(--paper); font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; pointer-events: none; }
 .cp-shot.on .cp-cone { fill: rgb(var(--accent-rgb) / .36); }
 .cp-shot.on .cp-cam { fill: var(--ink); }
 @media (hover: hover) { .cp-shot:hover .cp-cone { fill: rgb(var(--accent-rgb) / .36); } .cp-shot:hover .cp-cam { fill: var(--ink); } }
@@ -139,13 +151,16 @@ a { color: inherit; }
 .cp-tip.below { translate: -50% 12px; animation-name: cr-tip-below; }
 .cp-tip img { display: block; width: 100%; aspect-ratio: var(--ar); object-fit: cover; background: var(--code); }
 .cp-tip figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 10px; padding: 7px 10px 8px; font-size: 13px; font-weight: 600; }
+.cp-tip figcaption span { display: inline-flex; align-items: baseline; gap: 8px; }
+.cp-tip i { font: 600 11px/1 var(--sans); letter-spacing: .08em; font-variant-numeric: tabular-nums; color: var(--mute); }
+.cp-tip em { font-style: normal; }
 .cp-tip b { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: var(--accent); white-space: nowrap; }
 @media (hover: hover) { .cp-tip:hover b { text-decoration: underline; text-underline-offset: 3px; } }
 @keyframes cr-tip { from { opacity: 0; translate: -50% calc(-100% - 4px); } }
 @keyframes cr-tip-below { from { opacity: 0; translate: -50% 4px; } }
 
-.cr { margin-top: 40px; }
-.sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* heading for screen readers only */
+.cr { margin-top: 44px; }
+.cr-h { margin-bottom: 16px; }   /* the gallery's title, as the plan's */
 /* gallery: every render whole, in its own shape (--ar on each li). Rows of one height: each card grows in proportion to its shape
    from a 200px-tall start. A last row with room to spare keeps that start: the ::after filler joins it when a quarter of the width
    is still free and takes the slack; when less is free it wraps onto a line of its own (0 tall, and the rows are spaced by margin,
@@ -167,7 +182,7 @@ a { color: inherit; }
    - small screens: the rail dissolves (display: contents) and its parts sit in bands around the picture: the locator on top, the title and the switch below
    - wide screens (≥ 1100 × 560): a rail 320px wide beside the picture holds them in a column */
 .cr-lb { --cr-a: #2563eb; --cr-p: rgb(43 39 32 / .4); --cr-fi: #e6d8bd; --cr-fe: #dfe7cd; --cr-ln: #2b2720; --cr-ln2: rgb(43 39 32 / .4); --cr-fl: rgb(43 39 32 / .55); --cr-paper: #f3efe5; border: 0; padding: 0; background: transparent; width: 100vw; height: 100dvh; max-width: none; max-height: none; overflow: hidden; color: #fff; }
-.cr-lb::backdrop { background: rgb(0 0 0 / .92); }
+.cr-lb::backdrop { background: #0a0a0a; }   /* opaque: the page showing through muddied the rail's title and the locator */
 .cr-lb[open] { display: grid; place-items: center; }
 .cr-lb:focus { outline: none; }
 .cr-rail, .cr-stage, .cr-nav, .cr-k { display: contents; }
