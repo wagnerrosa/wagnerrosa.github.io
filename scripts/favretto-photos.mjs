@@ -46,7 +46,10 @@ const files = (await readdir(SRC))
 for (const x of files.filter(x => !PHOTOS[x.n])) console.warn(`! "${x.f}" is not in PHOTOS: add a caption and group`);
 if (!files.length) { console.error(`No photos in ${SRC}/`); process.exit(1); }
 
-await rm(OUT, { recursive: true, force: true });
+// clear this script's own output only: public/favretto/video/ (the hero clip, scripts/favretto-video.sh) stays
+await mkdir(OUT, { recursive: true });
+for (const f of await readdir(OUT)) if (f.endsWith('.webp') || f === 'photos.json' || f === 'og.jpg') await rm(`${OUT}/${f}`);
+await rm(THUMB, { recursive: true, force: true });
 await mkdir(THUMB, { recursive: true });
 
 let before = 0, after = 0;

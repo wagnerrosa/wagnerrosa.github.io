@@ -1,6 +1,7 @@
 ---
 // Sales page for the sítio: shared by link only. Not in sitemap.xml / llms.txt, noindex, no site shell (Google Analytics is added on its own).
 // Photos are read from public/favretto/ at build time (scripts/favretto-photos.mjs; raw files in favretto-src/, git-ignored). Text: src/data/favretto.ts.
+// Hero: a drone clip, public/favretto/video/ (scripts/favretto-video.sh); every photo is in the gallery.
 import '@fontsource-variable/figtree';
 import '@fontsource-variable/source-serif-4';
 import '../../styles/tokens.css';
@@ -11,26 +12,47 @@ import Analytics from '../../components/Analytics.astro';
 import { abs } from '../../data/site';
 import { favretto as f } from '../../data/favretto';
 import Planta from '../../components/favretto/Planta.astro';
+import { miniPlanta, miniShot } from '../../lib/favretto-planta';
 
 type Photo = { file: string; caption: string; group: string; groupLabel: string; w: number; h: number };
 const manifest: Photo[] = existsSync('public/favretto/photos.json') ? JSON.parse(readFileSync('public/favretto/photos.json', 'utf8')) : [];
-const photos = manifest.map((p, i) => ({
-  full: `/favretto/${p.file}`,
-  thumb: `/favretto/thumb/${p.file}`,
-  alt: `${p.caption} (foto ${i + 1} de ${manifest.length})`,
-  caption: p.caption,
-  group: p.group,
-  first: i === 0 || manifest[i - 1].group !== p.group,
-  ar: +(p.w / p.h).toFixed(4),
-  key: p.file.match(/(\d{4})\.webp$/)?.[1] ?? '',
-  nr: String(i + 1).padStart(2, '0'),
-}));
+const photos = manifest.map((p, i) => {
+  const key = p.file.match(/(\d{4})\.webp$/)?.[1] ?? '';
+  return {
+    full: `/favretto/${p.file}`,
+    thumb: `/favretto/thumb/${p.file}`,
+    alt: `${p.caption} (foto ${i + 1} de ${manifest.length})`,
+    caption: p.caption,
+    group: p.group,
+    first: i === 0 || manifest[i - 1].group !== p.group,
+    ar: +(p.w / p.h).toFixed(4),
+    key,
+    nr: String(i + 1).padStart(2, '0'),
+    mini: miniShot(key),   // the viewer's mini map: where it was taken, which way it looks, the part of the plan to show
+  };
+});
+// contact buttons' icons (WhatsApp: the standard glyph, Simple Icons, CC0)
+const ICON = {
+  wa: '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>',
+  tel: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
+};
 const shots = photos.map((p, i) => ({ i, key: p.key, caption: p.caption, thumb: p.thumb, ar: p.ar }));
-const groups = manifest.reduce<{ id: string; label: string }[]>((acc, p) => (acc.some(g => g.id === p.group) ? acc : [...acc, { id: p.group, label: p.groupLabel }]), []);
-const hero = photos[0];
+const mini = miniPlanta(shots);
+// the gallery's groups and how many photos each shows
+const groups = manifest.reduce<{ id: string; label: string; n: number }[]>((acc, p) => {
+  const g = acc.find(x => x.id === p.group) ?? (acc.push({ id: p.group, label: p.groupLabel, n: 0 }), acc[acc.length - 1]);
+  g.n++;
+  return acc;
+}, []);
+const gallery = photos.map((p, i) => ({ ...p, i, head: i === 0 || photos[i - 1].group !== p.group }));   // head: first photo of its group
+// hero clip (scripts/favretto-video.sh): AV1, else HEVC (Safari, every iPhone), else H.264; 1080p on desktop, 720p on phones and
+// tablets. The browser takes the first <source> whose media matches and whose type it plays.
+const VID = '/favretto/video';
+const clip = ['hero-1080.av1.mp4', 'hero-1080.hevc.mp4', 'hero-720.av1.mp4', 'hero-720.hevc.mp4', 'hero-720.mp4', 'hero.webp'].every(n => existsSync(`public${VID}/${n}`));
 const hasOg = existsSync('public/favretto/og.jpg');
 const wa = `https://wa.me/${f.contact.phone.replace('+', '')}?text=${encodeURIComponent(f.contact.wa)}`;
 const tel = `tel:${f.contact.phone}`;
+const lbPhotos = photos.map(p => ({ full: p.full, alt: p.alt, caption: p.caption, mini: p.mini }));
 ---
 <!doctype html>
 <html lang="pt-BR">
@@ -57,122 +79,188 @@ const tel = `tel:${f.contact.phone}`;
     <Analytics />
   </head>
   <body>
-    <button type="button" id="theme" class="theme" aria-label="Alternar tema claro/escuro" title="Alternar tema claro/escuro">
-      <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-      <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-    </button>
+    <!-- Phone and tablet: one column (head, hero, facts, plan, text, gallery, contact: .info and .media are display: contents and the
+         order is set in CSS). Desktop: text and contact on the left (sticky, scrolls on its own), hero, plan and photos on the right, like /apto/. -->
     <main class="page">
-      <header class="head">
-        <p class="head-k">À venda · Sítio</p>
-        <h1>{f.headline}</h1>
-        <p class="head-p">{f.summary}</p>
-        <div class="cta">
-          <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp" data-category="contact" data-location="favretto-head">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.95L2 22l5.2-1.36A9.9 9.9 0 1 0 12.04 2zm0 1.8a8.1 8.1 0 1 1-4.2 15.04l-.3-.18-3.08.8.82-3-.2-.31A8.1 8.1 0 0 1 12.04 3.8zm-3.1 4.1c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5s1.07 2.9 1.22 3.1c.15.2 2.1 3.3 5.2 4.5 2.57 1 3.1.8 3.65.75.56-.05 1.8-.74 2.05-1.45.25-.7.25-1.32.18-1.45-.08-.12-.28-.2-.58-.35-.3-.15-1.8-.88-2.07-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.18.2-.35.22-.65.07-.3-.15-1.28-.47-2.43-1.5-.9-.8-1.5-1.8-1.68-2.1-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.68-1.65-.93-2.25-.25-.58-.5-.5-.68-.5z"/></svg>
-            Chamar no WhatsApp
-          </a>
-          <a class="btn" href={tel} data-track="call" data-category="contact" data-location="favretto-head">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
-            Ligar para {f.contact.name}
-          </a>
+      <div class="info">
+        <button type="button" id="theme" class="theme" aria-label="Alternar tema claro/escuro" title="Alternar tema claro/escuro">
+          <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <header class="head">
+          <p class="head-k">À venda · Sítio</p>
+          <h1>{f.headline}</h1>
+          <p class="head-p">{f.summary}</p>
+          <div class="cta">
+            <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp" data-category="contact" data-location="favretto-head">
+              <Fragment set:html={ICON.wa} />
+              <span><span class="long">Chamar no </span>WhatsApp</span>
+            </a>
+            <a class="btn" href={tel} data-track="call" data-category="contact" data-location="favretto-head">
+              <Fragment set:html={ICON.tel} />
+              <span>Ligar<span class="long"> para {f.contact.name}</span></span>
+            </a>
+          </div>
+        </header>
+
+        <dl class="facts">
+          {f.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        </dl>
+
+        <div class="text">
+          {f.sections.map(s => (
+            <section>
+              <h2>{s.title}</h2>
+              {s.intro && <p class="prose">{s.intro}</p>}
+              {s.items && <ul class="bullets">{s.items.map(t => <li>{t}</li>)}</ul>}
+            </section>
+          ))}
+          <p class="closing prose">{f.closing}</p>
         </div>
-      </header>
 
-      {hero && (
-        <figure class="hero">
-          <button type="button" data-i="0" aria-label={`Ampliar: ${hero.caption}`}>
-            <img src={hero.full} alt={hero.alt} width="2200" height="1466" fetchpriority="high" decoding="async" />
-          </button>
-          <figcaption><i>{hero.nr}</i>{hero.caption}</figcaption>
-        </figure>
-      )}
-
-      <dl class="facts">
-        {f.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
-      </dl>
-
-      {shots.length > 0 && <Planta shots={shots} />}
-
-      <div class="text">
-        {f.sections.map(s => (
-          <section>
-            <h2>{s.title}</h2>
-            {s.intro && <p class="prose">{s.intro}</p>}
-            {s.items && <ul class="bullets">{s.items.map(t => <li>{t}</li>)}</ul>}
-          </section>
-        ))}
-        <p class="closing prose">{f.closing}</p>
+        <section class="contact" aria-labelledby="contact-h">
+          <h2 id="contact-h">Contato</h2>
+          <p class="prose">Fale com {f.contact.name} para agendar uma visita ou tirar dúvidas.</p>
+          <div class="cta">
+            <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp" data-category="contact" data-location="favretto-foot">
+              <Fragment set:html={ICON.wa} />
+              <span><span class="long">Chamar no </span>WhatsApp</span>
+            </a>
+            <a class="btn" href={tel} data-track="call" data-category="contact" data-location="favretto-foot">
+              <Fragment set:html={ICON.tel} />
+              <span><span class="long">Ligar · </span>{f.contact.display}</span>
+            </a>
+          </div>
+        </section>
       </div>
 
-      {photos.length > 1 && (
-        <section class="gallery" aria-label="Fotos">
-          <nav class="chips" aria-label="Ir para o grupo de fotos">
-            {groups.map(g => <a href={`#${g.id}`}>{g.label}</a>)}
-          </nav>
-          {groups.map(g => (
-            <div class="grp" id={g.id}>
-              <h2>{g.label}</h2>
-              <ul class="grid">
-                {photos.map((p, i) => i > 0 && p.group === g.id && (   /* photo 0 is the hero */
-                  <li>
-                    <button type="button" data-i={i} aria-label={`Ampliar: ${p.caption}`}>
-                      <img src={p.thumb} srcset={`${p.thumb} 800w, ${p.full} 2200w`} sizes="(min-width: 900px) 33vw, 92vw" alt={p.alt} width="800" height="533" loading={i < 4 ? 'eager' : 'lazy'} decoding="async" />
+      <div class="media">
+        {/* Plays muted, in a loop, while on screen; not under reduced motion (the poster stays, the button plays it). */}
+        {clip && (
+          <figure class="hero">
+            <div class="hv">
+              <video id="hero-v" muted loop playsinline preload="metadata" poster={`${VID}/hero.webp`} width="1920" height="1080" aria-label="Vídeo aéreo do sítio, sem som">
+                <source src={`${VID}/hero-1080.av1.mp4`} type='video/mp4; codecs="av01.0.08M.08"' media="(min-width: 900px)" />
+                <source src={`${VID}/hero-1080.hevc.mp4`} type='video/mp4; codecs="hvc1.1.6.L120.90"' media="(min-width: 900px)" />
+                <source src={`${VID}/hero-720.av1.mp4`} type='video/mp4; codecs="av01.0.05M.08"' />
+                <source src={`${VID}/hero-720.hevc.mp4`} type='video/mp4; codecs="hvc1.1.6.L93.90"' />
+                <source src={`${VID}/hero-720.mp4`} type='video/mp4; codecs="avc1.640020"' />
+              </video>
+              <button type="button" class="hv-pp" id="hero-pp" aria-label="Reproduzir o vídeo" hidden data-track="video_toggle" data-category="favretto" data-location="hero">
+                <svg class="i-pause" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>
+                <svg class="i-play" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M4.5 2.8v10.4a.8.8 0 0 0 1.2.7l8.3-5.2a.8.8 0 0 0 0-1.4L5.7 2.1a.8.8 0 0 0-1.2.7z"/></svg>
+              </button>
+            </div>
+            <figcaption>Vídeo aéreo do sítio</figcaption>
+          </figure>
+        )}
+
+        {shots.length > 0 && <Planta shots={shots} maps={f.place.link} />}
+
+        {/* Phone and tablet: one row that swipes (like /apto/), the group headings hidden and the chips scrolling the row.
+            Desktop: a grid, a heading per group, the chips jump down the page. */}
+        {gallery.length > 0 && (
+          <section class="gallery" aria-label="Fotos">
+            <nav class="chips" id="chips" aria-label="Ir para o grupo de fotos">
+              {groups.map(g => <a href={`#${g.id}`} data-g={g.id}>{g.label}<span>{g.n}</span></a>)}
+            </nav>
+            <ul class="grid" id="grid">
+              {gallery.map(p => (
+                <>
+                  {p.head && <li class="gh" id={p.group}><h2>{groups.find(g => g.id === p.group)!.label}</h2></li>}
+                  <li data-g={p.group}>
+                    <button type="button" data-i={p.i} aria-label={`Ampliar: ${p.caption}`}>
+                      <img src={p.thumb} srcset={`${p.thumb} 800w, ${p.full} 2200w`} sizes="(min-width: 900px) 30vw, min(84vw, 520px)" alt={p.alt} width="800" height="533" loading={p.i < 4 ? 'eager' : 'lazy'} decoding="async" />
                       <span class="cap"><i>{p.nr}</i>{p.caption}</span>
                     </button>
                   </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </section>
-      )}
-
-      <section class="map" aria-labelledby="map-h">
-        <h2 id="map-h">Localização</h2>
-        <iframe title="Mapa: localização do sítio" src={f.place.embed} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        <p class="prose"><a href={f.place.link} target="_blank" rel="noopener" data-track="maps" data-category="contact" data-location="favretto-map">Abrir no Google Maps ↗</a></p>
-      </section>
-
-      <section class="contact" aria-labelledby="contact-h">
-        <h2 id="contact-h">Contato</h2>
-        <p class="prose">Fale com {f.contact.name} para agendar uma visita ou tirar dúvidas.</p>
-        <div class="cta">
-          <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp" data-category="contact" data-location="favretto-foot">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.95L2 22l5.2-1.36A9.9 9.9 0 1 0 12.04 2zm0 1.8a8.1 8.1 0 1 1-4.2 15.04l-.3-.18-3.08.8.82-3-.2-.31A8.1 8.1 0 0 1 12.04 3.8zm-3.1 4.1c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5s1.07 2.9 1.22 3.1c.15.2 2.1 3.3 5.2 4.5 2.57 1 3.1.8 3.65.75.56-.05 1.8-.74 2.05-1.45.25-.7.25-1.32.18-1.45-.08-.12-.28-.2-.58-.35-.3-.15-1.8-.88-2.07-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.95 1.18-.18.2-.35.22-.65.07-.3-.15-1.28-.47-2.43-1.5-.9-.8-1.5-1.8-1.68-2.1-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.68-1.65-.93-2.25-.25-.58-.5-.5-.68-.5z"/></svg>
-            Chamar no WhatsApp
-          </a>
-          <a class="btn" href={tel} data-track="call" data-category="contact" data-location="favretto-foot">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
-            Ligar · {f.contact.display}
-          </a>
-        </div>
-      </section>
+                </>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
     </main>
 
+    <!-- Desktop: photo centred, caption, count and mini map float over it (.lb-stage, .lb-bar are display: contents).
+         Phone: photo on top, a bar under it with the caption and the mini map across the full width (held sideways: the bar on the right). -->
     <dialog id="lb" aria-label="Galeria de fotos">
-      <img id="lb-img" alt="" />
-      <button type="button" class="lb-n lb-prev" id="lb-prev" aria-label="Foto anterior">‹</button>
-      <button type="button" class="lb-n lb-next" id="lb-next" aria-label="Próxima foto">›</button>
-      <p class="lb-l"><span id="lb-label"></span> <span class="lb-c" id="lb-count"></span></p>
+      <div class="lb-stage" id="lb-stage">
+        <img id="lb-img" alt="" />
+        <button type="button" class="lb-n lb-prev" id="lb-prev" aria-label="Foto anterior">‹</button>
+        <button type="button" class="lb-n lb-next" id="lb-next" aria-label="Próxima foto">›</button>
+      </div>
+      <div class="lb-bar">
+        <p class="lb-l"><span id="lb-label"></span> <span class="lb-c" id="lb-count"></span></p>
+        <div class="lb-map off" id="lb-map" title="Onde a foto foi tirada">
+          <Fragment set:html={mini} />
+          <span class="m-n" aria-hidden="true"><svg viewBox="0 0 16 16" width="9" height="9"><path d="M8 1.5 12 14 8 11.2 4 14Z"/></svg>N</span>
+        </div>
+      </div>
       <button type="button" class="lb-x" id="lb-close" aria-label="Fechar">×</button>
     </dialog>
 
-    <script is:inline define:vars={{ photos }}>
+    <script is:inline define:vars={{ photos: lbPhotos }}>
       var dlg = document.getElementById('lb'), img = document.getElementById('lb-img'), count = document.getElementById('lb-count'), label = document.getElementById('lb-label'), cur = 0;
-      function show(i) {
+      function show(i, snap) {
         cur = (i + photos.length) % photos.length;
         img.src = photos[cur].full; img.alt = photos[cur].alt;
         count.textContent = (cur + 1) + ' / ' + photos.length;
         label.textContent = photos[cur].caption;
+        aim(photos[cur].mini, snap);
         [cur + 1, cur - 1].forEach(function (n) { new Image().src = photos[(n + photos.length) % photos.length].full; });
       }
+      // open first, so the mini map has a size when the camera is placed
+      function openAt(i) { var fresh = !dlg.open; if (fresh) dlg.showModal(); show(i, fresh); }
       document.querySelectorAll('[data-i]').forEach(function (b) {
-        b.addEventListener('click', function () { show(+b.dataset.i); dlg.showModal(); });
+        b.addEventListener('click', function () { openAt(+b.dataset.i); });
       });
+
+      // Mini map (src/lib/favretto-planta.ts, miniPlanta / miniShot): the plan framed on the camera and the farmyard, the camera as a dot and a
+      // cone (a ring for the photos that look straight down), the other photos as dots that open them. Going to the next photo glides the frame
+      // and the camera there (the camera turns the short way round); opening the viewer, or reduced motion, places them without gliding.
+      var map = document.getElementById('lb-map'), msvg = map.querySelector('svg'), mpos = msvg.querySelector('.m-pos'), mdots = msvg.querySelectorAll('.m-dots [data-j]');
+      var still = matchMedia('(prefers-reduced-motion: reduce)'), mnow = null, mraf = 0;
+      function mdraw(s) {
+        msvg.setAttribute('viewBox', s.vb.map(function (v) { return v.toFixed(1); }).join(' '));
+        var k = s.vb[2] / (msvg.getBoundingClientRect().width || 300);   // metres per screen px: the camera keeps its size at any frame
+        mpos.setAttribute('transform', 'translate(' + s.x.toFixed(1) + ' ' + s.y.toFixed(1) + ') rotate(' + s.a.toFixed(1) + ') scale(' + k.toFixed(4) + ')');
+      }
+      function aim(m, snap) {
+        cancelAnimationFrame(mraf);
+        map.classList.toggle('off', !m);
+        mdots.forEach(function (d) { d.classList.toggle('cur', +d.dataset.j === cur); });
+        if (!m) { mnow = null; return; }
+        map.classList.toggle('down', m.down);
+        var to = { vb: m.vb, x: m.x, y: m.y, a: m.a }, from = mnow;
+        if (snap || !from || still.matches) { mnow = to; mdraw(to); return; }
+        to.a = from.a + ((((to.a - from.a) % 360) + 540) % 360) - 180;
+        var t0 = performance.now();
+        (function step(now) {
+          var t = Math.min(1, (now - t0) / 550), e = 1 - Math.pow(1 - t, 3), L = function (u, v) { return u + (v - u) * e; };
+          mnow = { vb: from.vb.map(function (v, k) { return L(v, to.vb[k]); }), x: L(from.x, to.x), y: L(from.y, to.y), a: L(from.a, to.a) };
+          mdraw(mnow);
+          if (t < 1) mraf = requestAnimationFrame(step);
+        })(t0);
+      }
+      // a click on a dot's (wide, invisible) target opens the nearest dot's photo: some points are close enough for their targets to overlap
+      msvg.addEventListener('click', function (e) {
+        if (!e.target.closest('[data-j]')) return;
+        var best = null, bd = Infinity;
+        mdots.forEach(function (d) {
+          if (d.classList.contains('cur')) return;
+          var r = d.getBoundingClientRect(), dd = Math.hypot(r.left + r.width / 2 - e.clientX, r.top + r.height / 2 - e.clientY);
+          if (dd < bd) { bd = dd; best = d; }
+        });
+        if (best && bd <= 16) show(+best.dataset.j);   // farther: the click was on the current photo's own spot
+      });
+      if ('ResizeObserver' in window) new ResizeObserver(function () { if (mnow) mdraw(mnow); }).observe(msvg);
+
       document.getElementById('lb-close').onclick = function () { dlg.close(); };
       document.getElementById('lb-prev').onclick = function () { show(cur - 1); };
       document.getElementById('lb-next').onclick = function () { show(cur + 1); };
-      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+      var stage = document.getElementById('lb-stage');
+      dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target === stage) dlg.close(); });
       dlg.addEventListener('keydown', function (e) {
         if (e.key === 'ArrowRight') show(cur + 1);
         if (e.key === 'ArrowLeft') show(cur - 1);
@@ -183,6 +271,55 @@ const tel = `tel:${f.contact.phone}`;
         var d = e.changedTouches[0].clientX - tx;
         if (Math.abs(d) > 50) show(cur + (d < 0 ? 1 : -1));
       }, { passive: true });
+      // Gallery groups. Desktop: a chip jumps down the page to the group's heading (a plain #anchor, also without JS).
+      // Phone and tablet: the photos are one row and the headings are hidden, so a chip scrolls the row to the group's first photo.
+      // The lit chip follows the group on screen (the page on desktop, the row on phones); for a moment after a tap it stays on the chip tapped.
+      var chips = document.getElementById('chips'), grid = document.getElementById('grid'), row = matchMedia('(max-width: 899px)'), held = 0;
+      function markChip(g) {
+        chips.querySelectorAll('a').forEach(function (a) {
+          var on = a.dataset.g === g;
+          if (on && !a.classList.contains('on')) chips.scrollTo({ left: a.offsetLeft - (chips.clientWidth - a.offsetWidth) / 2, behavior: still.matches ? 'auto' : 'smooth' });
+          a.classList.toggle('on', on);
+        });
+      }
+      if (chips && grid) {
+        chips.addEventListener('click', function (e) {
+          var a = e.target.closest('a');
+          if (!a || !row.matches) return;
+          e.preventDefault();
+          var first = grid.querySelector('li[data-g="' + a.dataset.g + '"]');
+          held = Date.now() + 800;
+          markChip(a.dataset.g);
+          grid.scrollTo({ left: first.offsetLeft - parseFloat(getComputedStyle(grid).scrollPaddingLeft || '0'), behavior: still.matches ? 'auto' : 'smooth' });
+        });
+        if ('IntersectionObserver' in window) {
+          var seen = function (phone) {
+            return function (es) {
+              if (row.matches !== phone || Date.now() < held) return;
+              es.forEach(function (en) { if (en.isIntersecting) markChip(en.target.dataset.g); });
+            };
+          };
+          var inRow = new IntersectionObserver(seen(true), { root: grid, threshold: 0.6 });
+          var inPage = new IntersectionObserver(seen(false), { threshold: 0.6, rootMargin: '-30% 0px -30% 0px' });
+          grid.querySelectorAll('li[data-g]').forEach(function (li) { inRow.observe(li); inPage.observe(li); });
+        }
+      }
+
+      // Hero clip: plays while at least a quarter of it is on screen, unless reduced motion is on or someone paused it; the button
+      // pauses and plays (the browser may refuse to play, e.g. in battery saving: the button then shows play).
+      var hv = document.getElementById('hero-v'), pp = document.getElementById('hero-pp');
+      if (hv && pp) {
+        var want = !still.matches;
+        var sync = function () { var on = !hv.paused; pp.classList.toggle('on', on); pp.setAttribute('aria-label', on ? 'Pausar o vídeo' : 'Reproduzir o vídeo'); };
+        hv.addEventListener('play', sync);
+        hv.addEventListener('pause', sync);
+        pp.hidden = false;
+        pp.addEventListener('click', function () { want = hv.paused; if (want) hv.play().catch(sync); else hv.pause(); });
+        var onScreen = function (yes) { if (!yes) hv.pause(); else if (want) hv.play().catch(sync); };
+        if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { onScreen(es[0].isIntersecting); }, { threshold: 0.25 }).observe(hv);
+        else onScreen(true);
+      }
+
       document.getElementById('theme').addEventListener('click', function () {
         var d = document.documentElement, dark = d.dataset.theme ? d.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
         d.dataset.theme = dark ? 'light' : 'dark';

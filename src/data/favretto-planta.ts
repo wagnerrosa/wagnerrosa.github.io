@@ -14,8 +14,10 @@ export const FRAME = { e0: -490, e1: 410, n0: -265, n1: 335 };   // 900 × 600 m
 
 /** Satellite view (Google embed, loaded only when asked for): the frame's centre. */
 export const MAP = { lat: -29.9582149, lng: -51.0103352, zoom: 17 };
-/** Phones show a square of the frame first (FRAME.e0 + x .. + 600 m) and pan sideways to the rest. */
-export const SQUARE = { e0: -350 };
+/** Phones show an upright strip of the frame: its whole height, as wide as the box's shape allows (the box is sized to the screen),
+ *  centred on E `e`, and pan sideways to the rest. They start on the farmyard, 270 m wide around E -8, from just under the highway
+ *  (N 222) down as far as the box's shape reaches: a taller box shows more of the wetland, never a cut label at the top. */
+export const PHONE = { e: -25, start: { e: -8, top: 222, w: 270 } };
 
 type P = [number, number];
 
@@ -33,7 +35,7 @@ export const land: P[] = [
   [20, -74], [-20, -66], [-60, -60], [-100, -56], [-130, -54], [-150, -62], [-170, -80], [-190, -96], [-210, -104], [-240, -104],
   [-270, -100], [-300, -104], [-320, -120], [-335, -140], [-322, -165], [-310, -190], [-300, -230], [-296, -280], [-510, -280],
 ];
-/** Houses north-east, between the highway and the river (neighbours). */
+/** Houses north-east, between the highway and the river (neighbours; drawn, not named). */
 export const vila: P[] = [[150, 218], [200, 212], [250, 212], [300, 200], [350, 196], [430, 196], [430, 345], [150, 345]];
 
 /** Woods. `top` (woods north of the highway, up to the edge of the frame) is built from the highway in the lib. */
@@ -95,6 +97,10 @@ export const tracks: P[][] = [
     [20, -70], [-20, -63], [-60, -56], [-90, -51], [-112, -47]],
 ];
 
+/** The entrance gate (porteira): the white gate across the access road just past its bend, seen at the bottom of photo 0028 (found by
+ *  projecting the photo: camera about 24° down). `a` = the road's direction there, degrees counter-clockwise from east. */
+export const porteira = { at: [-371.6, -149.2] as P, a: 56.6 };
+
 /** Oriented rectangle: centre, length along `a`, width across, `a` = degrees counter-clockwise from east. */
 export type Rect = { c: P; L: number; W: number; a: number };
 // the sheds share one axis (32.4° south of east), measured from the centre of the main shed
@@ -117,34 +123,40 @@ export const buildings: Building[] = [
   { id: 'galpao-v', ...along(32.6, 56.95, -8.25, 14.25), cumeeira: [0] },
   { id: 'galpao-p', ...along(32.6, 56, -20, -8.25) },
   { id: 'galpao-se', ...along(59.4, 90.7, -11.1, 12.4), cumeeira: [0] },
-  // the two-storey house (photo 0099) and its annex
-  { id: 'casa', c: [-71.35, 51], L: 7.65, W: 10.85, a: -4.4 },
-  { id: 'casa-a', c: [-70, 42.5], L: 9, W: 6, a: -4 },
-  // the red-roofed house and its annex, the long white roof beside it, small sheds
-  { id: 'casa2', c: [-36.9, 19.85], L: 8.9, W: 14.5, a: -1.75 },
-  { id: 'casa2-a', c: [-36.9, 7], L: 7.5, W: 9, a: -2 },
+  // the old house, about a hundred years old (owner), by the road, and its annex
+  { id: 'casa-antiga', c: [-71.35, 51], L: 7.65, W: 10.85, a: -4.4 },
+  { id: 'casa-antiga-a', c: [-70, 42.5], L: 9, W: 6, a: -4 },
+  // the two-storey house (red roof, owner) and its annex, the long white roof beside it, small sheds
+  { id: 'casa', c: [-36.9, 19.85], L: 8.9, W: 14.5, a: -1.75 },
+  { id: 'casa-a', c: [-36.9, 7], L: 7.5, W: 9, a: -2 },
   { id: 'estufa', c: [-51.65, 25.4], L: 15, W: 4.75, a: -4 },
   { id: 'branca', c: [-52.15, 18.5], L: 7.65, W: 4.5, a: -3.4 },
   { id: 'laranja', c: [-43.75, 51.25], L: 4, W: 4, a: -4 },
-  { id: 'gso', c: [-68.5, -38], L: 23, W: 9.5, a: -4 },
-  { id: 'gs', c: [-39.5, -37.5], L: 11, W: 11, a: -2 },
-  { id: 'gs-a', c: [-29, -37.5], L: 10, W: 11, a: -2 },
+  { id: 'cabanha', c: [-68.5, -38], L: 23, W: 9.5, a: -4 },   // the sheep shed
+  { id: 'oficina', c: [-39.5, -37.5], L: 11, W: 11, a: -2 },   // workshop (owner)
+  { id: 'garagem', c: [-29, -37.5], L: 10, W: 11, a: -2 },   // garage (owner)
   { id: 'casinha', c: [-3.6, 77.6], L: 10.75, W: 6.25, a: -3.6 },
   { id: 'galpao-no', c: [-116, 73], L: 15, W: 5, a: 18 },
 ];
 
 /**
- * Labels. k: 'nome' (names, with a minimum size on screen), 'medida' (sizes and areas, drawn to scale), 'lugar' (river, wetland, fields:
- * italic), 'via' (on the highway). `area` / `dim` fill in a measure computed from the drawing. a = degrees counter-clockwise.
+ * Labels. k: 'nome' (names, with a minimum size on screen), 'medida' (sizes and areas, drawn to scale), 'lugar' (river, fields: italic),
+ * 'via' (on the highway), 'rumo' (the way to a town). `area` / `dim` fill in a measure computed from the drawing. a = degrees
+ * counter-clockwise. `seta`: an arrow beside the text, pointing that many degrees counter-clockwise from the text's baseline (180 = back
+ * along it); `at` is then the arrow's centre, and the text runs away from where it points.
  */
-export type Label = { t: string; at: P; k: 'nome' | 'medida' | 'lugar' | 'via'; a?: number; anchor?: 'start' | 'end' };
+export type Label = { t: string; at: P; k: 'nome' | 'medida' | 'lugar' | 'via' | 'rumo'; a?: number; anchor?: 'start' | 'end'; seta?: number };
 export const labels: Label[] = [
   { t: 'Galpão', at: [38, -12], k: 'nome', a: -32.4 },
   { t: '{dim:galpao}', at: [34.8, -17.1], k: 'medida', a: -32.4 },
   { t: 'Galpão', at: [75, -33.5], k: 'nome', a: -32.4 },
   { t: '{dim:galpao-se}', at: [71.8, -38.6], k: 'medida', a: -32.4 },
-  { t: 'Casa · 2 andares', at: [-71.35, 61], k: 'nome' },
-  { t: 'Casa', at: [-46, 4.5], k: 'nome', anchor: 'end' },
+  { t: 'Casa centenária', at: [-71.35, 61], k: 'nome' },
+  { t: 'Casa · 2 andares', at: [-46, 4.5], k: 'nome', anchor: 'end' },
+  { t: 'Cabanha', at: [-64, -27.5], k: 'nome' },   // the shed south-east of the açude (owner)
+  // the two beside it: workshop under, garage to the right (the names would run into each other side by side)
+  { t: 'Oficina', at: [-39.5, -48.5], k: 'nome' },
+  { t: 'Garagem', at: [-22, -37.5], k: 'nome', anchor: 'start' },
   { t: 'Açude', at: [-113, 24], k: 'nome' },
   { t: '{area:acude}', at: [-113, 18.5], k: 'medida' },
   { t: 'Tanques', at: [33, 57], k: 'nome' },
@@ -154,11 +166,13 @@ export const labels: Label[] = [
   { t: 'Campo', at: [-225, -45], k: 'lugar' },
   { t: 'Rio Gravataí', at: [-445, 136], k: 'lugar', a: 4 },
   { t: 'Rio Gravataí', at: [-215, 178], k: 'lugar', a: 11 },
-  { t: 'Casas vizinhas', at: [310, 245], k: 'lugar' },
-  { t: 'Banhado', at: [-60, -130], k: 'lugar' },
-  { t: 'Banhado', at: [240, -125], k: 'lugar' },
-  { t: 'Banhado', at: [215, 165], k: 'lugar' },
-  { t: 'BR-290 · Freeway', at: [-190, 250], k: 'via', a: 10.6 },
+  { t: 'Porteira de entrada', at: [-362, -151], k: 'nome', anchor: 'start' },
+  // the highway (on its central barrier, along it) and the ways to the towns (owner: Porto Alegre 20 min west, at the west end of the
+  // highway in the frame; Gravataí 3 km, whose centre lies north-east, across the river and the highway, bearing about 47°: on the open
+  // ground of the neighbours' houses, east). Both lie outside the strip phones show first; they come in when the plan is panned.
+  { t: 'BR-290 · Freeway', at: [40, 297.4], k: 'via', a: 12.6 },
+  { t: 'Porto Alegre a 20 min', at: [-472, 206.6], k: 'via', a: 6.8, seta: 180 },
+  { t: 'Gravataí a 3 km', at: [338, 258], k: 'rumo', seta: 43 },
 ];
 
 /**

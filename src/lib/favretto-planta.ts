@@ -2,11 +2,12 @@
 // from its north edge, so 1 unit = 1 m and north is up.
 // - Natural edges (ground, woods, ponds) are smoothed; buildings stay square.
 // - Woods get tree crowns and the wetland marsh marks, scattered on a jittered grid (same every build).
-// - Labels: names, places and the highway label are drawn at the origin of a group, so src/scripts/favretto-planta.ts can keep them
-//   readable on a small screen (CSS scale on .fp-ln / .fp-ll / .fp-lv); sizes and areas are drawn to scale.
+// - Labels: names, places, the highway's and the ways to the towns are drawn at the origin of a group, so src/scripts/favretto-planta.ts
+//   can keep them readable on a small screen (CSS scale on .fp-ln / .fp-ll / .fp-lv / .fp-lr, or on .fp-ls, a label with its arrow);
+//   sizes and areas are drawn to scale.
 // - Photo viewpoints (.fp-shot, data-i = index in the page's photo list): pin + cone of view in screen px (the script scales .fp-pin), so
 //   they keep their size at any zoom. A photo taken from outside the frame sits on its edge, on its line of sight.
-import { FRAME, SQUARE, highway, land, vila, woods, acude, ilha, tanques, diques, lagoa, roads, tracks, buildings, labels, fotos, type Rect } from '../data/favretto-planta';
+import { FRAME, PHONE, highway, land, vila, woods, acude, ilha, tanques, diques, lagoa, roads, tracks, porteira, buildings, labels, fotos, type Rect } from '../data/favretto-planta';
 
 type P = [number, number];
 export type Shot = { i: number; key: string; caption: string };
@@ -141,6 +142,9 @@ export function planta(shots: Shot[]) {
   o.push(`<path class="fp-track" d="${tracks.map(t => smooth(t, false)).join('')}"/>`);
   const rd = roads.map(r => smooth(r, false)).join('');
   o.push(`<path class="fp-road-c" d="${rd}"/><path class="fp-road" d="${rd}"/>`);
+  // the entrance gate: a bar across the road, a little wider than it
+  const g = ((porteira.a + 90) * Math.PI) / 180, gd: P = [Math.cos(g) * 4.5, Math.sin(g) * 4.5];
+  o.push(`<path class="fp-gate" d="${line([[porteira.at[0] - gd[0], porteira.at[1] - gd[1]], [porteira.at[0] + gd[0], porteira.at[1] + gd[1]]])}"/>`);
 
   // buildings, with ridge (solid) and valley (dashed) lines along their length
   const ridges: string[] = [], valleys: string[] = [];
@@ -154,14 +158,24 @@ export function planta(shots: Shot[]) {
     `<path class="fp-ridge" d="${ridges.join('')}"/><path class="fp-valley" d="${valleys.join('')}"/>`);
 
   // labels
-  const SIZE = { nome: 6.5, medida: 4.6, lugar: 9, via: 6 } as const;
-  const CLS = { nome: 'fp-ln', medida: 'fp-lm', lugar: 'fp-ll', via: 'fp-lv' } as const;
+  const SIZE = { nome: 6.5, medida: 4.6, lugar: 9, via: 6, rumo: 6.5 } as const;
+  const CLS = { nome: 'fp-ln', medida: 'fp-lm', lugar: 'fp-ll', via: 'fp-lv', rumo: 'fp-lr' } as const;
   o.push('<g class="fp-labels">');
   for (const l of labels) {
     const [x, y] = xy(l.at), z = SIZE[l.k];
-    const anchor = l.anchor ? ` style="text-anchor:${l.anchor}"` : '';   // inline: the stylesheet centres all labels
-    o.push(`<g class="fp-l-${l.k}" transform="translate(${r1(x)} ${r1(y)})${l.a ? ` rotate(${r1(-l.a)})` : ''}">` +
-      `<text class="${CLS[l.k]}" y="${r1(G * z)}" font-size="${z}"${anchor}>${esc(measure(l.t))}</text></g>`);
+    const pos = `transform="translate(${r1(x)} ${r1(y)})${l.a ? ` rotate(${r1(-l.a)})` : ''}"`;
+    if (l.seta === undefined) {
+      const anchor = l.anchor ? ` style="text-anchor:${l.anchor}"` : '';   // inline: the stylesheet centres all labels
+      o.push(`<g class="fp-l-${l.k}" ${pos}><text class="${CLS[l.k]}" y="${r1(G * z)}" font-size="${z}"${anchor}>${esc(measure(l.t))}</text></g>`);
+      continue;
+    }
+    // an arrow (1.3 × the text size, centred on `at`, turned to `seta`) and the text beside it, on the side it does not point to
+    const t = (l.seta * Math.PI) / 180, c = Math.cos(t), sn = Math.sin(t), back = c < 0;
+    const arrow = ([[-0.65, -0.07], [0.2, -0.07], [0.2, -0.32], [0.65, 0], [0.2, 0.32], [0.2, 0.07], [-0.65, 0.07]] as P[])
+      .map(([u, v]) => `${r1((u * c + v * sn) * z * 10) / 10} ${r1((-u * sn + v * c) * z * 10) / 10}`);
+    const gap = (0.65 * Math.abs(c) + 0.32 * Math.abs(sn) + 0.3) * z;
+    o.push(`<g class="fp-l-${l.k}" ${pos}><g class="fp-ls"><path class="fp-arrow" d="M${arrow.join('L')}Z"/>` +
+      `<text class="${CLS[l.k]}" x="${r1(back ? gap : -gap)}" y="${r1(G * z)}" font-size="${z}" style="text-anchor:${back ? 'start' : 'end'}">${esc(measure(l.t))}</text></g></g>`);
   }
   o.push('</g>');
 
@@ -178,7 +192,45 @@ export function planta(shots: Shot[]) {
   }
   o.push('</g>');
 
-  // phones: a 600 m square around the farmyard, and the first view on the farmyard itself (250 m around E -8, N 12)
-  const sq = `${SQUARE.e0 - FRAME.e0} 0 ${H} ${H}`, st = `${-8 - FRAME.e0 - 125} ${FRAME.n1 - 12 - 125} 250 250`;
-  return `<svg viewBox="0 0 ${W} ${H}" data-square="${sq}" data-start="${st}" class="fp-svg" role="group" aria-label="Planta do sítio, vista de cima, norte para cima. Os pontos numerados mostram de onde cada foto foi tirada.">${o.join('')}</svg>`;
+  // phones (PHONE): the centre of the upright strip; the first view's centre, top and width. The script gives them the box's shape.
+  const ph = `${PHONE.e - FRAME.e0}`, st = `${PHONE.start.e - FRAME.e0} ${FRAME.n1 - PHONE.start.top} ${PHONE.start.w}`;
+  return `<svg viewBox="0 0 ${W} ${H}" data-phone="${ph}" data-start="${st}" class="fp-svg" role="group" aria-label="Planta do sítio, vista de cima, norte para cima. Os pontos numerados mostram de onde cada foto foi tirada.">${o.join('')}</svg>`;
+}
+
+// ---- lightbox mini map: the same ground, woods, water, roads and buildings, without marks, labels or pins ----
+// The page's lightbox shows it beside the photo, framed on a part of the plan per photo ("sector": the camera and the farmyard, see
+// miniShot), with the camera (dot + cone, drawn here at the origin, pointing north, in screen px) placed and scaled by the page's script.
+/** The farmyard (buildings, açude, tanks), in drawing units. */
+function sede() {
+  const pts = [...buildings.flatMap(corners), ...acude, ...tanques].map(xy);
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
+}
+const MINI = { pad: 30, minW: 300 };   // m around the frame's content; narrowest frame (m)
+export type MiniShot = { x: number; y: number; a: number; down: boolean; vb: number[] };
+/** Where a photo was taken on the mini map, which way it looks (degrees clockwise from north), and the part of the plan to show around
+ *  it: the camera and the farmyard, padded, at the drawing's shape (3:2), at least 300 m wide, kept inside the drawing. */
+export function miniShot(key: string): MiniShot | null {
+  const f = fotos[key];
+  if (!f) return null;
+  const [x, y] = spot(f.at, f.az), s = sede(), p = MINI.pad;
+  const x0 = Math.min(s.x0, x) - p, x1 = Math.max(s.x1, x) + p, y0 = Math.min(s.y0, y) - p, y1 = Math.max(s.y1, y) + p;
+  const w = Math.min(W, Math.max(MINI.minW, x1 - x0, ((y1 - y0) * W) / H)), h = (w * H) / W;
+  const fx = Math.max(0, Math.min(W - w, (x0 + x1 - w) / 2)), fy = Math.max(0, Math.min(H - h, (y0 + y1 - h) / 2));
+  return { x: r1(x), y: r1(y), a: r1(f.az), down: !!f.down, vb: [fx, fy, w, h].map(r1) };
+}
+/** The mini map's SVG. Every photo point is a dot (a zero-length line with round caps and a non-scaling stroke, so it keeps its size at
+ *  any frame) and a wider invisible one on top to click (data-j = index in the page's photo list). */
+export function miniPlanta(dots: { i: number; key: string }[]) {
+  const o: string[] = [];
+  o.push(`<rect class="m-wet" width="${W}" height="${H}"/><path class="m-land" d="${smooth(land)}${smooth(vila)}"/>`);
+  o.push(`<g class="m-wood">${[...woods, woodsTop()].map(w => `<path d="${smooth(w)}"/>`).join('')}</g>`);
+  o.push(`<path class="m-water" d="${smooth(acude)}${smooth(lagoa)}${poly(tanques)}"/><path class="m-dyke" d="${diques.map(line).join('')}"/>`);
+  o.push(`<path class="m-hw" d="${poly(band(highway.south, highway.north))}"/><path class="m-road" d="${roads.map(r => smooth(r, false)).join('')}"/>`);
+  o.push(`<path class="m-bld" d="${buildings.map(b => poly(corners(b))).join('')}"/>`);
+  const pts = dots.flatMap(d => { const f = fotos[d.key]; if (!f) return []; const [x, y] = spot(f.at, f.az); return [{ i: d.i, d: `M${r1(x)} ${r1(y)}h0` }]; });
+  o.push(`<g class="m-dots">${pts.map(p => `<path data-j="${p.i}" d="${p.d}"/>`).join('')}</g>`);
+  o.push('<g class="m-pos"><path class="m-cone" d="M0 0L-13 -22.5A26 26 0 0 1 13 -22.5Z"/><circle class="m-ring" r="15"/><circle class="m-cam" r="6.5"/></g>');
+  o.push(`<g class="m-hits">${pts.map(p => `<path data-j="${p.i}" d="${p.d}"><title>Foto ${String(p.i + 1).padStart(2, '0')}</title></path>`).join('')}</g>`);
+  return `<svg class="m-svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">${o.join('')}</svg>`;
 }

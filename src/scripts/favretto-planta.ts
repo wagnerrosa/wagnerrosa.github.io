@@ -1,15 +1,18 @@
 // Site plan on /favretto/ (src/components/favretto/Planta.astro; drawing: src/lib/favretto-planta.ts). Same handling as the /casa/ plan:
 // - Zoom and pan by changing the SVG's viewBox: − / + / whole view buttons, ctrl/⌘ + wheel (trackpad pinch), drag once zoomed in, double
-//   click; on touch two fingers pinch and pan, one finger keeps scrolling the page. The drawing is 900 × 600 m; a phone shows a square of
-//   it (600 m, the farmyard in the middle), starts zoomed in on the farmyard, and pans sideways to the rest.
-// - Photo points (.fp-shot) and the names keep a readable size on screen at any zoom; sizes and areas scale with the drawing.
+//   click; on touch two fingers pinch and pan, one finger keeps scrolling the page. The drawing is 900 × 600 m; a phone shows an upright
+//   strip of it (the box spans the screen and is as tall as the stylesheet makes it; the view takes the box's shape: the frame's whole
+//   height, the farmyard in the middle; the scale and the zoom buttons sit on its bottom edge), starts zoomed in on the farmyard, and pans
+//   sideways to the rest.
+// - Photo points (.fp-shot), the names and the arrows to the towns keep a readable size on screen at any zoom; sizes and areas scale with
+//   the drawing.
 // - Graphic scale beside the title; legend chips switch names, measures and photo points off (data-off on .fp).
 // - With a mouse, hovering a photo point shows the photo above it; a click on the point or the preview opens the page's lightbox (wired by the
 //   page's own script through data-i). Keyboard: the points take focus, Enter opens. Hovering a photo in the gallery lights its point.
 // - Planta / Satélite: Google's satellite view in the same box, loaded the first time it is asked for.
 const MAX = 10;   // closest zoom, × the whole view
-const PHONE = 640;   // narrower than this (px): square view, starting on the farmyard
-const MIN = { 'fp-ln': [6.5, 12], 'fp-ll': [9, 13], 'fp-lv': [6, 11] } as Record<string, [number, number]>;   // label class → [size in m, least px]
+const PHONE = matchMedia('(max-width: 640px)');   // same as the stylesheet's phone layout of the plan: upright view, starting on the farmyard
+const MIN = { 'fp-ln': [6.5, 12], 'fp-ll': [9, 13], 'fp-lv': [6, 11], 'fp-lr': [6.5, 12] } as Record<string, [number, number]>;   // label class → [size in m, least px]
 const STEPS = [200, 100, 50, 20, 10, 5, 2];
 
 const root = document.querySelector<HTMLElement>('.fp');
@@ -18,32 +21,52 @@ const svg = view?.querySelector<SVGSVGElement>('svg');
 
 if (root && view && svg) {
   const all = svg.getAttribute('viewBox')!.split(' ').map(Number);   // the whole drawing
-  const square = svg.dataset.square!.split(' ').map(Number), start = svg.dataset.start!.split(' ').map(Number);
-  let narrow = view.getBoundingClientRect().width < PHONE;
-  let full = narrow ? square : all;   // the widest view (zoom 1)
-  let vb = narrow ? [...start] : [...all];
+  const mid = Number(svg.dataset.phone), start = svg.dataset.start!.split(' ').map(Number);   // phone: strip's centre; first view's centre x, top, width
+  let full = all;   // the widest view (zoom 1)
+  let vb = [...all];
+  let narrow = false, ar = 0;   // the layout the view was last shaped for: phone or not, and the box's width / height
   const pins = [...svg.querySelectorAll<SVGGElement>('.fp-pin')];
-  const texts = [...svg.querySelectorAll<SVGTextElement>('.fp-ln, .fp-ll, .fp-lv')];
+  // labels kept readable; one with an arrow is scaled as a whole (its group, .fp-ls)
+  const texts = [...svg.querySelectorAll<SVGTextElement>('.fp-ln, .fp-ll, .fp-lv, .fp-lr')].map(t => ({ el: t.closest('.fp-ls') ?? t, min: MIN[t.getAttribute('class')!] }));
   const bar = root.querySelector<HTMLElement>('.fp-zoom')!;
   const btn = (z: string) => bar.querySelector<HTMLButtonElement>(`[data-z="${z}"]`)!;
   const scale = root.querySelector<HTMLElement>('.fp-scale')!;
   const zoom = () => full[2] / vb[2];
 
+  /** Phones: the widest view is the frame's whole height at the box's shape, centred on the strip's centre; on entering the phone layout
+   *  the view starts on the farmyard, and a new shape (a phone turned) keeps the view's centre and width. Wider: the whole drawing. */
+  function shape() {
+    const r = view!.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const n = PHONE.matches, a = r.width / r.height;
+    if (n === narrow && (!n || Math.abs(a - ar) < 0.001)) return;
+    if (!n) { full = all; vb = [...all]; }
+    else {
+      const w = Math.min(all[2], all[3] * a);
+      full = [Math.max(0, Math.min(all[2] - w, mid - w / 2)), 0, w, all[3]];
+      const [x, y, vw] = n === narrow ? [vb[0] + vb[2] / 2, vb[1] + vb[3] / 2, vb[2]] : [start[0], start[1] + start[2] / a / 2, start[2]];
+      vb = [x - vw / 2, y - vw / a / 2, vw, vw / a];
+      clamp();
+    }
+    narrow = n;
+    ar = a;
+  }
   function apply() {
+    shape();
     svg!.setAttribute('viewBox', vb.map(x => Math.round(x * 100) / 100).join(' '));
     const w = svg!.getBoundingClientRect().width;
     if (!w) return;
     const z = zoom(), pxm = w / vb[2];   // px per metre
     view!.classList.toggle('zoomed', z > 1.001);
     pins.forEach(g => g.setAttribute('transform', `scale(${(1 / pxm).toFixed(4)})`));
-    for (const t of texts) {
-      const [m, px] = MIN[t.getAttribute('class')!] ?? [1, 0];
+    for (const { el, min } of texts) {
+      const [m, px] = min ?? [1, 0];
       const k = Math.max(1, px / (m * pxm));
-      if (k > 1.001) t.setAttribute('transform', `scale(${k.toFixed(3)})`); else t.removeAttribute('transform');
+      if (k > 1.001) el.setAttribute('transform', `scale(${k.toFixed(3)})`); else el.removeAttribute('transform');
     }
     btn('out').disabled = btn('fit').disabled = z <= 1.001;
     btn('in').disabled = z >= MAX - 0.001;
-    const m = STEPS.find(s => s * pxm <= 150) ?? STEPS.at(-1)!;
+    const m = STEPS.find(s => s * pxm <= (narrow ? 100 : 150)) ?? STEPS.at(-1)!;   // phone: the bar shares the box's bottom edge with the zoom
     scale.querySelector('i')!.style.width = `${(m * pxm).toFixed(1)}px`;
     scale.querySelector('b')!.textContent = `${m} m`;
     scale.setAttribute('aria-label', `Escala gráfica: a barra mede ${m} m`);
@@ -77,12 +100,8 @@ if (root && view && svg) {
     if (z === 'fit') { vb = [...full]; apply(); }
     else if (z) zoomAt(z === 'in' ? 1.6 : 1 / 1.6, ...centre());
   });
-  // a width that crosses PHONE (a phone turned, a window resized) switches between the square and the whole drawing
-  new ResizeObserver(() => {
-    const n = view.getBoundingClientRect().width < PHONE;
-    if (n !== narrow) { narrow = n; full = n ? square : all; vb = n ? [...start] : [...all]; }
-    apply();
-  }).observe(view);
+  // a new size (a phone turned, a window resized): apply() reshapes the view first (shape)
+  new ResizeObserver(apply).observe(view);
 
   // pointer: drag (mouse, zoomed in), pinch (two fingers); one finger scrolls the page (touch-action: pan-y)
   const pts = new Map<number, { x: number; y: number }>();

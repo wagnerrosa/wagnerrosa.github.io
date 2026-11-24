@@ -32,11 +32,10 @@ export const favretto = {
     },
   ] as { title: string; intro?: string; items?: string[] }[],
   closing: 'Área ampla e bem localizada, com construções prontas para reaproveitar. Fotos aéreas feitas por drone.',
-  // where the plot is (the Google Maps embed the owner shared)
+  // where the plot is (the Google Maps link the owner shared; offered under the site plan, whose Satélite view replaced the map section)
   place: {
     lat: -29.959053837193643,
     lng: -51.01139598004109,
-    embed: 'https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3258.9319120364526!2d-51.01139598004109!3d-29.959053837193643!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1795550298873!5m2!1spt-BR!2sbr',
     link: 'https://maps.app.goo.gl/QaAyHW3WaphqeMiD8',
   },
   contact: {
