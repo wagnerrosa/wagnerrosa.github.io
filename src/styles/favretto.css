@@ -52,6 +52,12 @@ h2 { font: 600 13px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppe
 .hv-pp .i-play, .hv-pp.on .i-pause { display: block; }
 .hv-pp .i-pause, .hv-pp.on .i-play { display: none; }
 @media (hover: hover) { .hv-pp:hover { background: rgb(0 0 0 / .7); } }
+/* phones (as the plan, ≤640px): the clip spans the screen, square corners */
+@media (max-width: 640px) {
+  .hero { margin-inline: -24px; }
+  .hero video { border-radius: 0; }
+  .hero figcaption { padding-inline: 24px; }
+}
 .hero figcaption { margin-top: 8px; font: 400 13px/1.3 var(--sans); color: var(--mute); }
 
 /* facts (no rules between them: spacing only) */
