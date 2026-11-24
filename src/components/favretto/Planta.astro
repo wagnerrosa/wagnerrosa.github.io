@@ -1,0 +1,62 @@
+---
+// Site plan of /favretto/: the drawing (src/lib/favretto-planta.ts, data src/data/favretto-planta.ts), the Planta / Satélite switch, zoom
+// controls, a legend that switches labels and photo points off, and a preview of a photo on hover. Behaviour: src/scripts/favretto-planta.ts.
+// A numbered point opens that photo in the page's lightbox (the page's script wires every [data-i]); without JS the drawing shows whole.
+import { planta, type Shot } from '../../lib/favretto-planta';
+import { MAP } from '../../data/favretto-planta';
+
+interface Props { shots: (Shot & { thumb: string; ar: number })[] }
+const { shots } = Astro.props;
+const embed = `https://maps.google.com/maps?ll=${MAP.lat},${MAP.lng}&z=${MAP.zoom}&t=k&hl=pt-BR&output=embed`;
+const tips = shots.map(s => ({ i: s.i, thumb: s.thumb, caption: s.caption, ar: s.ar }));
+
+const legenda = [
+  { id: 'nom', t: 'Nomes', d: 'Construções, açudes, rio e banhado', i: '<text x="8" y="11.5" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor" stroke="none">Aa</text>' },
+  { id: 'med', t: 'Medidas', d: 'Tamanho dos galpões e área dos açudes (aproximados)', i: '<path d="M1.5 4v8M14.5 4v8M1.5 8h13"/>' },
+  { id: 'fot', t: 'Fotos', d: 'De onde cada foto foi tirada: passe o mouse para ver, clique para ampliar', i: '<path d="M3 8 14 2.5v11z" fill="currentColor" fill-opacity=".25" stroke="none"/><circle cx="3.5" cy="8" r="2.6" fill="currentColor" stroke="none"/>' },
+];
+---
+<section class="fp" data-view="plan" data-off="" aria-labelledby="fp-h">
+  <div class="fp-bar">
+    <div class="fp-hg">
+      <h2 id="fp-h" class="fp-h" data-plan="Planta do sítio" data-map="Vista de satélite">Planta do sítio</h2>
+      <span class="fp-scale" role="img" hidden><i></i><b></b></span>
+    </div>
+    <div class="fp-ctrl">
+      <div class="fp-zoom" role="group" aria-label="Zoom da planta" title="Ctrl + rolagem ou pinça para aproximar, arraste para mover, duplo clique para aproximar" hidden>
+        <button type="button" data-z="out" aria-label="Afastar" title="Afastar"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        <button type="button" data-z="in" aria-label="Aproximar" title="Aproximar"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        <button type="button" data-z="fit" aria-label="Ver tudo" title="Ver tudo"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+      <div class="fp-seg" role="group" aria-label="Vista" hidden>
+        <button type="button" data-v="plan" aria-pressed="true">Planta</button>
+        <button type="button" data-v="map" aria-pressed="false" data-track="open_satelite" data-category="favretto" data-location="planta">Satélite</button>
+      </div>
+    </div>
+  </div>
+  <div class="fp-view">
+    <Fragment set:html={planta(shots)} />
+    <span class="fp-n" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 1.5 12 14 8 11.2 4 14Z"/></svg><b>N</b></span>
+  </div>
+  <div class="fp-map" data-src={embed} hidden>
+    <div class="fp-map-frame"></div>
+  </div>
+  <figure class="fp-tip" hidden aria-hidden="true" data-i="0"><img alt="" /><figcaption><span><i></i><em></em></span><b><svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Ampliar</b></figcaption></figure>
+  <div class="fp-foot">
+    <div class="fp-legend" role="group" aria-label="O que mostrar na planta" hidden>
+      <span class="fp-lg-h">Mostrar</span>
+      {legenda.map(l => (
+        <label class="fp-chip" title={l.d}>
+          <input type="checkbox" data-l={l.id} checked />
+          <span><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true" set:html={l.i} />{l.t}</span>
+        </label>
+      ))}
+    </div>
+    <p class="fp-note">Desenho feito a partir das fotos de drone e de imagens de satélite. Medidas aproximadas; os limites do terreno não estão marcados.</p>
+  </div>
+  <script type="application/json" id="fp-tips" set:html={JSON.stringify(tips)} />
+</section>
+
+<script>
+  import '../../scripts/favretto-planta';
+</script>

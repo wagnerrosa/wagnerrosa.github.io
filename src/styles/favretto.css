@@ -83,3 +83,129 @@ h2 { font: 600 13px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppe
 .lb-l { position: absolute; left: 16px; right: 72px; bottom: 16px; font: 500 14px/1.3 var(--sans); }
 .lb-c { margin-left: 10px; color: rgb(255 255 255 / .65); font-variant-numeric: tabular-nums; }
 @media (hover: hover) { .lb-x:hover, .lb-n:hover { background: rgb(255 255 255 / .26); } }
+
+/* ---------- site plan (src/components/favretto/Planta.astro; drawing: src/lib/favretto-planta.ts; behaviour: src/scripts/favretto-planta.ts) ----------
+   Same controls as the /casa/ plan. The drawing is a map in quiet tints: wetland blue-grey with marsh marks, woods green with crowns,
+   ground paper-warm, buildings as roofs with their ridges. */
+.fp {
+  --fp-wet: #e8eff1; --fp-wet-ink: #9db8c3; --fp-land: #fbfaf5; --fp-tree: #e5ecdd; --fp-crown: #d2dfc6; --fp-crown-ink: #9fb58f;
+  --fp-water: #cfe1ea; --fp-water-ink: #6f98ad; --fp-road: #d9d9d9; --fp-bld: #e7e3dc;
+  position: relative; margin-top: 48px;
+}
+:root[data-theme="dark"] .fp {
+  --fp-wet: #0e1c21; --fp-wet-ink: #2f5563; --fp-land: #161615; --fp-tree: #131a11; --fp-crown: #19241a; --fp-crown-ink: #35502f;
+  --fp-water: #15303c; --fp-water-ink: #427389; --fp-road: #2e2e2e; --fp-bld: #2b2824;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .fp {
+    --fp-wet: #0e1c21; --fp-wet-ink: #2f5563; --fp-land: #161615; --fp-tree: #131a11; --fp-crown: #19241a; --fp-crown-ink: #35502f;
+    --fp-water: #15303c; --fp-water-ink: #427389; --fp-road: #2e2e2e; --fp-bld: #2b2824;
+  }
+}
+.fp-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.fp-hg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; }
+.fp-scale { display: inline-flex; align-items: center; gap: 8px; font: 600 12px/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; }
+.fp-scale[hidden], .fp[data-view="map"] .fp-scale { display: none; }
+.fp-scale i { display: block; height: 6px; border: 1px solid var(--ink); background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
+.fp-ctrl { display: flex; align-items: center; gap: 10px; }
+.fp-seg { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--paper); }
+.fp-seg[hidden], .fp-zoom[hidden], .fp-legend[hidden], .fp-map[hidden] { display: none; }
+.fp-seg button { height: 32px; padding: 0 14px; border: 0; border-radius: 999px; background: none; font: 600 13px/1 var(--sans); color: var(--mute); cursor: pointer; }
+.fp-seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+@media (hover: hover) { .fp-seg button[aria-pressed="false"]:hover { color: var(--ink); background: var(--code); } }
+.fp-zoom { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; overflow: hidden; background: var(--paper); }
+.fp-zoom button { display: grid; place-items: center; width: 44px; height: 38px; padding: 0; border: 0; background: none; color: var(--ink); cursor: pointer; }
+.fp-zoom button + button { border-left: 1px solid var(--line); }
+.fp-zoom button:disabled { color: var(--mute); opacity: .45; cursor: default; }
+@media (hover: hover) { .fp-zoom button:not(:disabled):hover { background: var(--code); } }
+
+.fp-view { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: var(--fp-wet); touch-action: pan-y; }
+.fp-view.zoomed { cursor: grab; }
+.fp-view.dragging { cursor: grabbing; }
+.fp[data-view="map"] :is(.fp-view, .fp-zoom, .fp-legend, .fp-tip) { display: none; }
+.fp-svg { display: block; width: 100%; height: auto; -webkit-user-select: none; user-select: none; }
+.fp-n { position: absolute; right: 12px; top: 12px; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; background: color-mix(in srgb, var(--paper) 88%, transparent); box-shadow: 0 0 0 1px var(--line-strong); pointer-events: none; }
+.fp-n svg { fill: var(--ink); translate: 0 3px; }
+.fp-n b { position: absolute; top: 2px; font: 700 10px/1 var(--sans); color: var(--ink); }
+
+/* the drawing (strokes in screen px, so lines stay fine at any zoom) */
+.fp-svg :is(path, rect, circle) { vector-effect: non-scaling-stroke; }
+.fp-wet { fill: var(--fp-wet); }
+.fp-marsh { fill: none; stroke: var(--fp-wet-ink); stroke-width: .9px; stroke-linecap: round; }
+.fp-land { fill: var(--fp-land); stroke: var(--fp-wet-ink); stroke-width: 1px; }
+.fp-woods path { fill: var(--fp-tree); }
+.fp-crown { fill: var(--fp-crown); stroke: var(--fp-crown-ink); stroke-width: .7px; }
+.fp-water path { fill: var(--fp-water); stroke: var(--fp-water-ink); stroke-width: 1px; }
+.fp-isle { fill: var(--fp-land); stroke: var(--fp-water-ink); stroke-width: 1px; }
+.fp-svg .fp-dyke { fill: none; stroke: var(--fp-land); stroke-width: 2.5; vector-effect: none; }
+.fp-hw-road { fill: var(--fp-road); }
+.fp-hw-lane { fill: none; stroke: var(--paper); stroke-width: 1px; stroke-dasharray: 6 8; }
+.fp-hw-edge { fill: none; stroke: var(--paper); stroke-width: 1px; }
+.fp-hw-mid { fill: none; stroke: var(--mute); stroke-width: 1.6px; }
+.fp-track { fill: none; stroke: var(--mute); stroke-width: 1px; stroke-dasharray: 4 3; }
+.fp-svg .fp-road-c { fill: none; stroke: color-mix(in srgb, var(--ink) 45%, var(--fp-land)); stroke-width: 4.6; stroke-linecap: round; stroke-linejoin: round; vector-effect: none; }
+.fp-svg .fp-road { fill: none; stroke: var(--fp-land); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; vector-effect: none; }
+.fp-bld path { fill: var(--fp-bld); stroke: var(--ink); stroke-width: 1.3px; stroke-linejoin: round; }
+.fp-ridge, .fp-valley { fill: none; stroke: var(--ink); stroke-width: .8px; }
+.fp-valley { stroke-dasharray: 3 2; }
+.fp-svg text { fill: var(--ink); font-family: var(--sans); text-anchor: middle; }
+.fp-svg .fp-ln { font-weight: 650; paint-order: stroke; stroke: var(--fp-land); stroke-width: 1; stroke-linejoin: round; }   /* halo in metres: grows with the text */
+.fp-svg .fp-lm { fill: var(--ink-2); font-weight: 500; font-variant-numeric: tabular-nums; }
+.fp-svg .fp-ll { font-family: var(--serif); font-style: italic; fill: var(--mute); }
+.fp-svg .fp-lv { font-weight: 600; fill: var(--mute); letter-spacing: .04em; }
+
+/* photo points: accent pin with the photo's number (the gallery's), cone of view; a dashed ring for the ones that look straight down */
+.fp-shot { cursor: zoom-in; outline: none; }
+.fp-hit { fill: transparent; }
+.fp-cone { fill: rgb(var(--accent-rgb) / .18); stroke: rgb(var(--accent-rgb) / .55); stroke-width: 1px; transition: fill .15s; }
+.fp-down { fill: rgb(var(--accent-rgb) / .1); stroke: var(--accent); stroke-width: 1.5px; stroke-dasharray: 3 2.5; }
+.fp-cam { fill: var(--accent); stroke: var(--paper); stroke-width: 2px; transition: fill .15s; }
+.fp-svg .fp-num { fill: var(--paper); font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; pointer-events: none; }
+.fp-shot.on .fp-cone { fill: rgb(var(--accent-rgb) / .4); }
+.fp-shot.on .fp-cam, .fp-shot:focus-visible .fp-cam { fill: var(--ink); }
+.fp-shot:focus-visible .fp-hit { stroke: var(--accent); stroke-width: 2px; }
+@media (hover: hover) { .fp-shot:hover .fp-cone { fill: rgb(var(--accent-rgb) / .4); } .fp-shot:hover .fp-cam { fill: var(--ink); } }
+.fp-view.dragging .fp-shot { pointer-events: none; }
+
+/* what a legend chip switches off */
+.fp[data-off~="nom"] :is(.fp-l-nome, .fp-l-lugar, .fp-l-via),
+.fp[data-off~="med"] .fp-l-medida,
+.fp[data-off~="fot"] .fp-shots { display: none; }
+
+/* preview of a photo: whole, in its own shape, at most 320 wide; a click opens the lightbox */
+.fp-tip { --ar: 1.5; position: absolute; left: var(--x); top: var(--y); z-index: 5; width: min(320px, calc(300px * var(--ar))); translate: -50% calc(-100% - 14px); border-radius: 8px; overflow: hidden; background: var(--paper); box-shadow: 0 8px 28px rgb(0 0 0 / .28), 0 0 0 1px var(--line); cursor: zoom-in; animation: fp-tip .18s ease-out; }
+.fp-tip[hidden] { display: none; }
+.fp-tip.below { translate: -50% 14px; animation-name: fp-tip-below; }
+.fp-tip img { display: block; width: 100%; aspect-ratio: var(--ar); object-fit: cover; background: var(--code); }
+.fp-tip figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 10px; padding: 7px 10px 8px; font-size: 13px; font-weight: 600; }
+.fp-tip figcaption span { display: inline-flex; align-items: baseline; gap: 8px; }
+.fp-tip i { font: 600 11px/1 var(--sans); letter-spacing: .08em; font-variant-numeric: tabular-nums; font-style: normal; color: var(--mute); }
+.fp-tip em { font-style: normal; }
+.fp-tip b { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: var(--accent); white-space: nowrap; }
+@media (hover: hover) { .fp-tip:hover b { text-decoration: underline; text-underline-offset: 3px; } }
+@keyframes fp-tip { from { opacity: 0; translate: -50% calc(-100% - 6px); } }
+@keyframes fp-tip-below { from { opacity: 0; translate: -50% 6px; } }
+@media (prefers-reduced-motion: reduce) { .fp-tip { animation: none; } }
+
+/* satellite view: replaces the drawing in the same square box */
+.fp-map { position: relative; overflow: hidden; width: 100%; aspect-ratio: 3 / 2; border: 1px solid var(--line); border-radius: 10px; background: var(--code); }
+.fp-map-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* legend + note */
+.fp-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; margin-top: 14px; }
+.fp-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.fp-lg-h { margin-right: 2px; font: 600 12px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
+.fp-chip { position: relative; cursor: pointer; }
+.fp-chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.fp-chip span { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 13px 0 10px; border: 1px solid var(--ink); border-radius: 999px; background: var(--paper); font-size: 13px; font-weight: 600; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; }
+.fp-chip svg { flex: none; }
+.fp-chip input:not(:checked) + span { border-color: var(--line-strong); color: var(--mute); background: transparent; }
+.fp-chip input:not(:checked) + span svg { opacity: .55; }
+.fp-chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (hover: hover) { .fp-chip:hover span { background: var(--code); } }
+.fp-note { max-width: 62ch; font: 400 13px/1.45 var(--sans); color: var(--mute); }
+@media (max-width: 640px) { .fp-map { aspect-ratio: 1; } }
+@media (max-width: 560px) { .fp-seg button { padding: 0 11px; } }
+/* the photo's number (same as on the plan's points) before its caption */
+.cap i, .hero figcaption i { margin-right: 8px; font-style: normal; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.hero figcaption i { color: var(--ink); }

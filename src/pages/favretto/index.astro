@@ -10,6 +10,7 @@ import ThemeScript from '../../components/ThemeScript.astro';
 import Analytics from '../../components/Analytics.astro';
 import { abs } from '../../data/site';
 import { favretto as f } from '../../data/favretto';
+import Planta from '../../components/favretto/Planta.astro';
 
 type Photo = { file: string; caption: string; group: string; groupLabel: string; w: number; h: number };
 const manifest: Photo[] = existsSync('public/favretto/photos.json') ? JSON.parse(readFileSync('public/favretto/photos.json', 'utf8')) : [];
@@ -21,7 +22,10 @@ const photos = manifest.map((p, i) => ({
   group: p.group,
   first: i === 0 || manifest[i - 1].group !== p.group,
   ar: +(p.w / p.h).toFixed(4),
+  key: p.file.match(/(\d{4})\.webp$/)?.[1] ?? '',
+  nr: String(i + 1).padStart(2, '0'),
 }));
+const shots = photos.map((p, i) => ({ i, key: p.key, caption: p.caption, thumb: p.thumb, ar: p.ar }));
 const groups = manifest.reduce<{ id: string; label: string }[]>((acc, p) => (acc.some(g => g.id === p.group) ? acc : [...acc, { id: p.group, label: p.groupLabel }]), []);
 const hero = photos[0];
 const hasOg = existsSync('public/favretto/og.jpg');
@@ -79,13 +83,15 @@ const tel = `tel:${f.contact.phone}`;
           <button type="button" data-i="0" aria-label={`Ampliar: ${hero.caption}`}>
             <img src={hero.full} alt={hero.alt} width="2200" height="1466" fetchpriority="high" decoding="async" />
           </button>
-          <figcaption>{hero.caption}</figcaption>
+          <figcaption><i>{hero.nr}</i>{hero.caption}</figcaption>
         </figure>
       )}
 
       <dl class="facts">
         {f.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
       </dl>
+
+      {shots.length > 0 && <Planta shots={shots} />}
 
       <div class="text">
         {f.sections.map(s => (
@@ -111,7 +117,7 @@ const tel = `tel:${f.contact.phone}`;
                   <li>
                     <button type="button" data-i={i} aria-label={`Ampliar: ${p.caption}`}>
                       <img src={p.thumb} srcset={`${p.thumb} 800w, ${p.full} 2200w`} sizes="(min-width: 900px) 33vw, 92vw" alt={p.alt} width="800" height="533" loading={i < 4 ? 'eager' : 'lazy'} decoding="async" />
-                      <span class="cap">{p.caption}</span>
+                      <span class="cap"><i>{p.nr}</i>{p.caption}</span>
                     </button>
                   </li>
                 ))}
