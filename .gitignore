@@ -22,3 +22,6 @@
 
 # casa: raw architecture assets (renders, photos, plan files); only the compressed ones in public/casa/ are published
 /casa-src
+
+# favretto: raw drone photos and plan files; only the compressed ones in public/favretto/ are published
+/favretto-src
